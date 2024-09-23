@@ -15,6 +15,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::get('/', [Backend::class, 'signin'])->name('signin');
+Route::get('/get-role-name', [PrivilageController::class, 'getRoleName'])->name('get.role.name');
+
 Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 

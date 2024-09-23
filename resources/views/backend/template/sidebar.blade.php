@@ -31,61 +31,13 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('agent.index') ? 'active' : '' }}">
-                                <p>Agent</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('hotel.index') ? 'active' : '' }}">
-                                <p>Hotel</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('room.index') ? 'active' : '' }}">
-                                <p>Room</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('rekening.index') ? 'active' : '' }}">
-                                <p>Rekening</p>
+                            <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('satuan.index') ? 'active' : '' }}">
+                                <p>Satuan</p>
                             </a>
                         </li>
                     </ul>
                 </li>
-
-                <li class="nav-header">Transaction</li>
-
-                <li class="nav-item">
-                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('booking.index') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-hotel"></i>
-                        <p>Booking Hotels</p>
-                    </a>
-                </li>
                 
-                <li class="nav-item">
-                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('payment.index') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-credit-card"></i>
-                        <p>Payment Hotels</p>
-                    </a>
-                </li>
-                
-                <li class="nav-item">
-                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('visa.index') ? 'active' : '' }}">
-                        <i class="nav-icon fab fa-cc-visa"></i>
-                        <p>Payment Visa</p>
-                    </a>
-                </li>
-
-                <li class="nav-header">Report</li>
-
-                <li class="nav-item">
-                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('agents.report.index') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-users"></i>
-                        <p>Report Agent</p>
-                    </a>
-                </li>
-
-                @if (in_array($role, ['superadmin', 'admin']))
                 <li class="nav-header">Settings</li>
 
                 <li class="nav-item">
@@ -106,7 +58,7 @@
                         </li>
                     </ul>
                 </li>
-                @endif
+                
             </ul>
         </nav>
     </div>
