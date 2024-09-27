@@ -34,10 +34,14 @@ class TransaksiController extends Controller
     public function index()
     {
         $transaksi = Transaksi::with('user', 'details')
-            ->get();
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+        $userId = auth()->user()->id;
+        $no_inv = $this->generateInvoiceNumber($userId);
         $data = array(
             'title' => 'Transaksi | ',
             'datatransaksi' => $transaksi,
+            'no_inv' => $no_inv,
         );
         $title = 'Delete Transaksi!';
         $text = "Are you sure you want to delete?";

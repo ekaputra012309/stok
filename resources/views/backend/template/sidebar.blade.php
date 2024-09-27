@@ -1,6 +1,10 @@
+@php
+    $role = App\Models\Privilage::getRoleKodeForAuthenticatedUser();
+@endphp
+
 <aside class="main-sidebar sidebar-light-primary elevation-4">
     <a href="{{ route('dashboard') }}" class="brand-link">
-        <img src="{{ asset('backend/img/logo.jpeg') }}" alt="AdminLTE Logo" style="width: 75px;"> DNA KONSULTANT
+        <img src="{{ asset('backend/img/logo.jpeg') }}" alt="AdminLTE Logo" style="width: 75px;"> {{ config('app.name') }}
     </a>
     <div class="sidebar">
         <br>
@@ -47,6 +51,7 @@
                     </a>
                 </li>
                 
+                @if (in_array($role, ['superadmin', 'admin']))
                 <li class="nav-header">Settings</li>
 
                 <li class="nav-item">
@@ -67,7 +72,7 @@
                         </li>
                     </ul>
                 </li>
-                
+                @endif
             </ul>
         </nav>
     </div>

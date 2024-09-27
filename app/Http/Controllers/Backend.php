@@ -7,6 +7,7 @@ use App\Models\PermintaanModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Transaksi;
 
 class Backend extends Controller
 {
@@ -20,15 +21,24 @@ class Backend extends Controller
 
     public function dashboard()
     {
+        $today = Carbon::today();
+        $monthlyStart = $today->copy()->startOfMonth();
+        $yearlyStart = $today->copy()->startOfYear();
+        
+        $todayIncome = Transaksi::whereDate('created_at', $today)->sum('total');
+        $monthlyIncome = Transaksi::whereBetween('created_at', [$monthlyStart, $today->endOfDay()])->sum('total');
+        $yearlyIncome = Transaksi::whereBetween('created_at', [$yearlyStart, $today->endOfDay()])->sum('total');
+
         $data = [
             'title' => 'Dashboard | ',
-            'todayIncome' => 500000,
-            'monthlyIncome' => 2300000,
-            'yearlyIncome' => 15700000,
+            'todayIncome' => $todayIncome,
+            'monthlyIncome' => $monthlyIncome,
+            'yearlyIncome' => $yearlyIncome,
         ];
-
+        
         return view('backend.dashboard', $data);
     }
+
 
     public function profile(Request $request)
     {
