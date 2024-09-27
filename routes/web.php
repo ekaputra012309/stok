@@ -5,6 +5,7 @@ use App\Http\Controllers\Backend;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\PrivilageController;
+use App\Http\Controllers\Backend\TransaksiController;
 
 // Route::get('/', function () {
 //     return ['Laravel' => app()->version()];
@@ -23,6 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('user', UserController::class); //user
     Route::get('/user/{id}/reset-password', [UserController::class, 'resetPassword'])->name('user.resetPassword');
     Route::resource('privilage', PrivilageController::class); //privilage
+    Route::resource('transaksi', TransaksiController::class); //transaksi
 });
 
 require __DIR__.'/auth.php';

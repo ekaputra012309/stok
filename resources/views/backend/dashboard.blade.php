@@ -30,7 +30,9 @@
                             <div class="info-box">
                                 <span class="info-box-icon"><i class="fas fa-calendar-day"></i></span>
                                 <div class="info-box-content">
-                                    <span class="info-box-number">Rp {{ number_format($todayIncome, 0, ',', '.') }}</span>
+                                    <span class="info-box-number">
+                                        <h3 class="font-weight-bold">Rp {{ number_format($todayIncome, 0, ',', '.') }}</h3>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -47,7 +49,9 @@
                             <div class="info-box">
                                 <span class="info-box-icon"><i class="fas fa-calendar-week"></i></span>
                                 <div class="info-box-content">
-                                    <span class="info-box-number">Rp {{ number_format($monthlyIncome, 0, ',', '.') }}</span>
+                                    <span class="info-box-number">
+                                        <h3 class="font-weight-bold">Rp {{ number_format($monthlyIncome, 0, ',', '.') }}</h3>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -64,13 +68,17 @@
                             <div class="info-box">
                                 <span class="info-box-icon"><i class="fas fa-calendar-alt"></i></span>
                                 <div class="info-box-content">
-                                    <span class="info-box-number">Rp {{ number_format($yearlyIncome, 0, ',', '.') }}</span>
+                                    <span class="info-box-number">
+                                        <h3 class="font-weight-bold">Rp {{ number_format($yearlyIncome, 0, ',', '.') }}</h3>
+                                    </span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            
         </div>
     </section>
 </div>

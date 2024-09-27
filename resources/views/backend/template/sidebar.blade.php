@@ -24,18 +24,27 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-layer-group"></i>
                         <p>Master Data<i class="right fas fa-angle-left"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('satuan.index') ? 'active' : '' }}">
+                            <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                                 <p>Satuan</p>
                             </a>
                         </li>
                     </ul>
+                </li> -->
+
+                <li class="nav-header">Transaksi</li>
+
+                <li class="nav-item">
+                    <a href="{{ route('transaksi.index') }}" class="nav-link {{ request()->routeIs('transaksi.index') ? 'active' : '' }}">                        
+                        <i class="nav-icon fas fa-shopping-cart"></i>
+                        <p>Data Transaksi</p>
+                    </a>
                 </li>
                 
                 <li class="nav-header">Settings</li>
