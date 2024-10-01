@@ -10,6 +10,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use RealRashid\SweetAlert\Facades\Alert;
+use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 
 class TransaksiController extends Controller
 {
@@ -99,7 +100,10 @@ class TransaksiController extends Controller
                 'user_id' => $request->user_id,
             ]);
         }
-        Alert::success('Success', 'transaksi created successfully.');
+        Alert::success('Success', 'Transaksi created successfully.')->autoClose(2000);
+        // Store the transaction ID in session to trigger print
+        session()->flash('print_transaction_id', $transaksi->id);
+        // dd(session()->all());
         return redirect()->route('transaksi.index');
     }
 
@@ -137,4 +141,18 @@ class TransaksiController extends Controller
 
         return redirect()->route('transaksi.index');
     }
+
+    public function print($id)
+    {
+        $transaksi = Transaksi::with('details', 'user')->findOrFail($id);
+        $pdf = FacadePdf::loadView('backend.transaksi.print_transaksi', compact('transaksi')); // Use your view file
+        return $pdf->stream(''.$transaksi->no_inv.'.pdf'); // Stream the PDF to the browser
+    }
+
+    public function clearSession()
+    {
+        session()->forget('print_transaction_id');
+        return response()->json(['success' => true]);
+    }
+
 }

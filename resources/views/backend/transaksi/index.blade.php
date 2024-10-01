@@ -10,8 +10,6 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <!-- <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li> -->
-                        {{-- <li class="breadcrumb-item"><a href="#">Layout</a></li> --}}
                         <li class="breadcrumb-item active">Transaksi</li>
                     </ol>
                 </div>
@@ -26,6 +24,26 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Tambah Transaksi</h3>
+                            <div class="card-tools">
+                                @if(session('print_transaction_id') != 0)
+                                    <button id="printButton" onclick="openTab()" class="btn btn-primary btn-sm d-none">
+                                        <i class="fas fa-print"></i> Print Data
+                                    </button>
+
+                                    <script>
+                                        function openTab() {
+                                            const printTransactionId = @json(session('print_transaction_id'));
+                                            const printUrl = "{{ url('transaksi/print') }}" + '/' + printTransactionId;
+                                            window.open(printUrl, "_blank");
+                                        }
+
+                                        setTimeout(function() {
+                                            document.getElementById('printButton').click();
+                                        }, 3000);
+                                    </script>
+                                @endif
+
+                            </div>
                         </div>
                         <form action="{{ route('transaksi.store') }}" method="POST">
                             @csrf
@@ -45,8 +63,9 @@
                                                 </div>
                                                 <div class="col">
                                                     <label for="harga">Harga:</label>
-                                                    <input type="text" class="form-control price" name="details[0][harga]" required>
+                                                    <input type="tel" class="form-control price" name="details[0][harga]" required>
                                                 </div>
+
                                                 <input type="hidden" name="details[0][satuan]" value="Kg">
                                             </div>
                                         </div>
@@ -75,16 +94,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-
                     <div class="card">
-                        <!-- <div class="card-header">
-                            <h3 class="card-title"> </h3>
-                            <div class="card-tools">
-                                <a href="{{ route('transaksi.create') }}" class="btn btn-primary btn-sm">
-                                    <i class="fas fa-plus"></i> Add Data
-                                </a>
-                            </div>
-                        </div> -->
                         <div class="card-body">
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
@@ -100,9 +110,9 @@
                                     @foreach ($datatransaksi as $transaksi)
                                     <tr>
                                         <td>
-                                            <!-- <a class="btn btn-sm btn-primary" href="{{ route('transaksi.edit', $transaksi->id) }}">
-                                                <i class="fas fa-edit"></i> Edit
-                                            </a> -->
+                                            <a class="btn btn-sm btn-primary" href="{{ route('transaksi.print', $transaksi->id) }}" target="_blank">
+                                                <i class="fas fa-print"></i> Print
+                                            </a>
                                             <a class="btn btn-sm btn-danger" href="{{ route('transaksi.destroy', $transaksi->id) }}" data-confirm-delete="true">
                                                 <i class="fas fa-trash"></i> Delete
                                             </a>
@@ -121,6 +131,7 @@
             </div>
         </div>
     </section>
+
     <script>
         $("#example1").DataTable({
             "responsive": true,
@@ -163,16 +174,20 @@
 
             $('#addDetail').on('click', function() {
                 const newDetail = `
-                    <div class="form-row mb-3">
+                    <div class="form-row mb-3 detail-row">
                         <div class="col">
                             <label for="qty">Kuantiti:</label>
                             <input type="number" class="form-control qty" name="details[${detailIndex}][qty]" required>
                         </div>
                         <div class="col">
                             <label for="harga">Harga:</label>
-                            <input type="text" class="form-control price" name="details[${detailIndex}][harga]" required>
+                            <input type="tel" class="form-control price" name="details[${detailIndex}][harga]" required>
                         </div>
                         <input type="hidden" name="details[${detailIndex}][satuan]" value="Kg">
+                        <div class="col-auto">
+                            <br>
+                            <button type="button" class="btn btn-danger removeDetail">Remove</button>
+                        </div>
                     </div>`;
                 $('#details').append(newDetail);
                 detailIndex++; // Increment the index for the next detail
@@ -186,6 +201,11 @@
                 });
 
                 calculateTotal(); // Recalculate total
+            });
+
+            $('#details').on('click', '.removeDetail', function() {
+                $(this).closest('.detail-row').remove(); // Remove the parent row
+                calculateTotal(); // Recalculate total after removal
             });
 
             // Form submission handler

@@ -44,8 +44,6 @@
     {{-- sweef alert --}}
     <link rel="stylesheet" href="{{ asset('backend/css/sweetalert2.min.css') }}">
     <script src="{{ asset('backend/js/sweetalert2.min.js') }}"></script>
-    <!-- calendar -->
-    <link rel="stylesheet" href="{{ asset('backend/css/fullcalendar/main.css') }}">
 
     <style>
         [class*="sidebar-light-"] .nav-treeview>.nav-item>.nav-link.active,

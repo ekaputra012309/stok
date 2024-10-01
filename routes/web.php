@@ -17,6 +17,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::get('/', [Backend::class, 'signin'])->name('signin');
 Route::get('/get-role-name', [PrivilageController::class, 'getRoleName'])->name('get.role.name');
+Route::get('/transaksi/print/{id}', [TransaksiController::class, 'print'])->name('transaksi.print');
+Route::post('/clear-session', [TransaksiController::class, 'clearSession'])->name('clear.session');
 
 Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
