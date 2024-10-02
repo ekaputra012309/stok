@@ -145,8 +145,10 @@ class TransaksiController extends Controller
     public function print($id)
     {
         $transaksi = Transaksi::with('details', 'user')->findOrFail($id);
-        $pdf = FacadePdf::loadView('backend.transaksi.print_transaksi', compact('transaksi')); // Use your view file
-        return $pdf->stream(''.$transaksi->no_inv.'.pdf'); // Stream the PDF to the browser
+        $pdf = FacadePdf::loadView('backend.transaksi.print_transaksi', compact('transaksi'));
+        // $pdf->setPaper('A7', 'portrait');
+        $pdf->setPaper([0, 0, 219, 620], 'portrait');
+        return $pdf->stream(''.$transaksi->no_inv.'.pdf');
     }
 
     public function clearSession()

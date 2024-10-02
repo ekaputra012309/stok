@@ -5,11 +5,11 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            width: 58mm; /* Set width for 58mm thermal paper */
+            /* width: 58mm; Set width for thermal paper */
+            width: 100%;
             margin: 0;
-            padding: 10px;
-            border: none; /* Remove border */
-            font-size: 12px;
+            padding: 0;
+            font-size: 11px;
         }
         h1 {
             text-align: center;
@@ -18,17 +18,19 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            margin: 0; /* Remove margin */
         }
         th, td {
             text-align: left;
-            padding: 5px;
+            padding: 2px; /* Minimal padding */
+            line-height: 1.2; /* Adjust line height if needed */
         }
         .footer {
-            margin-top: 10px;
+            /* margin-top: 10px; */
             text-align: center;
         }
         .detail-row {
-            border-bottom: 1px dashed #000; /* Dashed line for distinction */
+            border-bottom: 1px dashed #000;
         }
         .price {
             text-align: right; /* Align price to the right */
@@ -40,7 +42,7 @@
     </style>
 </head>
 <body>
-    <h1>{{ config('app.name') }}</h1>
+    <h3 class="text-center">{{ config('app.name') }}</h3>
     <table>
         <tr>
             <th>No Invoice</th>

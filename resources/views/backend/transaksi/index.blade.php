@@ -1,3 +1,7 @@
+@php
+    $role = App\Models\Privilage::getRoleKodeForAuthenticatedUser();
+@endphp
+
 @extends('backend/template/app')
 
 @section('content')
@@ -113,9 +117,11 @@
                                             <a class="btn btn-sm btn-primary" href="{{ route('transaksi.print', $transaksi->id) }}" target="_blank">
                                                 <i class="fas fa-print"></i> Print
                                             </a>
+                                            @if (in_array($role, ['superadmin', 'admin']))
                                             <a class="btn btn-sm btn-danger" href="{{ route('transaksi.destroy', $transaksi->id) }}" data-confirm-delete="true">
                                                 <i class="fas fa-trash"></i> Delete
                                             </a>
+                                            @endif
                                         </td>
                                         <td>{{ $transaksi->no_inv }}</td>
                                         <td>{{ \Carbon\Carbon::parse($transaksi->created_at)->translatedFormat('d F Y, H:i') }}</td>
