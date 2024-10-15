@@ -157,4 +157,43 @@ class TransaksiController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function laporan()
+    {   
+        $data = array(
+            'title' => 'Laporan | ',
+        );        
+        return view('backend.transaksi.laporan', $data);
+    }
+
+    public function cetakLaporan(Request $request)
+    {
+        $startDate = $request->startDate;
+        $endDate = $request->endDate;
+
+        $request->validate([
+            'startDate' => 'required|date',
+            'endDate' => 'required|date|after_or_equal:startDate',
+        ]);
+    
+        $transaksiQuery = Transaksi::with('user', 'details')->orderBy('created_at', 'desc');
+
+        // Add date filtering only if both dates are provided
+        if ($startDate && $endDate) {
+            $transaksiQuery->whereBetween('created_at', [$startDate, $endDate]);
+        }
+    
+        $transaksi = $transaksiQuery->get();
+
+        $data = array(
+            'title' => 'Laporan | ',
+            'datatransaksi' => $transaksi,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        );        
+        // dd($data);
+        $pdf = FacadePdf::loadView('backend.transaksi.print_laporan', $data);
+        $pdf->setPaper('A4', 'portrait');
+        return $pdf->stream('Laporan-'.$startDate.'-'.$endDate.'.pdf');
+    }
+
 }

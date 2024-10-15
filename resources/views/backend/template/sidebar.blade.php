@@ -52,6 +52,13 @@
                 </li>
                 
                 @if (in_array($role, ['superadmin', 'admin']))
+                <li class="nav-item">
+                    <a href="{{ route('transaksi.laporan') }}" class="nav-link {{ request()->routeIs('transaksi.laporan') ? 'active' : '' }}">                        
+                        <i class="nav-icon fas fa-list-alt"></i>
+                        <p>Laporan Transaksi</p>
+                    </a>
+                </li>
+
                 <li class="nav-header">Settings</li>
 
                 <li class="nav-item">
