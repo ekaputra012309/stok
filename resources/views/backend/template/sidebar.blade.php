@@ -77,6 +77,11 @@
                                 <p>Manage User</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('companyProfile') }}" class="nav-link {{ request()->routeIs('companyProfile') ? 'active' : '' }}">
+                                <p>Perusahaan</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 @endif
