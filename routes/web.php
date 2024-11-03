@@ -25,6 +25,8 @@ Route::get('/transaksi/laporan', [TransaksiController::class, 'laporan'])->name(
 Route::get('/transaksi/laporan/cetak', [TransaksiController::class, 'cetakLaporan'])->name('transaksi.laporan.cetak');
 Route::get('/company-profile', [Backend::class, 'editCompany'])->name('companyProfile');
 Route::put('/company-profile/update', [Backend::class, 'updateCompany'])->name('companyProfile.update');
+Route::delete('satuan/{satuan}', [SatuanController::class, 'destroy'])->name('satuan.destroy');
+Route::delete('barang/{barang}', [BarangController::class, 'destroy'])->name('barang.destroy');
 
 Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

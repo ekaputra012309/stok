@@ -52,19 +52,31 @@
                 <li class="nav-header">Transaksi</li>
 
                 <li class="nav-item">
+                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">                        
+                        <i class="nav-icon fas fa-download"></i>
+                        <p>Barang Masuk</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">                        
+                        <i class="nav-icon fas fa-upload"></i>
+                        <p>Barang Keluar</p>
+                    </a>
+                </li>
+                <!-- <li class="nav-item">
                     <a href="{{ route('transaksi.index') }}" class="nav-link {{ request()->routeIs('transaksi.index') ? 'active' : '' }}">                        
                         <i class="nav-icon fas fa-shopping-cart"></i>
                         <p>Data Transaksi</p>
                     </a>
-                </li>
+                </li> -->
                 
                 @if (in_array($role, ['superadmin', 'admin']))
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="{{ route('transaksi.laporan') }}" class="nav-link {{ request()->routeIs('transaksi.laporan') ? 'active' : '' }}">                        
                         <i class="nav-icon fas fa-list-alt"></i>
                         <p>Laporan Transaksi</p>
                     </a>
-                </li>
+                </li> -->
 
                 <li class="nav-header">Settings</li>
 

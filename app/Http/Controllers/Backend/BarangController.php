@@ -16,9 +16,6 @@ class BarangController extends Controller
             'title' => 'Barang | ',
             'databarang' => Barang::with('satuan')->get(),
         ];
-        $title = 'Delete Barang!';
-        $text = "Are you sure you want to delete?";
-        confirmDelete($title, $text);
         return view('backend.barang.index', $data);
     }
 
@@ -42,7 +39,7 @@ class BarangController extends Controller
         ]);
 
         Barang::create($request->all());
-        Alert::success('Success', 'Barang created successfully.');
+        Alert::success('Success', 'Barang created successfully.')->autoClose(2000);
         return redirect()->route('barang.index');
     }
 
@@ -76,7 +73,7 @@ class BarangController extends Controller
         ]);
 
         $barang->update($request->all());
-        Alert::success('Success', 'Barang updated successfully.');
+        Alert::success('Success', 'Barang updated successfully.')->autoClose(2000);
 
         return redirect()->route('barang.index');
     }
@@ -84,8 +81,9 @@ class BarangController extends Controller
     public function destroy(Barang $barang)
     {
         $barang->delete();
-        Alert::success('Success', 'Barang deleted successfully.');
+        return response()->json(['success' => 'Barang deleted successfully.']);
+        // Alert::success('Success', 'Barang deleted successfully.');
 
-        return redirect()->route('barang.index');
+        // return redirect()->route('barang.index');
     }    
 }

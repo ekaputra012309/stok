@@ -15,9 +15,6 @@ class SatuanController extends Controller
             'title' => 'Satuan | ',
             'datasatuan' => Satuan::all(),
         ];
-        $title = 'Delete Satuan!';
-        $text = "Are you sure you want to delete?";
-        confirmDelete($title, $text);
         return view('backend.satuan.index', $data);
     }
 
@@ -37,7 +34,7 @@ class SatuanController extends Controller
         ]);
 
         Satuan::create($request->all());
-        Alert::success('Success', 'Satuan created successfully.');
+        Alert::success('Success', 'Satuan created successfully.')->autoClose(2000);
         return redirect()->route('satuan.index');
     }
 
@@ -67,7 +64,7 @@ class SatuanController extends Controller
         ]);
 
         $satuan->update($request->all());
-        Alert::success('Success', 'Satuan updated successfully.');
+        Alert::success('Success', 'Satuan updated successfully.')->autoClose(2000);
 
         return redirect()->route('satuan.index');
     }
@@ -75,8 +72,9 @@ class SatuanController extends Controller
     public function destroy(Satuan $satuan)
     {
         $satuan->delete();
-        Alert::success('Success', 'Satuan deleted successfully.');
+        return response()->json(['success' => 'Satuan deleted successfully.']);
+        // Alert::success('Success', 'Satuan deleted successfully.');
 
-        return redirect()->route('satuan.index');
+        // return redirect()->route('satuan.index');
     }    
 }

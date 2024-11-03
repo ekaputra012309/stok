@@ -48,9 +48,9 @@
                                             <a class="btn btn-sm btn-primary" href="{{ route('satuan.edit', $satuan->id) }}">
                                                 <i class="fas fa-edit"></i> Edit
                                             </a>
-                                            <a class="btn btn-sm btn-danger" href="{{ route('satuan.destroy', $satuan->id) }}" data-confirm-delete="true">
+                                            <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $satuan->id }}">
                                                 <i class="fas fa-trash"></i> Delete
-                                            </a>
+                                            </button>
                                         </td>
                                         <td>{{ $satuan->name }}</td>
                                     </tr>
@@ -70,6 +70,52 @@
             "autoWidth": true,
             // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    </script>
+    <script>
+    $(document).on('click', '.delete-btn', function() {
+        var satuanId = $(this).data('id');
+        var url = '{{ route('satuan.destroy', ':id') }}';
+        url = url.replace(':id', satuanId); // Replace :id with the actual ID
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This action cannot be undone.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: url,
+                    type: 'DELETE', // Set the HTTP method to DELETE
+                    data: {
+                        "_token": "{{ csrf_token() }}" // Include CSRF token
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: response.success,
+                            icon: 'success',
+                            timer: 2000, // Close after 2 seconds
+                            showConfirmButton: false, // No OK button
+                            timerProgressBar: true // Show progress bar
+                        }).then(() => {
+                            location.reload(); // Reload the page or update the UI
+                        });
+                    },
+                    error: function(xhr) {
+                        Swal.fire(
+                            'Error!',
+                            'An error occurred while deleting.',
+                            'error'
+                        );
+                    }
+                });
+            }
+        });
+    });
     </script>
 </div>
 @endsection
