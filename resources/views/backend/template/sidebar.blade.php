@@ -28,19 +28,26 @@
                     </a>
                 </li>
 
-                <!-- <li class="nav-item">
+                <li class="nav-header">Master</li>
+
+                <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-layer-group"></i>
                         <p>Master Data<i class="right fas fa-angle-left"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                            <a href="{{ route('barang.index') }}" class="nav-link {{ request()->routeIs('barang.index') ? 'active' : '' }}">
+                                <p>Barang</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('satuan.index') }}" class="nav-link {{ request()->routeIs('satuan.index') ? 'active' : '' }}">
                                 <p>Satuan</p>
                             </a>
                         </li>
                     </ul>
-                </li> -->
+                </li>
 
                 <li class="nav-header">Transaksi</li>
 
