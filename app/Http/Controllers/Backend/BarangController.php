@@ -82,8 +82,5 @@ class BarangController extends Controller
     {
         $barang->delete();
         return response()->json(['success' => 'Barang deleted successfully.']);
-        // Alert::success('Success', 'Barang deleted successfully.');
-
-        // return redirect()->route('barang.index');
-    }    
+    }
 }

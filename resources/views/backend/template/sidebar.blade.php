@@ -52,6 +52,12 @@
                 <li class="nav-header">Transaksi</li>
 
                 <li class="nav-item">
+                    <a href="{{ route('purchase_order.index') }}" class="nav-link {{ request()->routeIs('purchase_order.index') ? 'active' : '' }}">                        
+                        <i class="nav-icon fas fa-shopping-cart"></i>
+                        <p>Purchase Order (PO)</p>
+                    </a>
+                </li>
+                <!-- <li class="nav-item">
                     <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">                        
                         <i class="nav-icon fas fa-download"></i>
                         <p>Barang Masuk</p>
@@ -62,7 +68,7 @@
                         <i class="nav-icon fas fa-upload"></i>
                         <p>Barang Keluar</p>
                     </a>
-                </li>
+                </li> -->
                 <!-- <li class="nav-item">
                     <a href="{{ route('transaksi.index') }}" class="nav-link {{ request()->routeIs('transaksi.index') ? 'active' : '' }}">                        
                         <i class="nav-icon fas fa-shopping-cart"></i>

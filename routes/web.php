@@ -8,6 +8,7 @@ use App\Http\Controllers\Backend\PrivilageController;
 use App\Http\Controllers\Backend\TransaksiController;
 use App\Http\Controllers\Backend\SatuanController;
 use App\Http\Controllers\Backend\BarangController;
+use App\Http\Controllers\Backend\PurchaseOrderController;
 
 // Route::get('/', function () {
 //     return ['Laravel' => app()->version()];
@@ -27,6 +28,8 @@ Route::get('/company-profile', [Backend::class, 'editCompany'])->name('companyPr
 Route::put('/company-profile/update', [Backend::class, 'updateCompany'])->name('companyProfile.update');
 Route::delete('satuan/{satuan}', [SatuanController::class, 'destroy'])->name('satuan.destroy');
 Route::delete('barang/{barang}', [BarangController::class, 'destroy'])->name('barang.destroy');
+Route::delete('/purchase_order/{PurchaseOrder}', [PurchaseOrderController::class, 'destroy'])->name('purchase_order.destroy');
+Route::post('purchase_order/{id}/approve', [PurchaseOrderController::class, 'approve'])->name('purchase_order.approve');
 
 Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -37,6 +40,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('transaksi', TransaksiController::class); //transaksi
     Route::resource('satuan', SatuanController::class); //satuan
     Route::resource('barang', BarangController::class); //barang
+    Route::resource('purchase_order', PurchaseOrderController::class); //purchase_order
 });
 
 require __DIR__.'/auth.php';
