@@ -69,6 +69,7 @@ class Backend extends Controller
             'name' => 'required|string|max:255',
             'address' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:15',
+            'email' => 'nullable|email',
             'website' => 'nullable|url',
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
@@ -78,6 +79,7 @@ class Backend extends Controller
         $companyProfile->name = $request->name;
         $companyProfile->address = $request->address;
         $companyProfile->phone = $request->phone;
+        $companyProfile->email = $request->email;
         $companyProfile->website = $request->website;
         $companyProfile->description = $request->description;
 

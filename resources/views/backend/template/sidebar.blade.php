@@ -1,10 +1,11 @@
 @php
     $role = App\Models\Privilage::getRoleKodeForAuthenticatedUser();
+    $companyProfile = App\Models\CompanyProfile::first();
 @endphp
 
 <aside class="main-sidebar sidebar-light-primary elevation-4">
     <a href="{{ route('dashboard') }}" class="brand-link">
-        <img src="{{ asset('backend/img/logo.jpeg') }}" alt="AdminLTE Logo" style="width: 75px;"> {{ config('app.name') }}
+        <img src="{{ asset($companyProfile->image) }}" alt="AdminLTE Logo" style="width: 75px;"> {{ $companyProfile->name }}
     </a>
     <div class="sidebar">
         <br>
@@ -57,13 +58,13 @@
                         <p>Purchase Order (PO)</p>
                     </a>
                 </li>
-                <!-- <li class="nav-item">
-                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">                        
+                <li class="nav-item">
+                    <a href="{{ route('barang_masuk.index') }}" class="nav-link {{ request()->routeIs('barang_masuk.index') ? 'active' : '' }}">                        
                         <i class="nav-icon fas fa-download"></i>
                         <p>Barang Masuk</p>
                     </a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">                        
                         <i class="nav-icon fas fa-upload"></i>
                         <p>Barang Keluar</p>

@@ -47,10 +47,10 @@
                                     @foreach ($dataprivilage as $privilage)
                                     <tr>
                                         <td>
-                                            <a class="btn btn-sm btn-primary" href="{{ route('privilage.edit', $privilage->id) }}">
+                                            <a class="btn btn-xs btn-primary" href="{{ route('privilage.edit', $privilage->id) }}">
                                                 <i class="fas fa-edit"></i> Edit
-                                            </a>
-                                            <a class="btn btn-sm btn-danger" href="{{ route('privilage.destroy', $privilage->id) }}" data-confirm-delete="true">
+                                            </a> <br>
+                                            <a class="btn btn-xs btn-danger" href="{{ route('privilage.destroy', $privilage->id) }}" data-confirm-delete="true">
                                                 <i class="fas fa-trash"></i> Delete
                                             </a>
                                         </td>

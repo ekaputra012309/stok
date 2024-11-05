@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Barang;
 use App\Models\Satuan;
+use App\Models\CompanyProfile;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderItem;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 
 class PurchaseOrderController extends Controller
 {
@@ -33,11 +35,11 @@ class PurchaseOrderController extends Controller
 
         if ($latestInvoice) {
             // Extract the last four digits and increment by 1
-            $lastSequence = (int) substr($latestInvoice->invoice_number, -4);
-            $newSequence = str_pad($lastSequence + 1, 4, '0', STR_PAD_LEFT);
+            $lastSequence = (int) substr($latestInvoice->invoice_number, -3);
+            $newSequence = str_pad($lastSequence + 1, 3, '0', STR_PAD_LEFT);
         } else {
-            // Start sequence at 0001 if no previous invoices exist for today
-            $newSequence = '0001';
+            // Start sequence at 001 if no previous invoices exist for today
+            $newSequence = '001';
         }
 
         // Combine all parts to form the final invoice number
@@ -47,7 +49,7 @@ class PurchaseOrderController extends Controller
     public function create()
     {
         $userId = auth()->user()->id;
-        $datePrefix = Carbon::now()->format('Ymd'); // Format: YYYYMMDD
+        $datePrefix = Carbon::now()->format('ymd'); // Format: YYMMDD
         $invoiceNumber = $this->generateInvoiceNumber($userId, $datePrefix);
         $barangs = Barang::all(); // Get all barang for selection
         $satuans = Satuan::all();
@@ -171,14 +173,14 @@ class PurchaseOrderController extends Controller
             foreach ($purchaseOrder->items as $item) {
                 // Revert the stock update on `Barang` table
                 $barang = Barang::find($item->barang_id);
-                $barang->decrement('stok', $item->qty);
+                // $barang->decrement('stok', $item->qty);
                 $item->delete();
             }
 
             // Add updated items and adjust stock
             foreach ($request->items as $item) {
-                $barangItem = Barang::find($item['barang_id']);
-                $barangItem->increment('stok', $item['qty']); // Update stock
+                // $barangItem = Barang::find($item['barang_id']);
+                // $barangItem->increment('stok', $item['qty']); // Update stock
 
                 PurchaseOrderItem::create([
                     'purchase_order_id' => $purchaseOrder->id,
@@ -212,5 +214,14 @@ class PurchaseOrderController extends Controller
         });
 
         return response()->json(['success' => 'Purchase Order transaction deleted successfully.']);
+    }
+
+    public function print($id)
+    {
+        $purchaseOrder = PurchaseOrder::with('items.barang', 'user')->findOrFail($id); // Fetch the purchase order
+        $companyProfile = CompanyProfile::first(); // Retrieve the company profile
+        $pdf = FacadePdf::loadView('backend.purchase_order.print_purchase_order', compact('purchaseOrder', 'companyProfile'));
+        // $pdf->setPaper('A4', 'portrait'); // Set paper size
+        return $pdf->stream(''.$purchaseOrder->invoice_number.'.pdf'); // Stream the PDF
     }
 }

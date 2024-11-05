@@ -45,10 +45,10 @@
                                     @foreach ($datasatuan as $satuan)
                                     <tr>
                                         <td>
-                                            <a class="btn btn-sm btn-primary" href="{{ route('satuan.edit', $satuan->id) }}">
+                                            <a class="btn btn-xs btn-primary" href="{{ route('satuan.edit', $satuan->id) }}">
                                                 <i class="fas fa-edit"></i> Edit
                                             </a>
-                                            <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $satuan->id }}">
+                                            <button class="btn btn-xs btn-danger delete-btn" data-id="{{ $satuan->id }}">
                                                 <i class="fas fa-trash"></i> Delete
                                             </button>
                                         </td>

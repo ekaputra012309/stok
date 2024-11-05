@@ -46,13 +46,13 @@
                                     @foreach ($datauser as $user)
                                     <tr>
                                         <td>
-                                            <a class="btn btn-sm btn-primary" href="{{ route('user.edit', $user->id) }}">
+                                            <a class="btn btn-xs btn-primary" href="{{ route('user.edit', $user->id) }}">
                                                 <i class="fas fa-edit"></i> Edit
-                                            </a>
-                                            <a class="btn btn-sm btn-danger" href="{{ route('user.destroy', $user->id) }}" data-confirm-delete="true">
+                                            </a> <br>
+                                            <a class="btn btn-xs btn-danger" href="{{ route('user.destroy', $user->id) }}" data-confirm-delete="true">
                                                 <i class="fas fa-trash"></i> Delete
-                                            </a>
-                                            <a class="btn btn-sm btn-warning" href="{{ route('user.resetPassword', $user->id) }}">
+                                            </a> <br>
+                                            <a class="btn btn-xs btn-warning" href="{{ route('user.resetPassword', $user->id) }}">
                                                 <i class="fas fa-key"></i> Reset Password
                                             </a>
                                         </td>

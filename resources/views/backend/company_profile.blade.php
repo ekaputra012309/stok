@@ -65,6 +65,11 @@
                                         </div>
 
                                         <div class="form-group">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="email" name="email" value="{{ $companyProfile->email }}">
+                                        </div>
+
+                                        <div class="form-group">
                                             <label for="website" class="form-label">Website</label>
                                             <input type="url" class="form-control" id="website" name="website" value="{{ $companyProfile->website }}">
                                         </div>

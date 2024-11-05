@@ -1,3 +1,7 @@
+@php
+    $companyProfile = App\Models\CompanyProfile::first();
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +9,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="{{ asset('backend/img/logo.ico') }}" type="image/x-icon">
-    <title>{{ $title . config('app.name') }}</title>
+    <title>{{ $title . $companyProfile->name }}</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -94,7 +98,7 @@
                 <b>Version</b> 1.1.0
             </div>
             <strong>Copyright &copy; {{ date('Y') >= 2024 ? '2024' : '2024-' . date('Y') }}
-                {{ config('app.name') }}
+                {{ $companyProfile->name }}
             </strong>
             All rights
             reserved.

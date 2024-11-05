@@ -51,6 +51,11 @@
                                                 <a class="btn btn-xs btn-dark" href="{{ route('purchase_order.show', $purchaseOrder->id) }}">
                                                     <i class="fas fa-eye"></i> Show
                                                 </a> <br>
+                                                @if ($purchaseOrder->status_order === 'Approved') <!-- Conditional check for Approved status -->
+                                                    <a class="btn btn-xs btn-success" href="{{ route('purchase_order.print', $purchaseOrder->id) }}" target="_blank">
+                                                        <i class="fas fa-print"></i> Print Invoice
+                                                    </a> <br>
+                                                @endif
                                                 @if ($purchaseOrder->status_order !== 'Approved') <!-- Conditional check -->
                                                     <a class="btn btn-xs btn-primary" href="{{ route('purchase_order.edit', $purchaseOrder->id) }}">
                                                         <i class="fas fa-edit"></i> Edit

@@ -18,7 +18,8 @@ class CreateCompanyProfilesTable extends Migration
             $table->string('name'); // Company name
             $table->string('address')->nullable(); // Company address
             $table->string('phone')->nullable(); // Contact number
-            $table->string('website')->nullable(); // Website URL
+            $table->string('email')->nullable(); // Website URL
+            $table->string('website')->nullable();
             $table->text('description')->nullable(); // Description of the company
             $table->string('image')->nullable(); // Path to image file
             $table->timestamps(); // created_at and updated_at timestamps
