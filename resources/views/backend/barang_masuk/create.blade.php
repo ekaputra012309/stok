@@ -61,10 +61,6 @@
                                             <label for="qty">Quantity</label>
                                             <input type="number" class="form-control" name="items[0][qty]" placeholder="Quantity" required min="1">
                                         </div>
-                                        <div class="form-group col-md-3">
-                                            <label for="harga">Harga</label>
-                                            <input type="number" class="form-control" name="items[0][harga]" placeholder="Harga" required min="0" step="0.01">
-                                        </div>
                                         <div class="form-group col-md-2 d-flex align-items-end">
                                             <button type="button" class="btn btn-danger btn-sm remove-item">Remove</button>
                                         </div>
@@ -128,10 +124,6 @@
                         <div class="form-group col-md-2">
                             <label for="qty">Quantity</label>
                             <input type="number" class="form-control" name="items[${itemIndex}][qty]" placeholder="Quantity" required min="1">
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="harga">Harga</label>
-                            <input type="number" class="form-control" name="items[${itemIndex}][harga]" placeholder="Harga" required min="0" step="0.01">
                         </div>
                         <div class="form-group col-md-2 d-flex align-items-end">
                             <button type="button" class="btn btn-danger btn-sm remove-item">Remove</button>

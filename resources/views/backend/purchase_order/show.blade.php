@@ -38,7 +38,7 @@
                                     <td>{{ $PurchaseOrder->user->name ?? 'N/A' }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Date</th>
+                                    <th>Tanggal PO</th>
                                     <td>{{ $PurchaseOrder->created_at->translatedFormat('d F Y') }}</td>
                                 </tr>
                                 <tr>
@@ -54,24 +54,20 @@
                                         <tr>
                                             <th>Barang</th>
                                             <th>Quantity</th>
-                                            <th>Harga</th>
-                                            <th>Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($PurchaseOrder->items as $item)
                                             <tr>
                                                 <td>{{ $item->barang->deskripsi }}</td>
-                                                <td>{{ $item->qty }}</td>
-                                                <td>{{ number_format($item->harga, 0, ',', '.') }}</td>
-                                                <td>{{ number_format($item->qty * $item->harga, 0, ',', '.') }}</td>
+                                                <td>{{ $item->qty .' '.$item->barang->satuan->name }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="3" class="text-right">Grand Total</th>
-                                            <th>{{ number_format($PurchaseOrder->items->sum(fn($item) => $item->qty * $item->harga), 0, ',', '.') }}</th>
+                                            <th class="text-right">Total</th>
+                                            <th>{{ number_format($PurchaseOrder->items->sum(fn($item) => $item->qty), 0, ',', '.') }}</th>
                                         </tr>
                                     </tfoot>
                                 </table>

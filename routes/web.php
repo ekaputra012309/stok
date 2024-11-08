@@ -10,6 +10,7 @@ use App\Http\Controllers\Backend\SatuanController;
 use App\Http\Controllers\Backend\BarangController;
 use App\Http\Controllers\Backend\PurchaseOrderController;
 use App\Http\Controllers\Backend\BarangMasukController;
+use App\Http\Controllers\Backend\BarangKeluarController;
 
 // Route::get('/', function () {
 //     return ['Laravel' => app()->version()];
@@ -33,7 +34,7 @@ Route::delete('/purchase_order/{PurchaseOrder}', [PurchaseOrderController::class
 Route::post('purchase_order/{id}/approve', [PurchaseOrderController::class, 'approve'])->name('purchase_order.approve');
 Route::get('/purchase-order/{id}/print', [PurchaseOrderController::class, 'print'])->name('purchase_order.print');
 Route::post('/barang_masuk/process', [BarangMasukController::class, 'process'])->name('barang_masuk.process');
-
+Route::get('/barang-keluar/{id}/print', [BarangKeluarController::class, 'print'])->name('barang_keluar.print');
 
 Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -47,6 +48,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('purchase_order', PurchaseOrderController::class); //purchase_order
 
     Route::resource('barang_masuk', BarangMasukController::class); //barang_masuk
+    Route::resource('barang_keluar', BarangKeluarController::class); //barang_keluar
 
 });
 

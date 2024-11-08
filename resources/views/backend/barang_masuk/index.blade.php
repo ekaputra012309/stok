@@ -49,6 +49,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>No Invoice</th>
+                                        <th>Stok Aktual</th>
                                         <th>Nama Barang (Qty Masuk)</th>
                                         <th>Total Qty</th>
                                         <th>Catatan</th>
@@ -63,6 +64,11 @@
                                                 </a>
                                             </td>
                                             <td>{{ $barangMasuk->purchaseOrder->invoice_number }}</td>
+                                            <td>
+                                                @foreach ($barangMasuk->details as $item)
+                                                    <strong>({{ $item->barang->stok }} @if ($item->barang->satuan) {{ $item->barang->satuan->name }} @endif)</strong><br>
+                                                @endforeach
+                                            </td>
                                             <td>
                                                 @foreach ($barangMasuk->details as $item)
                                                     {{ $item->barang->deskripsi }} <strong>({{ $item->qty }} @if ($item->barang->satuan) {{ $item->barang->satuan->name }} @endif)</strong><br>

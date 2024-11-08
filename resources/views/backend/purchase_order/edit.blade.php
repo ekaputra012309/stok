@@ -63,10 +63,6 @@
                                             <label for="qty">Quantity</label>
                                             <input type="number" class="form-control" name="items[{{ $index }}][qty]" value="{{ $item->qty }}" required min="1">
                                         </div>
-                                        <div class="form-group col-md-3">
-                                            <label for="harga">Harga</label>
-                                            <input type="number" class="form-control" name="items[{{ $index }}][harga]" value="{{ $item->harga }}" required min="0" step="0.01">
-                                        </div>
                                         <div class="form-group col-md-2 d-flex align-items-end">
                                             <button type="button" class="btn btn-danger btn-sm remove-item">Remove</button>
                                         </div>
@@ -130,10 +126,6 @@
                         <div class="form-group col-md-2">
                             <label for="qty">Quantity</label>
                             <input type="number" class="form-control" name="items[${itemIndex}][qty]" placeholder="Quantity" required min="1">
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="harga">Harga</label>
-                            <input type="number" class="form-control" name="items[${itemIndex}][harga]" placeholder="Harga" required min="0" step="0.01">
                         </div>
                         <div class="form-group col-md-2 d-flex align-items-end">
                             <button type="button" class="btn btn-danger btn-sm remove-item">Remove</button>

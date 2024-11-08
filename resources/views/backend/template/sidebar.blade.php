@@ -64,12 +64,12 @@
                         <p>Barang Masuk</p>
                     </a>
                 </li>
-                <!-- <li class="nav-item">
-                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">                        
+                <li class="nav-item">
+                    <a href="{{ route('barang_keluar.index') }}" class="nav-link {{ request()->routeIs('barang_keluar.index') ? 'active' : '' }}">                        
                         <i class="nav-icon fas fa-upload"></i>
                         <p>Barang Keluar</p>
                     </a>
-                </li> -->
+                </li>
                 <!-- <li class="nav-item">
                     <a href="{{ route('transaksi.index') }}" class="nav-link {{ request()->routeIs('transaksi.index') ? 'active' : '' }}">                        
                         <i class="nav-icon fas fa-shopping-cart"></i>

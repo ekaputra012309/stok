@@ -15,7 +15,6 @@ class PurchaseOrderItem extends Model
         'barang_id',
         'user_id',
         'qty',
-        'harga',
     ];
 
     public function purchaseOrder()

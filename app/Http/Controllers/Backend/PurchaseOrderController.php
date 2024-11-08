@@ -27,22 +27,20 @@ class PurchaseOrderController extends Controller
 
     private function generateInvoiceNumber($userId, $datePrefix)
     {
-        // Get the latest invoice number for the current date and user
+        // Include "PO" in the matching pattern to avoid mismatches
         $latestInvoice = PurchaseOrder::where('user_id', $userId)
-            ->where('invoice_number', 'like', "{$datePrefix}{$userId}%")
+            ->where('invoice_number', 'like', "PO{$datePrefix}{$userId}%")
             ->latest('invoice_number')
             ->first();
 
         if ($latestInvoice) {
-            // Extract the last four digits and increment by 1
+            // Correctly extract the last 3 digits for consistent incrementation
             $lastSequence = (int) substr($latestInvoice->invoice_number, -3);
             $newSequence = str_pad($lastSequence + 1, 3, '0', STR_PAD_LEFT);
         } else {
-            // Start sequence at 001 if no previous invoices exist for today
             $newSequence = '001';
         }
 
-        // Combine all parts to form the final invoice number
         return "PO{$datePrefix}{$userId}{$newSequence}";
     }
 
@@ -64,13 +62,13 @@ class PurchaseOrderController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'invoice_number' => 'required|string|unique:purchase_order,invoice_number|max:255',
             'user_id' => 'required|exists:users,id',
             'items' => 'required|array',
             'items.*.barang_id' => 'required|exists:barang,id',
             'items.*.qty' => 'required|integer|min:1',
-            'items.*.harga' => 'required|numeric|min:0',
         ]);
 
         DB::transaction(function () use ($request) {
@@ -93,7 +91,6 @@ class PurchaseOrderController extends Controller
                     'barang_id' => $item['barang_id'],
                     'user_id' => $request->user_id,
                     'qty' => $item['qty'],
-                    'harga' => $item['harga'],
                 ]);
             }
         });
@@ -106,7 +103,7 @@ class PurchaseOrderController extends Controller
     {
         $data = [
             'title' => 'Detail Purchase Order | ',
-            'PurchaseOrder' => $PurchaseOrder->load('items.barang'),
+            'PurchaseOrder' => $PurchaseOrder->load(['items.barang.satuan']),
         ];
         return view('backend.purchase_order.show', $data);
     }
@@ -159,7 +156,6 @@ class PurchaseOrderController extends Controller
             'items' => 'required|array',
             'items.*.barang_id' => 'required|exists:barang,id',
             'items.*.qty' => 'required|integer|min:1',
-            'items.*.harga' => 'required|numeric|min:0',
         ]);
 
         DB::transaction(function () use ($request, $purchaseOrder) {
@@ -187,7 +183,6 @@ class PurchaseOrderController extends Controller
                     'barang_id' => $item['barang_id'],
                     'user_id' => $request->user_id,
                     'qty' => $item['qty'],
-                    'harga' => $item['harga'],
                 ]);
             }
         });

@@ -31,7 +31,6 @@ return new class extends Migration
             $table->unsignedBigInteger('barang_id'); // Link to barang
             $table->unsignedBigInteger('user_id'); // Track the user who created this item entry
             $table->integer('qty'); // Quantity added
-            $table->decimal('harga', 10, 2);
             $table->timestamps();
 
             // Foreign keys

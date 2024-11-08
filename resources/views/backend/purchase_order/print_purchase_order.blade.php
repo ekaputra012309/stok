@@ -17,6 +17,9 @@
         .text-right {
             text-align: right;
         }
+        .text-left {
+            text-align: left;
+        }
         .text-center {
             text-align: center;
         }
@@ -61,7 +64,7 @@
                     <img src="{{ public_path($companyProfile->image) }}" height="60" alt="Company Logo">
                 </td>
                 <td class="text-right">
-                    <h3>Invoice</h3>
+                    <h1>Invoice</h1>
                 </td>
             </tr>
         </table>
@@ -90,32 +93,20 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th><strong>Barang</strong></th>
-                    <th class="text-center"><strong>Harga</strong></th>
+                    <th class="text-left"><strong>Barang</strong></th>
                     <th class="text-center"><strong>Qty</strong></th>
-                    <th class="text-right"><strong>Total</strong></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($purchaseOrder->items as $item)
                     <tr>
                         <td>{{ $item->barang->deskripsi }}</td>
-                        <td class="text-center">Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
                         <td class="text-center">{{ $item->qty }}</td>
-                        <td class="text-right">Rp {{ number_format($item->qty * $item->harga, 0, ',', '.') }}</td>
                     </tr>
                 @endforeach
                 <tr>
-                    <td class="thick-line"></td>
-                    <td class="thick-line"></td>
-                    <td class="thick-line text-center"><strong>Subtotal</strong></td>
-                    <td class="thick-line text-right">Rp {{ number_format($purchaseOrder->items->sum(fn($item) => $item->qty * $item->harga), 0, ',', '.') }}</td>
-                </tr>
-                <tr>
-                    <td class="no-line"></td>
-                    <td class="no-line"></td>
-                    <td class="no-line text-center"><strong>Total</strong></td>
-                    <td class="no-line text-right"><strong>Rp {{ number_format($purchaseOrder->items->sum(fn($item) => $item->qty * $item->harga), 0, ',', '.') }}</strong></td>
+                    <td class="no-line text-left"><strong>Total</strong></td>
+                    <td class="no-line text-center"><strong>{{ $purchaseOrder->items->sum(fn($item) => $item->qty ) }}</strong></td>
                 </tr>
             </tbody>
         </table>

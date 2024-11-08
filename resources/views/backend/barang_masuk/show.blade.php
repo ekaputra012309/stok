@@ -38,7 +38,7 @@
                                     <td>{{ $BarangMasuk->user->name ?? 'N/A' }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Date</th>
+                                    <th>Tanggal Barang Masuk</th>
                                     <td>{{ $BarangMasuk->created_at->translatedFormat('d F Y') }}</td>
                                 </tr>
                                 <tr>
@@ -60,7 +60,7 @@
                                         @foreach ($BarangMasuk->details as $item)
                                             <tr>
                                                 <td>{{ $item->barang->deskripsi }}</td>
-                                                <td>{{ $item->qty }}</td>
+                                                <td>{{ $item->qty .' '.$item->barang->satuan->name }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
