@@ -46,7 +46,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($databarang as $barang)
-                                    <tr>
+                                    <tr class="bg-{{ $barang->stok < 5 ? 'warning' : '' }}">
                                         <td>
                                             <a class="btn btn-xs btn-primary" href="{{ route('barang.edit', $barang->id) }}">
                                                 <i class="fas fa-edit"></i> Edit

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use App\Models\PermintaanModel;
 use App\Models\CompanyProfile;
+use App\Models\Barang;
+use App\Models\BarangMasukDetail;
+use App\Models\BarangKeluarDetail;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -31,11 +34,15 @@ class Backend extends Controller
         $monthlyIncome = Transaksi::whereBetween('created_at', [$monthlyStart, $today->endOfDay()])->sum('total');
         $yearlyIncome = Transaksi::whereBetween('created_at', [$yearlyStart, $today->endOfDay()])->sum('total');
 
+        $barang = Barang::count();
+        $barang_masuk = BarangMasukDetail::whereDate('created_at', $today)->sum('qty');
+        $barang_keluar = BarangKeluarDetail::whereDate('created_at', $today)->sum('qty');
+
         $data = [
             'title' => 'Dashboard | ',
-            'todayIncome' => $todayIncome,
-            'monthlyIncome' => $monthlyIncome,
-            'yearlyIncome' => $yearlyIncome,
+            'barang' => $barang == '' ? 0 : $barang,
+            'barang_masuk' => $barang_masuk == '' ? 0 : $barang_masuk,
+            'barang_keluar' => $barang_keluar == '' ? 0 : $barang_keluar,            
         ];
         
         return view('backend.dashboard', $data);
