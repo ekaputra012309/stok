@@ -8,6 +8,7 @@ use App\Models\CompanyProfile;
 use App\Models\Barang;
 use App\Models\BarangMasukDetail;
 use App\Models\BarangKeluarDetail;
+use App\Models\BarangBrokenDetail;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -37,12 +38,14 @@ class Backend extends Controller
         $barang = Barang::count();
         $barang_masuk = BarangMasukDetail::whereDate('created_at', $today)->sum('qty');
         $barang_keluar = BarangKeluarDetail::whereDate('created_at', $today)->sum('qty');
+        $barang_broken = BarangBrokenDetail::whereDate('created_at', $today)->sum('qty');
 
         $data = [
             'title' => 'Dashboard | ',
             'barang' => $barang == '' ? 0 : $barang,
             'barang_masuk' => $barang_masuk == '' ? 0 : $barang_masuk,
-            'barang_keluar' => $barang_keluar == '' ? 0 : $barang_keluar,            
+            'barang_keluar' => $barang_keluar == '' ? 0 : $barang_keluar,  
+            'barang_broken' => $barang_broken == '' ? 0 : $barang_broken,  
         ];
         
         return view('backend.dashboard', $data);
