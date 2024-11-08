@@ -89,12 +89,12 @@
                     <div class="inner">
                         <h3>{{ $barang }}</h3>
 
-                        <p>Item Barang</p>
+                        <p>Item Barang {{$role}}</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-bag"></i>
                     </div>
-                    <a href="{{ $role !== 'superadmin' || $role !== 'admin' ? route('dashboard') : route('barang.index') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="{{ $role !== 'superadmin' || $role !== 'admin' ? route('barang.index') : route('dashboard') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <!-- ./col -->

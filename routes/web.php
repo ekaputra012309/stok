@@ -11,6 +11,7 @@ use App\Http\Controllers\Backend\BarangController;
 use App\Http\Controllers\Backend\PurchaseOrderController;
 use App\Http\Controllers\Backend\BarangMasukController;
 use App\Http\Controllers\Backend\BarangKeluarController;
+use App\Http\Controllers\Backend\BarangBrokenController;
 
 // Route::get('/', function () {
 //     return ['Laravel' => app()->version()];
@@ -35,6 +36,7 @@ Route::post('purchase_order/{id}/approve', [PurchaseOrderController::class, 'app
 Route::get('/purchase-order/{id}/print', [PurchaseOrderController::class, 'print'])->name('purchase_order.print');
 Route::post('/barang_masuk/process', [BarangMasukController::class, 'process'])->name('barang_masuk.process');
 Route::get('/barang-keluar/{id}/print', [BarangKeluarController::class, 'print'])->name('barang_keluar.print');
+Route::get('/barang-broken/{id}/print', [BarangBrokenController::class, 'print'])->name('barang_broken.print');
 
 Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -49,6 +51,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('barang_masuk', BarangMasukController::class); //barang_masuk
     Route::resource('barang_keluar', BarangKeluarController::class); //barang_keluar
+    Route::resource('barang_broken', BarangBrokenController::class); //barang_broken
 
 });
 

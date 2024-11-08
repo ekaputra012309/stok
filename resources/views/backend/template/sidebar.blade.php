@@ -70,12 +70,12 @@
                         <p>Barang Keluar</p>
                     </a>
                 </li>
-                <!-- <li class="nav-item">
-                    <a href="{{ route('transaksi.index') }}" class="nav-link {{ request()->routeIs('transaksi.index') ? 'active' : '' }}">                        
-                        <i class="nav-icon fas fa-shopping-cart"></i>
-                        <p>Data Transaksi</p>
+                <li class="nav-item">
+                    <a href="{{ route('barang_broken.index') }}" class="nav-link {{ request()->routeIs('barang_broken.index') ? 'active' : '' }}">                        
+                        <i class="nav-icon fas fa-unlink"></i>
+                        <p>Barang Broken</p>
                     </a>
-                </li> -->
+                </li>
                 
                 @if (in_array($role, ['superadmin', 'admin']))
                 <!-- <li class="nav-item">
