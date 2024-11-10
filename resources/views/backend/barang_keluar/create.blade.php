@@ -51,6 +51,18 @@
                                         <label for="tanggal_keluar">Tanggal Keluar Barang</label>
                                         <input type="date" class="form-control" name="tanggal_keluar" id="tanggal_keluar" value="{{ now()->format('Y-m-d') }}">
                                     </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="barang_template">Barang Template</label>
+                                        <select class="form-control select2bs4" id="barang_template" required>
+                                            <option value="" disabled selected>Select Template</option>
+                                            @foreach ($barang_template as $barang_t)
+                                                <option value="{{ $barang_t->id }}">
+                                                    {{ $barang_t->nama_template }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
 
                                 <!-- Container for Dynamic Barang Items -->
@@ -192,6 +204,59 @@
 
             $(document).on('input', '.qty-input', function() {
                 validateQty(this);
+            });
+
+            $(document).on('change', '#barang_template', function() {
+                const templateId = $(this).val();
+                
+                if (templateId) {
+                    $.ajax({
+                        url: `/barang-template/${templateId}`,
+                        type: 'GET',
+                        success: function(details) {
+                            $('#items-container').empty(); // Clear current details
+                            let itemIndex = 0; // Start fresh for new details
+                            // console.log(details);
+                            details.forEach((item) => {
+                                const satuanName = item.barang && item.barang.satuan ? item.barang.satuan.name : 'N/A';
+
+                                const newItemRow = `
+                                    <div class="item-row row">
+                                        <div class="form-group col-md-4">
+                                            <label for="barang_id">Barang</label>
+                                            <select class="form-control select2bs4" name="items[${itemIndex}][barang_id]" required>
+                                                <option value="${item.barang.barang_id}" selected>${item.barang.deskripsi} (${item.barang.stok} ${satuanName})</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label>Stock</label>
+                                            <input type="text" class="form-control" id="items[${itemIndex}][stok]" value="${item.barang.stok}" readonly>
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="qty">Quantity</label>
+                                            <input type="number" class="form-control qty-input" name="items[${itemIndex}][qty]" value="${item.qty}" placeholder="Quantity" required min="1" max="${item.barang.stok}">
+                                        </div>
+                                        <div class="form-group col-md-2 d-flex align-items-end">
+                                            <button type="button" class="btn btn-danger btn-sm remove-item">Remove</button>
+                                        </div>
+                                    </div>`;
+                                
+                                $('#items-container').append(newItemRow);
+                                itemIndex++;
+                            });
+
+                            // Reinitialize select2 for new items
+                            $('.select2bs4').select2({ theme: 'bootstrap4' });
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Failed to load template items.',
+                            });
+                        }
+                    });
+                }
             });
         });
     </script>

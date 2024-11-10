@@ -30,7 +30,7 @@
                     <div class="inner">
                         <h3>{{ $barang }}</h3>
 
-                        <p>Item Barang {{$role}}</p>
+                        <p>Item Barang</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-bag"></i>

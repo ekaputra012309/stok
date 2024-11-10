@@ -8,6 +8,7 @@ use App\Models\Barang;
 use App\Models\Satuan;
 use App\Models\CompanyProfile;
 use App\Models\BarangKeluar;
+use App\Models\BarangTemplate;
 use App\Models\BarangKeluarDetail;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\DB;
@@ -21,6 +22,7 @@ class BarangKeluarController extends Controller
         $data = [
             'title' => 'Barang Keluar | ',
             'databarang_keluar' => BarangKeluar::with(['details.barang.satuan'])->orderBy('created_at', 'desc')->get(),
+            'databarang_template' => BarangTemplate::with(['details.barang.satuan'])->orderBy('created_at', 'desc')->get(),
         ];
         return view('backend.barang_keluar.index', $data);
     }
@@ -50,9 +52,11 @@ class BarangKeluarController extends Controller
         $datePrefix = Carbon::now()->format('ymd'); // Format: YYMMDD
         $invoiceNumber = $this->generateInvoiceNumber($userId, $datePrefix);
         $barangs = Barang::with('satuan')->where('stok', '>', 0)->get();
+        $barang_template = BarangTemplate::with(['details.barang.satuan'])->get();
         $data = [
             'title' => 'Add Barang Keluar | ',
             'barangs' => $barangs,
+            'barang_template' => $barang_template,
             'invoiceNumber' => $invoiceNumber,
         ];
         return view('backend.barang_keluar.create', $data);
@@ -209,5 +213,16 @@ class BarangKeluarController extends Controller
         $pdf = FacadePdf::loadView('backend.barang_keluar.print_barang_keluar', $data);
         // $pdf->setPaper('A4', 'portrait'); // Set paper size
         return $pdf->stream(''.$barangKeluar->invoice_number.'.pdf'); // Stream the PDF
+    }
+
+    public function getBarangTemplateData($id)
+    {
+        $template = BarangTemplate::with(['details.barang.satuan'])->find($id);
+        // dd($template);
+        if ($template) {
+            return response()->json($template->details);
+        }
+
+        return response()->json([], 404); // Return empty response if template not found
     }
 }
