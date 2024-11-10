@@ -87,5 +87,55 @@
             
         </div>
     </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <span class="text-danger font-italic font-weight-bold">* Data barang dengan stok <= 5 *</span>
+                            </h3>
+                            <div class="card-tools">
+                                <a href="{{ route('purchase_order.create') }}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-plus"></i> Buat Purchase Order (PO)
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table id="example1" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Deskripsi</th>
+                                        <th>Stok</th>
+                                        <th>Uom</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($databarang as $barang)
+                                    <tr>
+                                        <td>{{ $barang->deskripsi }}</td>
+                                        <td>{{ $barang->stok }}</td>
+                                        <td>{{ $barang->satuan->name }}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    </div>
+            </div>        
+        </div>
+    </section>
+    <script>
+        $("#example1").DataTable({
+            "responsive": true,
+            "lengthChange": true,
+            "autoWidth": true,
+            "pageLength": 5,
+            // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    </script>
 </div>
 @endsection

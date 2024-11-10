@@ -46,6 +46,7 @@ class Backend extends Controller
             'barang_masuk' => $barang_masuk == '' ? 0 : $barang_masuk,
             'barang_keluar' => $barang_keluar == '' ? 0 : $barang_keluar,  
             'barang_broken' => $barang_broken == '' ? 0 : $barang_broken,  
+            'databarang' => Barang::with('satuan')->where('stok','<=', 5)->get(),
         ];
         
         return view('backend.dashboard', $data);
