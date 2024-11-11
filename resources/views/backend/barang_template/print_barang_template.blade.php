@@ -82,7 +82,8 @@
                     <p>
                         <strong>Nama:</strong> {{ $barangTemplate->nama_template }} <br>
                         <strong>Tanggal:</strong> {{ $barangTemplate->created_at->translatedFormat('d F Y') }} <br>
-                        <strong>Created by:</strong> {{ $barangTemplate->user->name }} <br>
+                        <strong>Dibuat Oleh:</strong> {{ $barangTemplate->user->name }} <br>
+                        <strong>Dicetak Oleh:</strong> {{ auth()->user()->name }} <br>
                     </p>
                 </td>
             </tr>

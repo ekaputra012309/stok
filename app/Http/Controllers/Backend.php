@@ -6,6 +6,7 @@ use App\Models\Booking;
 use App\Models\PermintaanModel;
 use App\Models\CompanyProfile;
 use App\Models\Barang;
+use App\Models\PurchaseOrder;
 use App\Models\BarangMasukDetail;
 use App\Models\BarangKeluarDetail;
 use App\Models\BarangBrokenDetail;
@@ -47,6 +48,13 @@ class Backend extends Controller
             'barang_keluar' => $barang_keluar == '' ? 0 : $barang_keluar,  
             'barang_broken' => $barang_broken == '' ? 0 : $barang_broken,  
             'databarang' => Barang::with('satuan')->where('stok','<=', 5)->get(),
+            'datapurchase_order' => PurchaseOrder::with(['items.barang.satuan'])
+                                    ->where(function($query) {
+                                        $query->where('status_order', '!=', 'Approved')
+                                            ->orWhereNull('status_order');
+                                    })
+                                    ->orderBy('created_at', 'desc')
+                                    ->get(),
         ];
         
         return view('backend.dashboard', $data);

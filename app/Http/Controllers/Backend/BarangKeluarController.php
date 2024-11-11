@@ -80,7 +80,6 @@ class BarangKeluarController extends Controller
                 'invoice_number' => $request->invoice_number,
                 'user_id' => auth()->user()->id, // Assuming the user is authenticated
                 'tanggal_keluar' => $request->tanggal_keluar, // Use the provided date
-                'note' => $request->note,
             ]);
 
             // Loop through the items to create BarangKeluarDetail entries and update stock

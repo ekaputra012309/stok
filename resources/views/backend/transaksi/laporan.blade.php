@@ -43,12 +43,20 @@
                                             </button>
                                         </div>
                                         <div class="form-group">
-                                            <input type="text" id="daterange" class="form-control" readonly>
-                                            <input type="hidden" name="startDate" id="startDate" class="form-control" readonly>
+                                            <input type="text" id="daterange" class="form-control" readonly >
+                                            <input type="hidden" name="startDate" id="startDate" class="form-control" readonly> 
                                             <input type="hidden" name="endDate" id="endDate" class="form-control" readonly>
                                         </div>
+                                        <div class="form-group">
+                                            <select name="type_transaksi" id="type_transaksi" class="form-control select2bs4" required>
+                                                <option value="">Pilih Jenis Transaksi</option>
+                                                <option value="barang_masuk">Barang Masuk</option>
+                                                <option value="barang_keluar">Barang Keluar</option>
+                                                <option value="barang_broken">Barang Broken</option>
+                                            </select>
+                                        </div>
                                         <div class="form-group text-center">
-                                            <button type="submit" class="btn btn-primary w-100">Print Laporan</button>
+                                            <button type="submit" class="btn btn-primary w-100" id="printButton" disabled>Print Laporan</button>
                                         </div>
                                     </div>
                                 </div>
@@ -62,6 +70,10 @@
 
     <script>
         $(function () {
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            });
+
             $('#daterange-btn').daterangepicker(
                 {
                     ranges   : {
@@ -78,9 +90,21 @@
                 function (start, end) {
                     $('#daterange').val(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
                     $('#startDate').val(start.format('YYYY-MM-DD'));
-                    $('#endDate').val(end.format('YYYY-MM-DD'))
+                    $('#endDate').val(end.format('YYYY-MM-DD'));
+
+                    // Enable the print button if date range is selected
+                    if ($('#startDate').val() && $('#endDate').val()) {
+                        $('#printButton').prop('disabled', false); // Enable button
+                    } else {
+                        $('#printButton').prop('disabled', true); // Disable button
+                    }
                 }
             );
+
+            // Check if date range is already selected on page load
+            if ($('#startDate').val() && $('#endDate').val()) {
+                $('#printButton').prop('disabled', false); // Enable button if date range is pre-filled
+            }
         });
     </script>
 </div>

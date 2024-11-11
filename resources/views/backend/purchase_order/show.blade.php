@@ -1,3 +1,7 @@
+@php
+    $role = App\Models\Privilage::getRoleKodeForAuthenticatedUser();
+@endphp
+
 @extends('backend.template.app')
 
 @section('content')
@@ -73,6 +77,7 @@
                                 </table>
                             </div>
 
+                            @if (in_array($role, ['superadmin', 'owner']))
                             <h4 class="mt-4">Approval</h4>
                             <form action="{{ route('purchase_order.approve', $PurchaseOrder->id) }}" method="POST">
                                 @csrf
@@ -109,6 +114,7 @@
                                     }
                                 });
                             </script>
+                            @endif
                         </div>
 
                         <div class="card-footer">

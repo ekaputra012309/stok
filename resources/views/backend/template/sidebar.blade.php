@@ -29,6 +29,7 @@
                     </a>
                 </li>
 
+                @if (in_array($role, ['superadmin', 'owner', 'admin']))
                 <li class="nav-header">Master</li>
 
                 <li class="nav-item">
@@ -49,6 +50,7 @@
                         </li>
                     </ul>
                 </li>
+                @endif
 
                 <li class="nav-header">Transaksi</li>
 
@@ -77,14 +79,18 @@
                     </a>
                 </li>
                 
-                @if (in_array($role, ['superadmin', 'admin']))
-                <!-- <li class="nav-item">
+                @if (in_array($role, ['superadmin', 'owner', 'admin']))
+                <li class="nav-header">Laporan</li>
+
+                <li class="nav-item">
                     <a href="{{ route('transaksi.laporan') }}" class="nav-link {{ request()->routeIs('transaksi.laporan') ? 'active' : '' }}">                        
                         <i class="nav-icon fas fa-list-alt"></i>
                         <p>Laporan Transaksi</p>
                     </a>
-                </li> -->
+                </li>
+                @endif
 
+                @if (in_array($role, ['superadmin', 'owner']))
                 <li class="nav-header">Settings</li>
 
                 <li class="nav-item">

@@ -91,7 +91,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-12">
+                <div class="@if ($role == 'superadmin' || $role == 'owner') col-md-6 @else col-md-12 @endif col-12">
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">
@@ -103,7 +103,7 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body table-responsive">
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
@@ -124,12 +124,79 @@
                             </table>
                         </div>
                     </div>
+                </div>
+
+                @if (in_array($role, ['superadmin', 'owner']))
+                <div class="col-md-6 col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <span class="text-danger font-italic font-weight-bold">* Data PO belum proses!! *</span>
+                            </h3>
+                            <div class="card-tools">
+                                
+                            </div>
+                        </div>
+                        <div class="card-body table-responsive">
+                            <table id="example2" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Tanggal</th>
+                                        <th>Nama Barang</th>
+                                        <th>Qty</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($datapurchase_order as $purchaseOrder)
+                                        <tr>
+                                            <td>
+                                                <a class="btn btn-xs btn-dark" href="{{ route('purchase_order.show', $purchaseOrder->id) }}">
+                                                    <i class="fas fa-eye"></i> Proses
+                                                </a> <br>
+                                            </td>
+                                            <td>{{ $purchaseOrder->created_at->translatedFormat('d F Y') }}</td>
+                                            <td>
+                                                @foreach ($purchaseOrder->items as $item)
+                                                    {{ $item->barang->deskripsi }} <strong>({{ $item->qty }} @if ($item->barang->satuan) {{ $item->barang->satuan->name }} @endif)</strong><br>
+                                                @endforeach
+                                            </td>
+                                            <td>
+                                                @php
+                                                    $totalQty = $purchaseOrder->items->sum('qty');
+                                                    echo $totalQty; // Total quantity of items
+                                                @endphp
+                                            </td>
+                                            <td>
+                                                <span class="btn btn-sm 
+                                                    @switch($purchaseOrder->status_order)
+                                                        @case('Rejected')
+                                                            btn-warning
+                                                            @break
+                                                        @case('Approved')
+                                                            btn-success
+                                                            @break
+                                                        @default
+                                                            btn-secondary
+                                                    @endswitch
+                                                ">
+                                                    {{ $purchaseOrder->status_order ?: 'Belum Diproses' }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+                </div>
+                @endif
             </div>        
         </div>
     </section>
     <script>
-        $("#example1").DataTable({
+        $("#example1, #example2").DataTable({
             "responsive": true,
             "lengthChange": true,
             "autoWidth": true,

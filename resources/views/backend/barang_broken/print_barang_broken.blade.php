@@ -82,7 +82,8 @@
                     <p>
                         <strong>Invoice No.</strong> {{ $barangBroken->invoice_number }} <br>
                         <strong>Invoice Date:</strong> {{ $barangBroken->created_at->translatedFormat('d F Y') }} <br>
-                        <strong>Created by:</strong> {{ $barangBroken->user->name }} <br>
+                        <strong>Dibuat Oleh:</strong> {{ $barangBroken->user->name }} <br>
+                        <strong>Dicetak Oleh:</strong> {{ auth()->user()->name }} <br>
                     </p>
                 </td>
             </tr>

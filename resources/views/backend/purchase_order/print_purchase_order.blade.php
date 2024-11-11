@@ -82,7 +82,8 @@
                     <p>
                         <strong>Invoice No.</strong> {{ $purchaseOrder->invoice_number }} <br>
                         <strong>Invoice Date:</strong> {{ $purchaseOrder->created_at->translatedFormat('d F Y') }} <br>
-                        <strong>Created by:</strong> {{ $purchaseOrder->user->name }} <br>
+                        <strong>Dibuat Oleh:</strong> {{ $purchaseOrder->user->name }} <br>
+                        <strong>Dicetak Oleh:</strong> {{ auth()->user()->name }} <br>
                     </p>
                 </td>
             </tr>

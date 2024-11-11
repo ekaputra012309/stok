@@ -1,112 +1,148 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <link rel="shortcut icon" href="{{ asset('backend/img/logo.ico') }}" type="image/x-icon">
-    <title>{{ $title . config('app.name') }}</title>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{{ public_path('backend/img/logo.ico') }}" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan</title>    
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
             width: 100%;
-            margin: 0;
-            padding: 0;
-            font-size: 11px;
+            margin: 0 auto;
+        }
+        .text-left {
+            text-align: left;
+        }
+        .text-right {
+            text-align: right;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .w-100 {
+            width: 100%;
         }
         h3 {
-            text-align: center;
-        }
-        p {
-            text-align: center;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
             margin: 0;
         }
-        th {
-            text-align: center;
-            padding: 5px;
-            line-height: 1.2;
-            border: 1px solid #000; /* Border for all cells */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
-        td {
-            text-align: right;
-            vertical-align: top;
-            padding: 5px;
-            line-height: 1.2;
-            border: 1px solid #000; /* Border for all cells */
+        .table th, .table td {
+            border: 1px solid #ced4da;
+            padding: 4px;
         }
         .footer {
             text-align: center;
+            margin-top: 30px;
+            font-size: 0.9em;
         }
-        .price {
-            text-align: right;
+        .no-line {
+            border-top: none;
         }
-        .total-row {
-            font-weight: bold;
-            text-align: right;
+        .thick-line {
+            border-top: 2px solid #ced4da;
+        }
+        p {
+            margin: 0;
+        }
+        .invoice-header {
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <h3>{{ config('app.name') }}</h3>
-    <p>
-        Laporan dari tanggal 
-        {{ \Carbon\Carbon::parse($startDate)->translatedFormat('d F Y') }} s/d 
-        {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d F Y') }}
-    </p>
 
-    <table>
-        <thead>
+<div class="container">
+    <div class="row">
+        <table class="w-100">
             <tr>
-                <th>No</th>
-                <th>Petugas</th>
-                <th>No Invoice</th>
-                <th>Tanggal Transaksi</th>
-                <th>Qty</th>
-                <th>Harga</th>
-                <th>Total</th>
-                <th>Sub Total</th>
+                <td>
+                    <img src="{{ public_path($companyProfile->image) }}" height="60" alt="Company Logo">
+                </td>
+                <td class="text-right">
+                    <h2>Laporan {{ $judul }}</h2>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @php
-                $grandTotal = 0;
-                $rowNumber = 0;
-            @endphp
-            @foreach ($datatransaksi as $transaksi)
+        </table>
+        <table class="w-100">
+            <tr>                    
+                <td>
+                    <p>
+                        {{ $companyProfile->name }} <br>
+                        {{ $companyProfile->address }} <br>
+                        Phone: {{ $companyProfile->phone }} <br> 
+                        Email: {{ $companyProfile->email }}
+                    </p>
+                </td>
+                <td class="text-right">
+                    <p>
+                        <strong>Dicetak Oleh:</strong> {{ auth()->user()->name }} <br>
+                        <strong>Dari tanggal:</strong> {{ \Carbon\Carbon::parse($startDate)->translatedFormat('d F Y') }} <br>
+                        <strong>Sampai tanggal:</strong> {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d F Y') }} <br>
+                    </p>
+                </td>
+            </tr>
+        </table>       
+    </div>
+    
+    <div class="row">
+        <table class="table">
+            <thead>
                 <tr>
-                    <td style="text-align: center;">{{ ++$rowNumber }}</td>
-                    <td>{{ $transaksi->user->name }}</td>
-                    <td>{{ $transaksi->no_inv }}</td>
-                    <td>{{ \Carbon\Carbon::parse($transaksi->created_at)->translatedFormat('d F Y, H:i') }}</td>
-                    <td>
-                        @foreach ($transaksi->details as $detail)
-                            {{ $detail->qty }}<br>
-                        @endforeach
-                    </td>
-                    <td>
-                        @foreach ($transaksi->details as $detail)
-                            Rp {{ number_format($detail->harga, 0, ',', '.') }}<br>
-                        @endforeach
-                    </td>
-                    <td>
-                        @foreach ($transaksi->details as $detail)
-                            Rp {{ number_format($detail->qty*$detail->harga, 0, ',', '.') }}<br>
-                        @endforeach
-                    </td>
-                    <td class="price">Rp {{ number_format($transaksi->total, 0, ',', '.') }}</td>
+                    <th class="text-left"><strong>Invoice No.</strong></th>
+                    <th class="text-left"><strong>Invoice Date</strong></th>
+                    <th class="text-left"><strong>Barang</strong></th>
+                    <th class="text-center"><strong>Qty</strong></th>
                 </tr>
-                @php
-                    $grandTotal += $transaksi->total; // Sum total for the invoice
-                @endphp
-            @endforeach
-        </tbody>
-        <tfoot>
-            <tr>
-                <td colspan="7"><b>Grand Total</b></td>
-                <td class="price"><b>Rp {{ number_format($grandTotal, 0, ',', '.') }}</b></td>
-            </tr>
-        </tfoot>
-    </table>
+            </thead>
+            <tbody>
+                @if ($datatransaksi->isEmpty())
+                    <tr>
+                        <td colspan="4" class="no-data text-center">Data transaksi tidak ditemukan untuk periode yang dipilih.</td>
+                    </tr>
+                @else
+                    @foreach ($datatransaksi as $detailitem)
+                        <!-- Display the invoice header information -->
+                        <tr class="invoice-header">
+                            <td>
+                                @if ($type == 'barang_masuk')
+                                    {{ $detailitem->purchaseOrder->invoice_number }}
+                                @else
+                                    {{ $detailitem->invoice_number }}
+                                @endif
+                            </td>
+                            <td>{{ $detailitem->created_at->translatedFormat('d F Y') }}</td>
+                            <td colspan="2">Dibuat Oleh: {{ $detailitem->user->name }}</td>
+                        </tr>
+
+                        <!-- Display each item's details under the current invoice -->
+                        @foreach ($detailitem->details as $item)
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>{{ $item->barang->deskripsi }}</td>
+                                <td class="text-center">{{ $item->qty }}</td>
+                            </tr>
+                        @endforeach
+
+                        <!-- Display the total for the current invoice -->
+                        <tr>
+                            <td colspan="3" class="no-line text-left"><strong>Total</strong></td>
+                            <td class="no-line text-center"><strong>{{ $detailitem->details->sum(fn($item) => $item->qty) }}</strong></td>
+                        </tr>
+                    @endforeach
+                @endif
+            </tbody>
+        </table>
+    </div>
+</div>
+
 </body>
 </html>

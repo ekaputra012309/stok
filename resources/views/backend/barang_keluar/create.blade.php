@@ -54,7 +54,7 @@
 
                                     <div class="form-group col-md-4">
                                         <label for="barang_template">Barang Template</label>
-                                        <select class="form-control select2bs4" id="barang_template" required>
+                                        <select class="form-control select2bs4" id="barang_template">
                                             <option value="" disabled selected>Select Template</option>
                                             @foreach ($barang_template as $barang_t)
                                                 <option value="{{ $barang_t->id }}">
@@ -225,7 +225,7 @@
                                         <div class="form-group col-md-4">
                                             <label for="barang_id">Barang</label>
                                             <select class="form-control select2bs4" name="items[${itemIndex}][barang_id]" required>
-                                                <option value="${item.barang.barang_id}" selected>${item.barang.deskripsi} (${item.barang.stok} ${satuanName})</option>
+                                                <option value="${item.barang.id}" selected>${item.barang.deskripsi} (${item.barang.stok} ${satuanName})</option>
                                             </select>
                                         </div>
                                         <div class="form-group col-md-2">
