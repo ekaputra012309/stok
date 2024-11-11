@@ -31,10 +31,6 @@ class Backend extends Controller
         $today = Carbon::today();
         $monthlyStart = $today->copy()->startOfMonth();
         $yearlyStart = $today->copy()->startOfYear();
-        
-        $todayIncome = Transaksi::whereDate('created_at', $today)->sum('total');
-        $monthlyIncome = Transaksi::whereBetween('created_at', [$monthlyStart, $today->endOfDay()])->sum('total');
-        $yearlyIncome = Transaksi::whereBetween('created_at', [$yearlyStart, $today->endOfDay()])->sum('total');
 
         $barang = Barang::count();
         $barang_masuk = BarangMasukDetail::whereDate('created_at', $today)->sum('qty');
