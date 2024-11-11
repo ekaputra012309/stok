@@ -40,7 +40,7 @@ Route::get('/barang-keluar/{id}/print', [BarangKeluarController::class, 'print']
 Route::get('/barang-broken/{id}/print', [BarangBrokenController::class, 'print'])->name('barang_broken.print');
 Route::get('/barang-template/{id}/print', [BarangTemplateController::class, 'print'])->name('barang_template.print');
 // Route to get barang template data
-Route::get('/barang-template/{id}', [BarangKeluarController::class,'getBarangTemplateData'])->name('barang_template.data');
+Route::get('barang-template/{id}', [BarangKeluarController::class, 'getBarangTemplateData'])->name('barang_template.get_data');
 
 Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

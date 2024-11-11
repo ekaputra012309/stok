@@ -115,6 +115,10 @@
     </section>
 
     <script>
+        const barangTemplateUrl = "{{ route('barang_template.get_data', ':id') }}";
+    </script>
+
+    <script>
         $(function() {
             $('.select2bs4').select2({
                 theme: 'bootstrap4'
@@ -207,48 +211,58 @@
             });
 
             $(document).on('change', '#barang_template', function() {
-                const templateId = $(this).val();
+                const templateId = $(this).val(); // Get selected template ID
                 
                 if (templateId) {
+                    // Replace :id with the actual template ID in the URL
+                    const url = barangTemplateUrl.replace(':id', templateId);
+                    
                     $.ajax({
-                        url: `/barang-template/${templateId}`,
+                        url: url, // Dynamic URL for fetching template data
                         type: 'GET',
                         success: function(details) {
-                            $('#items-container').empty(); // Clear current details
-                            let itemIndex = 0; // Start fresh for new details
-                            // console.log(details);
-                            details.forEach((item) => {
-                                const satuanName = item.barang && item.barang.satuan ? item.barang.satuan.name : 'N/A';
+                            $('#items-container').empty(); // Clear current details if any
+                            
+                            if (details.length === 0) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'No Data Found',
+                                    text: 'No template items found for this template.',
+                                });
+                                return;
+                            }
 
+                            details.forEach((item, index) => {
+                                const satuanName = item.barang && item.barang.satuan ? item.barang.satuan.name : 'N/A';
                                 const newItemRow = `
                                     <div class="item-row row">
                                         <div class="form-group col-md-4">
                                             <label for="barang_id">Barang</label>
-                                            <select class="form-control select2bs4" name="items[${itemIndex}][barang_id]" required>
+                                            <select class="form-control select2bs4" name="items[${index}][barang_id]" required>
                                                 <option value="${item.barang.id}" selected>${item.barang.deskripsi} (${item.barang.stok} ${satuanName})</option>
                                             </select>
                                         </div>
                                         <div class="form-group col-md-2">
                                             <label>Stock</label>
-                                            <input type="text" class="form-control" id="items[${itemIndex}][stok]" value="${item.barang.stok}" readonly>
+                                            <input type="text" class="form-control" id="items[${index}][stok]" value="${item.barang.stok}" readonly>
                                         </div>
                                         <div class="form-group col-md-2">
                                             <label for="qty">Quantity</label>
-                                            <input type="number" class="form-control qty-input" name="items[${itemIndex}][qty]" value="${item.qty}" placeholder="Quantity" required min="1" max="${item.barang.stok}">
+                                            <input type="number" class="form-control qty-input" name="items[${index}][qty]" value="${item.qty}" placeholder="Quantity" required min="1" max="${item.barang.stok}">
                                         </div>
                                         <div class="form-group col-md-2 d-flex align-items-end">
                                             <button type="button" class="btn btn-danger btn-sm remove-item">Remove</button>
                                         </div>
                                     </div>`;
                                 
-                                $('#items-container').append(newItemRow);
-                                itemIndex++;
+                                $('#items-container').append(newItemRow); // Append new row
                             });
 
-                            // Reinitialize select2 for new items
+                            // Reinitialize select2 for the new items
                             $('.select2bs4').select2({ theme: 'bootstrap4' });
                         },
-                        error: function() {
+                        error: function(xhr) {
+                            console.error(xhr.responseText); // Log the error
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error',
@@ -258,6 +272,7 @@
                     });
                 }
             });
+
         });
     </script>
 
