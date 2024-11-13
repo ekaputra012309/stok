@@ -38,8 +38,8 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="form-group col-md-4">
-                                        <label for="invoice_number">No Order</label>
-                                        <input type="text" class="form-control" id="invoice_number" name="invoice_number" placeholder="No Order" value="{{ $barangBroken->invoice_number }}" readonly required>
+                                        <label for="invoice_number">No Invoice</label>
+                                        <input type="text" class="form-control" id="invoice_number" name="invoice_number" placeholder="No Invoice" value="{{ $barangBroken->invoice_number }}" readonly required>
                                     </div>
 
                                     <!-- Tanggal broken Field -->
@@ -59,7 +59,7 @@
                                                     <option value="" disabled>Select Barang</option>
                                                     @foreach ($barangs as $barang)
                                                         <option value="{{ $barang->id }}" data-stok="{{ $barang->stok }}" {{ $item->barang_id == $barang->id ? 'selected' : '' }}>
-                                                            {{ $barang->deskripsi }}
+                                                            {{$barang->part_number}}  {{ $barang->deskripsi }}
                                                         </option>
                                                     @endforeach
                                                 </select>

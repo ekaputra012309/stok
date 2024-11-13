@@ -55,7 +55,7 @@
                                     <tbody>
                                         @foreach ($barangBroken->details as $item)
                                             <tr>
-                                                <td>{{ $item->barang->deskripsi }}</td>
+                                                <td><strong>({{ $item->barang->part_number }})</strong> {{ $item->barang->deskripsi }}</td>
                                                 <td>{{ $item->qty .' '.$item->barang->satuan->name }}</td>
                                             </tr>
                                         @endforeach

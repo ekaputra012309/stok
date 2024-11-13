@@ -37,8 +37,8 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="form-group col-md-4">
-                                        <label for="invoice_number">No Order</label>
-                                        <input type="text" class="form-control @error('invoice_number') is-invalid @enderror" id="invoice_number" name="invoice_number" placeholder="No Order" value="{{ $invoiceNumber }}" readonly required>
+                                        <label for="invoice_number">No Invoice</label>
+                                        <input type="text" class="form-control @error('invoice_number') is-invalid @enderror" id="invoice_number" name="invoice_number" placeholder="No Invoice" required>
                                         @error('invoice_number')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -74,7 +74,7 @@
                                                 <option value="" disabled selected>Select Barang</option>
                                                 @foreach ($barangs as $barang)
                                                     <option value="{{ $barang->id }}" data-stok="{{ $barang->stok }}">
-                                                        {{ $barang->deskripsi . ' (' . $barang->stok . ' ' . $barang->satuan->name . ')' }}
+                                                        <strong>{{ $barang->part_number }}</strong> {{ $barang->deskripsi . ' (' . $barang->stok . ' ' . $barang->satuan->name . ')' }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -167,7 +167,7 @@
                             <select class="form-control select2bs4" name="items[${itemIndex}][barang_id]" required>
                                 <option value="" disabled selected>Select Barang</option>
                                 @foreach ($barangs as $barang)
-                                    <option value="{{ $barang->id }}" data-stok="{{ $barang->stok }}">{{ $barang->deskripsi . ' (' . $barang->stok . ' ' . $barang->satuan->name . ')' }}</option>
+                                    <option value="{{ $barang->id }}" data-stok="{{ $barang->stok }}"><strong>{{ $barang->part_number }}</strong> {{ $barang->deskripsi . ' (' . $barang->stok . ' ' . $barang->satuan->name . ')' }}</option>
                                 @endforeach
                             </select>
                         </div>

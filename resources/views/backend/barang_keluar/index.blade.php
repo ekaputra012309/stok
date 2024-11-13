@@ -56,7 +56,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
-                                                        <th>No Order</th>
+                                                        <th>No Invoice</th>
                                                         <th>Stok Aktual</th>
                                                         <th>Nama Barang</th>
                                                         <th>Qty</th>
@@ -107,6 +107,7 @@
                                                     <tr>
                                                         <th>#</th>
                                                         <th>Nama Template</th>
+                                                        <th>Part Number</th>
                                                         <th>Nama Barang</th>
                                                         <th>Qty</th>
                                                     </tr>
@@ -129,6 +130,11 @@
                                                                 </button>
                                                             </td>
                                                             <td>{{ $barangTemplate->nama_template }}</td>
+                                                            <td>
+                                                                @foreach ($barangTemplate->details as $item)
+                                                                    <strong>({{ $item->barang->part_number }})</strong>
+                                                                @endforeach
+                                                            </td>
                                                             <td>
                                                                 @foreach ($barangTemplate->details as $item)
                                                                     {{ $item->barang->deskripsi }} <strong>({{ $item->qty }} @if ($item->barang->satuan) {{ $item->barang->satuan->name }} @endif)</strong><br>

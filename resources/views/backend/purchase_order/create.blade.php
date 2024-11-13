@@ -37,7 +37,7 @@
                             <div class="card-body">
                                 <div class="form-group col-md-4">
                                     <label for="invoice_number">Invoice Number</label>
-                                    <input type="text" class="form-control @error('invoice_number') is-invalid @enderror" id="invoice_number" name="invoice_number" placeholder="Invoice Number" value="{{ $invoiceNumber }}" readonly required>
+                                    <input type="text" class="form-control @error('invoice_number') is-invalid @enderror" id="invoice_number" name="invoice_number" placeholder="Invoice Number" required>
                                     @error('invoice_number')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -53,7 +53,7 @@
                                             <select class="form-control select2bs4" name="items[0][barang_id]" required>
                                                 <option value="" disabled selected>Select Barang</option>
                                                 @foreach ($barangs as $barang)
-                                                    <option value="{{ $barang->id }}">{{ $barang->deskripsi }}</option>
+                                                    <option value="{{ $barang->id }}">({{ $barang->part_number }}) {{ $barang->deskripsi }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -117,7 +117,7 @@
                             <select class="form-control select2bs4" name="items[${itemIndex}][barang_id]" required>
                                 <option value="" disabled selected>Select Barang</option>
                                 @foreach ($barangs as $barang)
-                                    <option value="{{ $barang->id }}">{{ $barang->deskripsi }}</option>
+                                    <option value="{{ $barang->id }}">({{ $barang->part_number }}) {{ $barang->deskripsi }}</option>
                                 @endforeach
                             </select>
                         </div>

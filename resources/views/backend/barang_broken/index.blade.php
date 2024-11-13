@@ -38,7 +38,8 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>No Order</th>
+                                        <th>No Invoice</th>
+                                        <th>Part Number</th>
                                         <th>Nama Barang</th>
                                         <th>Qty</th>
                                     </tr>
@@ -51,7 +52,7 @@
                                                     <i class="fas fa-eye"></i> Show
                                                 </a> <br>
                                                 <a class="btn btn-xs btn-success" href="{{ route('barang_broken.print', $barangBroken->id) }}" target="_blank">
-                                                    <i class="fas fa-print"></i> Print Order
+                                                    <i class="fas fa-print"></i> Print
                                                 </a> <br>
                                                 <a class="btn btn-xs btn-primary" href="{{ route('barang_broken.edit', $barangBroken->id) }}">
                                                     <i class="fas fa-edit"></i> Edit
@@ -61,6 +62,11 @@
                                                 </button>
                                             </td>
                                             <td>{{ $barangBroken->invoice_number }}</td>
+                                            <td>
+                                                @foreach ($barangBroken->details as $item)
+                                                    <strong>({{ $item->barang->part_number }})</strong>
+                                                @endforeach
+                                            </td>
                                             <td>
                                                 @foreach ($barangBroken->details as $item)
                                                     {{ $item->barang->deskripsi }} <strong>({{ $item->qty }} @if ($item->barang->satuan) {{ $item->barang->satuan->name }} @endif)</strong><br>

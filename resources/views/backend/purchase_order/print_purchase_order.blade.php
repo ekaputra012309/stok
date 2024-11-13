@@ -101,7 +101,7 @@
             <tbody>
                 @foreach ($purchaseOrder->items as $item)
                     <tr>
-                        <td>{{ $item->barang->deskripsi }}</td>
+                        <td><strong>({{ $item->barang->part_number }})</strong> {{ $item->barang->deskripsi }}</td>
                         <td class="text-center">{{ $item->qty }}</td>
                     </tr>
                 @endforeach

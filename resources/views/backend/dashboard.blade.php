@@ -115,7 +115,7 @@
                                 <tbody>
                                     @foreach ($databarang as $barang)
                                     <tr>
-                                        <td>{{ $barang->deskripsi }}</td>
+                                        <td><strong>({{$barang->part_number}})</strong> {{ $barang->deskripsi }}</td>
                                         <td>{{ $barang->stok }}</td>
                                         <td>{{ $barang->satuan->name }}</td>
                                     </tr>
@@ -159,7 +159,7 @@
                                             <td>{{ $purchaseOrder->created_at->translatedFormat('d F Y') }}</td>
                                             <td>
                                                 @foreach ($purchaseOrder->items as $item)
-                                                    {{ $item->barang->deskripsi }} <strong>({{ $item->qty }} @if ($item->barang->satuan) {{ $item->barang->satuan->name }} @endif)</strong><br>
+                                                    <strong>({{$item->barang->part_number}})</strong> {{ $item->barang->deskripsi }} <strong>({{ $item->qty }} @if ($item->barang->satuan) {{ $item->barang->satuan->name }} @endif)</strong><br>
                                                 @endforeach
                                             </td>
                                             <td>

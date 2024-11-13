@@ -53,7 +53,7 @@
                                                     <option value="" disabled>Select Barang</option>
                                                     @foreach ($barangs as $barang)
                                                         <option value="{{ $barang->id }}" data-stok="{{ $barang->stok }}" {{ $item->barang_id == $barang->id ? 'selected' : '' }}>
-                                                            {{ $barang->deskripsi }}
+                                                            {{$barang->part_number}} {{ $barang->deskripsi }}
                                                         </option>
                                                     @endforeach
                                                 </select>
@@ -118,7 +118,7 @@
                             <select class="form-control select2bs4" name="items[${itemIndex}][barang_id]" required>
                                 <option value="" disabled selected>Select Barang</option>
                                 @foreach ($barangs as $barang)
-                                    <option value="{{ $barang->id }}" data-stok="{{ $barang->stok }}">{{ $barang->deskripsi }}</option>
+                                    <option value="{{ $barang->id }}" data-stok="{{ $barang->stok }}">{{$barang->part_number}} {{ $barang->deskripsi }}</option>
                                 @endforeach
                             </select>
                         </div>

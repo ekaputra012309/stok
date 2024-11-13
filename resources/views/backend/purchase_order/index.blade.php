@@ -39,6 +39,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>No Invoice</th>
+                                        <th>Part Number</th>
                                         <th>Nama Barang</th>
                                         <th>Qty</th>
                                         <th>Status</th>
@@ -66,6 +67,11 @@
                                                 @endif
                                             </td>
                                             <td>{{ $purchaseOrder->invoice_number }}</td>
+                                            <td>
+                                                @foreach ($purchaseOrder->items as $item)
+                                                    <strong>({{ $item->barang->part_number }})</strong>
+                                                @endforeach
+                                            </td>
                                             <td>
                                                 @foreach ($purchaseOrder->items as $item)
                                                     {{ $item->barang->deskripsi }} <strong>({{ $item->qty }} @if ($item->barang->satuan) {{ $item->barang->satuan->name }} @endif)</strong><br>

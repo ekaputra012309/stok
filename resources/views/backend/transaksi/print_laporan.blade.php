@@ -127,7 +127,7 @@
                             <tr>
                                 <td></td>
                                 <td></td>
-                                <td>{{ $item->barang->deskripsi }}</td>
+                                <td><strong>({{ $item->barang->part_number }})</strong> {{ $item->barang->deskripsi }}</td>
                                 <td class="text-center">{{ $item->qty }}</td>
                             </tr>
                         @endforeach
