@@ -56,16 +56,18 @@
                                 <!-- Container for Dynamic Barang Items -->
                                 <div id="items-container">
                                     <div class="item-row row">
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-2">
                                             <label for="barang_id">Barang</label>
-                                            <select class="form-control select2bs4" name="items[0][barang_id]" required>
-                                                <option value="" disabled selected>Select Barang</option>
+                                            <select class="form-control select2bs4 barang-select" name="items[0][barang_id]" required>
+                                                <option value="" data-deskripsi="" disabled selected>Select Part Number</option>
                                                 @foreach ($barangs as $barang)
-                                                    <option value="{{ $barang->id }}" data-stok="{{ $barang->stok }}">
-                                                        <strong>{{ $barang->part_number }}</strong> {{ $barang->deskripsi }}
-                                                    </option>
+                                                    <option value="{{ $barang->id }}" data-deskripsi="{{ $barang->deskripsi }}">{{ $barang->part_number }}</option>
                                                 @endforeach
                                             </select>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="deskripsi">Deskripsi</label>
+                                            <input type="text" class="form-control deskripsi-input" name="deskripsi_display" placeholder="Deskripsi" readonly>
                                         </div>
                                         <div class="form-group col-md-2">
                                             <label for="qty">Quantity</label>
@@ -127,14 +129,18 @@
             $('#add-item').on('click', function() {
                 const newItemRow = `
                     <div class="item-row row">
+                        <div class="form-group col-md-2">
+                        <label for="barang_id">Barang</label>
+                        <select class="form-control select2bs4 barang-select" name="items[${itemIndex}][barang_id]" required>
+                            <option value="" data-deskripsi="" disabled selected>Select Part Number</option>
+                            @foreach ($barangs as $barang)
+                                <option value="{{ $barang->id }}" data-deskripsi="{{ $barang->deskripsi }}">{{ $barang->part_number }}</option>
+                            @endforeach
+                        </select>
+                        </div>
                         <div class="form-group col-md-4">
-                            <label for="barang_id">Barang</label>
-                            <select class="form-control select2bs4" name="items[${itemIndex}][barang_id]" required>
-                                <option value="" disabled selected>Select Barang</option>
-                                @foreach ($barangs as $barang)
-                                    <option value="{{ $barang->id }}" data-stok="{{ $barang->stok }}">{{ $barang->deskripsi }}</option>
-                                @endforeach
-                            </select>
+                            <label for="deskripsi">Deskripsi</label>
+                            <input type="text" class="form-control deskripsi-input" name="deskripsi_display" placeholder="Deskripsi" readonly>
                         </div>
                         <div class="form-group col-md-2">
                             <label for="qty">Quantity</label>
@@ -159,6 +165,11 @@
             $(document).on('click', '.remove-item', function() {
                 $(this).closest('.item-row').remove();
                 updateOptions();
+            });
+
+            $(document).on('change', '.barang-select', function() {
+                const deskripsi = $(this).find('option:selected').data('deskripsi');
+                $(this).closest('.item-row').find('.deskripsi-input').val(deskripsi);
             });
         });
     </script>

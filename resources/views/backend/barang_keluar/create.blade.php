@@ -68,16 +68,20 @@
                                 <!-- Container for Dynamic Barang Items -->
                                 <div id="items-container">
                                     <div class="item-row row">
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-2">
                                             <label for="barang_id">Barang</label>
                                             <select class="form-control select2bs4" name="items[0][barang_id]" required>
                                                 <option value="" disabled selected>Select Barang</option>
                                                 @foreach ($barangs as $barang)
-                                                    <option value="{{ $barang->id }}" data-stok="{{ $barang->stok }}">
-                                                        <strong>{{ $barang->part_number }}</strong> {{ $barang->deskripsi . ' (' . $barang->stok . ' ' . $barang->satuan->name . ')' }}
+                                                    <option value="{{ $barang->id }}" data-stok="{{ $barang->stok }}" data-deskripsi="{{ $barang->deskripsi }}">
+                                                        {{ $barang->part_number }}
                                                     </option>
                                                 @endforeach
                                             </select>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label>Deskripsi</label>
+                                            <input type="text" class="form-control" id="items[0][deskripsi]" readonly>
                                         </div>
                                         <div class="form-group col-md-2">
                                             <label>Stock</label>
@@ -162,14 +166,20 @@
             $('#add-item').on('click', function() {
                 const newItemRow = `
                     <div class="item-row row">
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-2">
                             <label for="barang_id">Barang</label>
                             <select class="form-control select2bs4" name="items[${itemIndex}][barang_id]" required>
                                 <option value="" disabled selected>Select Barang</option>
                                 @foreach ($barangs as $barang)
-                                    <option value="{{ $barang->id }}" data-stok="{{ $barang->stok }}"><strong>{{ $barang->part_number }}</strong> {{ $barang->deskripsi . ' (' . $barang->stok . ' ' . $barang->satuan->name . ')' }}</option>
+                                    <option value="{{ $barang->id }}" data-stok="{{ $barang->stok }}" data-deskripsi="{{ $barang->deskripsi }}">
+                                        {{ $barang->part_number }}
+                                    </option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label>Deskripsi</label>
+                            <input type="text" class="form-control" id="items[${itemIndex}][deskripsi]" readonly>
                         </div>
                         <div class="form-group col-md-2">
                             <label>Stock</label>
@@ -202,7 +212,9 @@
 
             $(document).on('change', '[name^="items["][name$="[barang_id]"]', function() {
                 const stockValue = $(this).find(':selected').data('stok') || 0;
+                const deskripsiValue = $(this).find(':selected').data('deskripsi');
                 $(this).closest('.item-row').find('[id$="[stok]"]').val(stockValue);
+                $(this).closest('.item-row').find('[id$="[deskripsi]"]').val(deskripsiValue);
                 updateOptions();
             });
 
@@ -236,11 +248,15 @@
                                 const satuanName = item.barang && item.barang.satuan ? item.barang.satuan.name : 'N/A';
                                 const newItemRow = `
                                     <div class="item-row row">
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-2">
                                             <label for="barang_id">Barang</label>
                                             <select class="form-control select2bs4" name="items[${index}][barang_id]" required>
-                                                <option value="${item.barang.id}" selected>${item.barang.deskripsi} (${item.barang.stok} ${satuanName})</option>
+                                                <option value="${item.barang.id}" selected>${item.barang.part_number}</option>
                                             </select>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label>Deskripsi</label>
+                                            <input type="text" class="form-control" id="items[${index}][deskripsi]" value="${item.barang.deskripsi}" readonly>
                                         </div>
                                         <div class="form-group col-md-2">
                                             <label>Stock</label>
