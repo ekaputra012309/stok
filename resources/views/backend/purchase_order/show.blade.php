@@ -56,6 +56,7 @@
                                 <table class="table table-bordered mt-3">
                                     <thead>
                                         <tr>
+                                            <th>Part Number</th>
                                             <th>Barang</th>
                                             <th>Quantity</th>
                                         </tr>
@@ -63,14 +64,15 @@
                                     <tbody>
                                         @foreach ($PurchaseOrder->items as $item)
                                             <tr>
-                                                <td><strong>({{ $item->barang->part_number }})</strong> {{ $item->barang->deskripsi }}</td>
+                                                <td><strong>({{ $item->barang->part_number }})</strong></td>
+                                                <td> {{ $item->barang->deskripsi }}</td>
                                                 <td>{{ $item->qty .' '.$item->barang->satuan->name }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th class="text-right">Total</th>
+                                            <th colspan="2" class="text-right">Total</th>
                                             <th>{{ number_format($PurchaseOrder->items->sum(fn($item) => $item->qty), 0, ',', '.') }}</th>
                                         </tr>
                                     </tfoot>
