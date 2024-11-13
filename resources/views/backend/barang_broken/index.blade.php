@@ -64,7 +64,7 @@
                                             <td>{{ $barangBroken->invoice_number }}</td>
                                             <td>
                                                 @foreach ($barangBroken->details as $item)
-                                                    <strong>({{ $item->barang->part_number }})</strong>
+                                                    <strong>({{ $item->barang->part_number }})</strong> <br>
                                                 @endforeach
                                             </td>
                                             <td>

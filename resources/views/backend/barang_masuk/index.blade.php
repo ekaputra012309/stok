@@ -72,7 +72,7 @@
                                             </td>
                                             <td>
                                                 @foreach ($barangMasuk->details as $item)
-                                                    <strong>({{ $item->barang->part_number }})</strong>
+                                                    <strong>({{ $item->barang->part_number }})</strong> <br>
                                                 @endforeach
                                             </td>
                                             <td>

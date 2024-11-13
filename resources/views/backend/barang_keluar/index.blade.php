@@ -58,6 +58,7 @@
                                                         <th>#</th>
                                                         <th>No Invoice</th>
                                                         <th>Stok Aktual</th>
+                                                        <th>Part Number</th>
                                                         <th>Nama Barang</th>
                                                         <th>Qty</th>
                                                     </tr>
@@ -83,6 +84,11 @@
                                                             <td>
                                                                 @foreach ($barangKeluar->details as $item)
                                                                     <strong>({{ $item->barang->stok }} @if ($item->barang->satuan) {{ $item->barang->satuan->name }} @endif)</strong><br>
+                                                                @endforeach
+                                                            </td>
+                                                            <td>
+                                                                @foreach ($barangKeluar->details as $item)
+                                                                    <strong>({{ $item->barang->part_number }})</strong> <br>
                                                                 @endforeach
                                                             </td>
                                                             <td>
@@ -132,7 +138,7 @@
                                                             <td>{{ $barangTemplate->nama_template }}</td>
                                                             <td>
                                                                 @foreach ($barangTemplate->details as $item)
-                                                                    <strong>({{ $item->barang->part_number }})</strong>
+                                                                    <strong>({{ $item->barang->part_number }})</strong> <br>
                                                                 @endforeach
                                                             </td>
                                                             <td>
