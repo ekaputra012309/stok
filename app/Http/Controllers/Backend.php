@@ -22,6 +22,7 @@ class Backend extends Controller
     {
         $data = array(
             'title' => 'Login | ',
+            'companyProfile' => CompanyProfile::firstOrFail(),
         );
         return view('backend.login', $data);
     }

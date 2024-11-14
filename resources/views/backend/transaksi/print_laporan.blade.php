@@ -73,7 +73,7 @@
         </table>
         <table class="w-100">
             <tr>                    
-                <td>
+                <td style="width: 60%">
                     <p>
                         {{ $companyProfile->name }} <br>
                         {{ $companyProfile->address }} <br>
@@ -84,8 +84,8 @@
                 <td class="text-right">
                     <p>
                         <strong>Dicetak Oleh:</strong> {{ auth()->user()->name }} <br>
-                        <strong>Dari tanggal:</strong> {{ \Carbon\Carbon::parse($startDate)->translatedFormat('d F Y') }} <br>
-                        <strong>Sampai tanggal:</strong> {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d F Y') }} <br>
+                        <strong>Dari tanggal:</strong> {{ \Carbon\Carbon::parse($startDate)->translatedFormat('d M Y') }} <br>
+                        <strong>Sampai tanggal:</strong> {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d M Y') }} <br>
                     </p>
                 </td>
             </tr>
@@ -118,16 +118,21 @@
                                     {{ $detailitem->invoice_number }}
                                 @endif
                             </td>
-                            <td>{{ $detailitem->created_at->translatedFormat('d F Y') }}</td>
+                            <td>{{ $detailitem->created_at->translatedFormat('d M Y') }}</td>
                             <td colspan="2">Dibuat Oleh: {{ $detailitem->user->name }}</td>
                         </tr>
-
+                        <tr>
+                            <td></td>
+                            <td><strong>Part Number</strong></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                         <!-- Display each item's details under the current invoice -->
                         @foreach ($detailitem->details as $item)
                             <tr>
                                 <td></td>
-                                <td></td>
-                                <td><strong>({{ $item->barang->part_number }})</strong> {{ $item->barang->deskripsi }}</td>
+                                <td>{{ $item->barang->part_number }}</td>
+                                <td> {{ $item->barang->deskripsi }}</td>
                                 <td class="text-center">{{ $item->qty }}</td>
                             </tr>
                         @endforeach

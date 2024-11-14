@@ -70,7 +70,7 @@
         </table>
         <table class="w-100">
             <tr>                    
-                <td>
+                <td style="width: 60%">
                     <p>
                         {{ $companyProfile->name }} <br>
                         {{ $companyProfile->address }} <br>
@@ -94,6 +94,7 @@
         <table class="table">
             <thead>
                 <tr>
+                    <th class="text-left"><strong>Part Number</strong></th>
                     <th class="text-left"><strong>Barang</strong></th>
                     <th class="text-center"><strong>Qty</strong></th>
                 </tr>
@@ -101,12 +102,13 @@
             <tbody>
                 @foreach ($purchaseOrder->items as $item)
                     <tr>
-                        <td><strong>({{ $item->barang->part_number }})</strong> {{ $item->barang->deskripsi }}</td>
+                        <td><strong>({{ $item->barang->part_number }})</strong></td>
+                        <td>{{ $item->barang->deskripsi }}</td>
                         <td class="text-center">{{ $item->qty }}</td>
                     </tr>
                 @endforeach
                 <tr>
-                    <td class="no-line text-left"><strong>Total</strong></td>
+                    <td colspan="2" class="no-line text-left"><strong>Total</strong></td>
                     <td class="no-line text-center"><strong>{{ $purchaseOrder->items->sum(fn($item) => $item->qty ) }}</strong></td>
                 </tr>
             </tbody>

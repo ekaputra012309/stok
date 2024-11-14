@@ -54,7 +54,7 @@
                                                 <i class="fas fa-trash"></i> Delete
                                             </a>
                                         </td>
-                                        <td>{{ $privilage->user->name }}</td>
+                                        <td>{{ $privilage->user->name ?? 'N/A' }}</td>
                                         <td>{{ $privilage->user->email }}</td>
                                         <td>{{ $privilage->role->nama_role }}</td>
                                     </tr>
