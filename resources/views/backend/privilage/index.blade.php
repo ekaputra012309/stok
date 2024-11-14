@@ -55,8 +55,8 @@
                                             </a>
                                         </td>
                                         <td>{{ $privilage->user->name ?? 'N/A' }}</td>
-                                        <td>{{ $privilage->user->email }}</td>
-                                        <td>{{ $privilage->role->nama_role }}</td>
+                                        <td>{{ $privilage->user->email ?? 'N/A' }}</td>
+                                        <td>{{ $privilage->role->nama_role ?? 'N/A' }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
