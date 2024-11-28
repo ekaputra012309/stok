@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id'); // Track the user who created this transaction
             $table->string('invoice_number')->unique(); // Invoice number
+            $table->string('vendor')->nullable();
             $table->string('status_order')->nullable();
             $table->string('approveby')->nullable();
             $table->string('note')->nullable();

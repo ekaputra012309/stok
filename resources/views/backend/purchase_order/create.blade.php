@@ -35,14 +35,25 @@
                             @endauth
 
                             <div class="card-body">
-                                <div class="form-group col-md-4">
-                                    <label for="invoice_number">Invoice Number</label>
-                                    <input type="text" class="form-control @error('invoice_number') is-invalid @enderror" id="invoice_number" name="invoice_number" placeholder="Invoice Number" required>
-                                    @error('invoice_number')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label for="invoice_number">Invoice Number</label>
+                                        <input type="text" class="form-control @error('invoice_number') is-invalid @enderror" id="invoice_number" name="invoice_number" placeholder="Invoice Number" required>
+                                        @error('invoice_number')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="vendor">Nama Vendor</label>
+                                        <input type="text" class="form-control @error('vendor') is-invalid @enderror" id="vendor" name="vendor" placeholder="Nama Vendor" required>
+                                        @error('vendor')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
                                 </div>
 
                                 <!-- Container for Dynamic Barang Items -->

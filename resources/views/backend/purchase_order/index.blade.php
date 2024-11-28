@@ -38,7 +38,8 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>No Invoice</th>
+                                        <th>No Surat Jalan</th>
+                                        <th>Vendor</th>
                                         <th>Part Number</th>
                                         <th>Nama Barang</th>
                                         <th>Qty</th>
@@ -54,7 +55,7 @@
                                                 </a> <br>
                                                 @if ($purchaseOrder->status_order === 'Approved') <!-- Conditional check for Approved status -->
                                                     <a class="btn btn-xs btn-success" href="{{ route('purchase_order.print', $purchaseOrder->id) }}" target="_blank">
-                                                        <i class="fas fa-print"></i> Print Invoice
+                                                        <i class="fas fa-print"></i> Print Surat Jalan
                                                     </a> <br>
                                                 @endif
                                                 @if ($purchaseOrder->status_order !== 'Approved') <!-- Conditional check -->
@@ -67,6 +68,7 @@
                                                 @endif
                                             </td>
                                             <td>{{ $purchaseOrder->invoice_number }}</td>
+                                            <td>{{ $purchaseOrder->vendor }}</td>
                                             <td>
                                                 @foreach ($purchaseOrder->items as $item)
                                                     <strong>({{ $item->barang->part_number }})</strong> <br>

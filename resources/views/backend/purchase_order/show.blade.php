@@ -34,8 +34,12 @@
                         <div class="card-body">
                             <table class="table table-bordered">
                                 <tr>
-                                    <th>Invoice Number</th>
+                                    <th>Surat Jalan</th>
                                     <td>{{ $PurchaseOrder->invoice_number }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Nama Vendor</th>
+                                    <td>{{ $PurchaseOrder->vendor }}</td>
                                 </tr>
                                 <tr>
                                     <th>User</th>

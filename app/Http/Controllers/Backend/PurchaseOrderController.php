@@ -65,6 +65,7 @@ class PurchaseOrderController extends Controller
         // dd($request->all());
         $request->validate([
             'invoice_number' => 'required|string|unique:purchase_order,invoice_number|max:255',
+            'vendor' => 'required|string|max:255',
             'user_id' => 'required|exists:users,id',
             'items' => 'required|array',
             'items.*.barang_id' => 'required|exists:barang,id',
@@ -76,6 +77,7 @@ class PurchaseOrderController extends Controller
             $PurchaseOrder = PurchaseOrder::create([
                 'user_id' => $request->user_id,
                 'invoice_number' => $request->invoice_number,
+                'vendor' => $request->vendor,
             ]);
 
             // Loop through items to create PurchaseOrderItem entries and update stock
@@ -152,6 +154,7 @@ class PurchaseOrderController extends Controller
     {
         $request->validate([
             'invoice_number' => 'required|string|unique:purchase_order,invoice_number,' . $purchaseOrder->id . '|max:255',
+            'vendor' => 'required|string|max:255',
             'user_id' => 'required|exists:users,id',
             'items' => 'required|array',
             'items.*.barang_id' => 'required|exists:barang,id',
@@ -163,6 +166,7 @@ class PurchaseOrderController extends Controller
             $purchaseOrder->update([
                 'user_id' => $request->user_id,
                 'invoice_number' => $request->invoice_number,
+                'vendor' => $request->vendor,
             ]);
 
             // Remove old items and update stock

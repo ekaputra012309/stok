@@ -13,6 +13,7 @@ class PurchaseOrder extends Model
     protected $fillable = [
         'user_id',
         'invoice_number',
+        'vendor',
         'status_order',
         'approveby',
         'note',
