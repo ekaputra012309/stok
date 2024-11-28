@@ -32,6 +32,10 @@ Route::get('/company-profile', [Backend::class, 'editCompany'])->name('companyPr
 Route::put('/company-profile/update', [Backend::class, 'updateCompany'])->name('companyProfile.update');
 Route::delete('satuan/{satuan}', [SatuanController::class, 'destroy'])->name('satuan.destroy');
 Route::delete('barang/{barang}', [BarangController::class, 'destroy'])->name('barang.destroy');
+Route::post('barang/import', [BarangController::class, 'import'])->name('barang.import');
+Route::get('barang/template', [BarangController::class, 'downloadTemplate'])->name('barang.template');
+Route::post('/barang/delete-selected', [BarangController::class, 'destroy'])->name('barang.destroy');
+
 Route::delete('/purchase_order/{PurchaseOrder}', [PurchaseOrderController::class, 'destroy'])->name('purchase_order.destroy');
 Route::post('purchase_order/{id}/approve', [PurchaseOrderController::class, 'approve'])->name('purchase_order.approve');
 Route::get('/purchase-order/{id}/print', [PurchaseOrderController::class, 'print'])->name('purchase_order.print');

@@ -52,7 +52,7 @@
                                 <div class="card-body">
                                     <div class="tab-content" id="custom-tabs-four-tabContent">
                                         <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
-                                            <table id="example1" class="table table-bordered table-striped">
+                                            <table id="example1" class="table table-bordered table-striped w-100">
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
@@ -108,7 +108,7 @@
                                             </table>
                                         </div>
                                         <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
-                                            <table id="example2" class="table table-bordered table-striped">
+                                            <table id="example2" class="table table-bordered table-striped w-100">
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
@@ -167,12 +167,26 @@
         </div>
     </section>
     <script>
-        $("#example1, #example2").DataTable({
+        $("#example1").DataTable({
+            // "responsive": true,
+            // "lengthChange": true,
+            // "autoWidth": false,
+            scrollY:        "300px",
+            scrollX:        true,
+            scrollCollapse: true,
+            paging:         false,
+            fixedColumns:   true,
+        });
+
+        $("#example2").DataTable({
             "responsive": true,
             "lengthChange": true,
             "autoWidth": false,
-            // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+            scrollY:        "300px",
+            scrollX:        true,
+            scrollCollapse: true,
+            paging:         false,
+        });
     </script>
     
     <script>

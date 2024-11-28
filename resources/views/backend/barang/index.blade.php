@@ -1,3 +1,7 @@
+@php
+    $role = App\Models\Privilage::getRoleKodeForAuthenticatedUser();
+@endphp
+
 @extends('backend/template/app')
 
 @section('content')
@@ -26,18 +30,41 @@
 
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title"> </h3>
-                            <div class="card-tools">
-                                <a href="{{ route('barang.create') }}" class="btn btn-primary btn-sm">
-                                    <i class="fas fa-plus"></i> Add Data
-                                </a>
+                            <div class="card-title d-flex align-items-center w-100">
+                                <div class="row w-100">
+                                    @if (in_array($role, ['superadmin', 'owner', 'admin']))
+                                    <div class="col-md-6">
+                                        <form action="{{ route('barang.import') }}" method="POST" enctype="multipart/form-data" class="d-flex align-items-center">
+                                            @csrf
+                                            <div class="form-group mb-0 mr-2">
+                                                <label for="file" class="sr-only">Import Excel</label>
+                                                <input type="file" name="file" class="form-control form-control-sm" required>
+                                            </div>
+                                            <button type="submit" class="btn btn-success btn-sm ml-2">Import</button>
+                                        </form>
+                                    </div>
+                                    @endif
+                                    <div class="col-md-6 d-flex justify-content-end">
+                                        <a href="{{ route('barang.template') }}" class="btn btn-info btn-sm mr-2">
+                                            <i class="fas fa-download"></i> Download Template
+                                        </a>
+                                        <a href="{{ route('barang.create') }}" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-plus"></i> Add Data
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <table id="example1" class="table table-bordered table-striped">
+
+
+                        <div class="card-body table-responsive">
+                            <table id="example1" class="table table-bordered table-striped w-100">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <th>
+                                            @if (in_array($role, ['superadmin', 'owner', 'admin']))
+                                            <input type="checkbox" id="select-all" class="select-all"></th> <!-- Checkbox to select all rows -->
+                                            @endif
                                         <th>Part Number</th>
                                         <th>Deskripsi</th>
                                         <th>Stok</th>
@@ -48,6 +75,10 @@
                                     @foreach ($databarang as $barang)
                                     <tr class="bg-{{ $barang->stok < 5 ? 'warning' : '' }}">
                                         <td>
+                                            @if (in_array($role, ['superadmin', 'owner', 'admin']))
+                                            <input type="checkbox" class="select-item" data-id="{{ $barang->id }}">
+                                            &nbsp;
+                                            @endif
                                             <a class="btn btn-xs btn-primary" href="{{ route('barang.edit', $barang->id) }}">
                                                 <i class="fas fa-edit"></i> Edit
                                             </a>
@@ -64,21 +95,128 @@
                                 </tbody>
                             </table>
                         </div>
+                        @if (in_array($role, ['superadmin', 'owner', 'admin']))
+                        <div class="card-footer">
+                            <button id="delete-selected" class="btn btn-danger btn-sm">Delete Selected</button>
+                            <span id="selected-count" class="ml-2">Selected: 0</span>
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </section>
     <script>
-        $("#example1").DataTable({
-            "responsive": true,
-            "lengthChange": true,
-            "autoWidth": true,
-            // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        $(document).ready(function () {
+            // Initialize DataTable
+            var table = $("#example1").DataTable({
+                "responsive": true,
+                "lengthChange": true,
+                "autoWidth": true,
+                "columnDefs": [
+                    {
+                        "targets": 0,
+                        "checkboxes": {
+                            "selectRow": true
+                        }
+                    }
+                ],
+                scrollY:        "300px",
+                scrollX:        true,
+                scrollCollapse: true,
+                paging:         false,
+                fixedColumns:   true,
+                "select": {
+                    "style": "multi"
+                }
+            });
+
+            // Select all checkbox functionality
+            $('#select-all').on('click', function () {
+                var checked = $(this).prop('checked');
+                $('.select-item').prop('checked', checked);
+                updateSelectedCount();
+            });
+
+            // Handle individual row checkbox selection
+            $(document).on('change', '.select-item', function () {
+                var allChecked = $('.select-item:checked').length === $('.select-item').length;
+                $('#select-all').prop('checked', allChecked);
+            });
+
+            function updateSelectedCount() {
+                var selectedCount = $('.select-item:checked').length;
+                $('#selected-count').text('Selected: ' + selectedCount);
+            }
+
+            // Update count when checkboxes are changed
+            $(document).on('change', '.select-item', function () {
+                updateSelectedCount();
+            });
+
+            // Handle delete selected rows
+            $('#delete-selected').on('click', function () {
+                var selectedIds = [];
+                $('.select-item:checked').each(function () {
+                    selectedIds.push($(this).data('id'));
+                });
+
+                if (selectedIds.length === 0) {
+                    Swal.fire({
+                        title: 'No rows selected',
+                        text: 'Please select rows to delete.',
+                        icon: 'warning',
+                    });
+                    return;
+                }
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "This action cannot be undone.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete selected!',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Send AJAX request to delete selected rows
+                        $.ajax({
+                            url: '{{ route('barang.destroy', ['barang' => 'delete-selected']) }}', // Use the same route for multiple deletion
+                            type: 'POST',
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                "ids": selectedIds, // Send the selected IDs
+                            },
+                            success: function (response) {
+                                Swal.fire({
+                                    title: 'Deleted!',
+                                    text: response.success,
+                                    icon: 'success',
+                                    timer: 2000,
+                                    showConfirmButton: false,
+                                    timerProgressBar: true
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            },
+                            error: function (xhr) {
+                                Swal.fire(
+                                    'Error!',
+                                    'An error occurred while deleting.',
+                                    'error'
+                                );
+                            }
+                        });
+                    }
+                });
+            });
+
+        });
     </script>
+
     <script>
-    $(document).on('click', '.delete-btn', function() {
+    $(document).on('click', '.delete-btn', function () {
         var barangId = $(this).data('id');
         var url = '{{ route('barang.destroy', ':id') }}';
         url = url.replace(':id', barangId); // Replace :id with the actual ID
@@ -95,23 +233,23 @@
             if (result.isConfirmed) {
                 $.ajax({
                     url: url,
-                    type: 'DELETE', // Set the HTTP method to DELETE
+                    type: 'DELETE',
                     data: {
-                        "_token": "{{ csrf_token() }}" // Include CSRF token
+                        "_token": "{{ csrf_token() }}"
                     },
-                    success: function(response) {
+                    success: function (response) {
                         Swal.fire({
                             title: 'Deleted!',
                             text: response.success,
                             icon: 'success',
-                            timer: 2000, // Close after 2 seconds
-                            showConfirmButton: false, // No OK button
-                            timerProgressBar: true // Show progress bar
+                            timer: 2000,
+                            showConfirmButton: false,
+                            timerProgressBar: true
                         }).then(() => {
-                            location.reload(); // Reload the page or update the UI
+                            location.reload();
                         });
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         Swal.fire(
                             'Error!',
                             'An error occurred while deleting.',
@@ -122,6 +260,24 @@
             }
         });
     });
+    </script>
+
+    <script>
+        @if(session('errors'))
+            let errorDetails = `<ul>`;
+            @foreach(session('errors') as $error)
+                errorDetails += `<li>Row {{ $error['row'] }}: {!! $error['error'] !!}</li>`;
+            @endforeach
+            errorDetails += `</ul>`;
+
+            Swal.fire({
+                title: 'Import Errors',
+                html: errorDetails, // Render HTML content (e.g., bold part numbers and satuan names)
+                icon: 'error',
+                width: '600px',
+                showConfirmButton: true,
+            });
+        @endif
     </script>
 </div>
 @endsection

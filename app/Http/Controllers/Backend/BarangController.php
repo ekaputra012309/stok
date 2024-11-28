@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 use App\Models\Barang;
 use App\Models\Satuan;
 use RealRashid\SweetAlert\Facades\Alert;
+use App\Imports\BarangImport;
+use App\Exports\BarangTemplateExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class BarangController extends Controller
 {
@@ -78,9 +83,50 @@ class BarangController extends Controller
         return redirect()->route('barang.index');
     }
 
-    public function destroy(Barang $barang)
+    public function destroy(Request $request, Barang $barang = null)
     {
-        $barang->delete();
-        return response()->json(['success' => 'Barang deleted successfully.']);
+        // $barang->delete();
+        // return response()->json(['success' => 'Barang deleted successfully.']);
+        if ($request->has('ids') && is_array($request->input('ids'))) {
+            // If there is an array of IDs, delete the selected records
+            Barang::whereIn('id', $request->input('ids'))->delete();
+            return response()->json(['success' => 'Selected barang records deleted successfully.']);
+        }
+    
+        if ($barang) {
+            // If there's a single Barang model, delete it
+            $barang->delete();
+            return response()->json(['success' => 'Barang deleted successfully.']);
+        }
+    
+        return response()->json(['error' => 'No items selected'], 400);
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv',
+        ]);
+
+        $import = new BarangImport();
+        Excel::import($import, $request->file('file'));
+
+        // dd($import->errors);
+
+        if (count($import->errors) > 0) {
+            // Pass formatted errors to the view
+            return redirect()->route('barang.index')->with([
+                'success' => 'Barang imported with some errors.',
+                'errors' => $import->errors, // Pass errors to the view
+            ]);
+        }
+
+        Alert::success('Success', 'Barang imported successfully.')->autoClose(2000);
+        return redirect()->route('barang.index');
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new BarangTemplateExport, 'barang_template.xlsx');
     }
 }

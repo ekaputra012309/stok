@@ -24,23 +24,23 @@
     <script src="{{ asset('backend/js/jquery.overlayScrollbars.min.js') }}"></script>
 
     {{-- datatables css --}}
-    <link rel="stylesheet" href="https://adminlte.io/themes/v3/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-    {{-- <link rel="stylesheet" href="{{ asset('backend/css/datatables/dataTables.bootstrap4.min.css') }}"> --}}
+    <!-- <link rel="stylesheet" href="https://adminlte.io/themes/v3/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css"> -->
+    <!-- <link rel="stylesheet" href="{{ asset('backend/css/datatables/dataTables.bootstrap4.min.css') }}"> -->
     <link rel="stylesheet" href="{{ asset('backend/css/datatables/responsive.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('backend/css/datatables/buttons.bootstrap4.min.css') }}">
     {{-- datatables js --}}
-    <script src="{{ asset('backend/js/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('backend/js/datatables/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('backend/js/datatables/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('backend/js/datatables/responsive.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('backend/js/datatables/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ asset('backend/js/datatables/buttons.bootstrap4.min.js') }}"></script>
+    <!-- <script src="{{ asset('backend/js/datatables/jquery.dataTables.min.js') }}"></script> -->
+    <!-- <script src="{{ asset('backend/js/datatables/dataTables.bootstrap4.min.js') }}"></script> -->
+    <!-- <script src="{{ asset('backend/js/datatables/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('backend/js/datatables/responsive.bootstrap4.min.js') }}"></script> -->
+    <!-- <script src="{{ asset('backend/js/datatables/dataTables.buttons.min.js') }}"></script> -->
+    <!-- <script src="{{ asset('backend/js/datatables/buttons.bootstrap4.min.js') }}"></script> -->
     <script src="{{ asset('backend/js/datatables/jszip.min.js') }}"></script>
     <script src="{{ asset('backend/js/datatables/pdfmake.min.js') }}"></script>
     <script src="{{ asset('backend/js/datatables/vfs_fonts.js') }}"></script>
-    <script src="{{ asset('backend/js/datatables/buttons.html5.min.js') }}"></script>
+    <!-- <script src="{{ asset('backend/js/datatables/buttons.html5.min.js') }}"></script>
     <script src="{{ asset('backend/js/datatables/buttons.print.min.js') }}"></script>
-    <script src="{{ asset('backend/js/datatables/buttons.colVis.min.js') }}"></script>
+    <script src="{{ asset('backend/js/datatables/buttons.colVis.min.js') }}"></script> -->
     {{-- select2 css js --}}
     <link rel="stylesheet" href="{{ asset('backend/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('backend/css/select2-bootstrap4.min.css') }}">
@@ -52,6 +52,13 @@
     <script src="{{ asset('backend/moment/moment.min.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('backend/css/daterangepicker/daterangepicker.css') }}">
     <script src="{{ asset('backend/js/daterangepicker/daterangepicker.js') }}"></script>
+
+    <!-- datatable fixcolumn -->
+    <link rel="stylesheet" href="https://datatables.net/release-datatables/media/css/dataTables.bootstrap4.css">
+    <link rel="stylesheet" href="https://datatables.net/release-datatables/extensions/FixedColumns/css/fixedColumns.bootstrap4.css">
+    <script src="https://datatables.net/release-datatables/media/js/jquery.dataTables.js"></script>
+    <script src="https://datatables.net/release-datatables/media/js/dataTables.bootstrap4.js"></script>
+    <script src="https://datatables.net/release-datatables/extensions/FixedColumns/js/dataTables.fixedColumns.js"></script>
 
     <style>
         [class*="sidebar-light-"] .nav-treeview>.nav-item>.nav-link.active,
