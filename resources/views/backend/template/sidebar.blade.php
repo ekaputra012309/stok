@@ -48,6 +48,11 @@
                                 <p>Satuan</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('customer.index') }}" class="nav-link {{ request()->routeIs('customer.index') ? 'active' : '' }}">
+                                <p>Customer</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 @endif

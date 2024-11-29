@@ -13,6 +13,7 @@ use App\Http\Controllers\Backend\BarangMasukController;
 use App\Http\Controllers\Backend\BarangKeluarController;
 use App\Http\Controllers\Backend\BarangBrokenController;
 use App\Http\Controllers\Backend\BarangTemplateController;
+use App\Http\Controllers\Backend\CustomerController;
 
 // Route::get('/', function () {
 //     return ['Laravel' => app()->version()];
@@ -61,6 +62,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('barang_keluar', BarangKeluarController::class); //barang_keluar
     Route::resource('barang_broken', BarangBrokenController::class); //barang_broken
     Route::resource('barang_template', BarangTemplateController::class); //barang_template
+    Route::resource('customer', CustomerController::class); //customer
 
 });
 
