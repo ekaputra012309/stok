@@ -9,6 +9,7 @@ use App\Models\Satuan;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Imports\BarangImport;
 use App\Exports\BarangTemplateExport;
+use App\Exports\BarangExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -129,4 +130,11 @@ class BarangController extends Controller
     {
         return Excel::download(new BarangTemplateExport, 'barang_template.xlsx');
     }
+
+    public function export()
+    {
+        $fileName = 'barang-' . date('Ymd') . '.xlsx';
+        return Excel::download(new BarangExport, $fileName);
+    }
+
 }
