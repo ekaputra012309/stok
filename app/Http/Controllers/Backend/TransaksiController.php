@@ -52,7 +52,7 @@ class TransaksiController extends Controller
                 ->orderBy('created_at', 'desc');
         } elseif ($type == 'barang_keluar') {
             $judul = 'Barang Keluar';
-            $transaksi = BarangKeluar::with(['details.barang', 'user'])
+            $transaksi = BarangKeluar::with(['details.barang', 'user', 'customer'])
                 ->whereBetween('created_at', [$startDate, $endDate])
                 ->orderBy('created_at', 'desc');
         } elseif ($type == 'barang_broken') {
@@ -72,7 +72,7 @@ class TransaksiController extends Controller
             if ($type == 'barang_masuk') {
                 $transaksi = BarangMasukDetail::with('barang', 'barangMasuk.purchaseOrder');
             } elseif ($type == 'barang_keluar') {
-                $transaksi = BarangKeluarDetail::with('barang', 'barangKeluar');
+                $transaksi = BarangKeluarDetail::with('barang', 'barangKeluar.customer');
             } elseif ($type == 'barang_broken') {
                 $transaksi = BarangBrokenDetail::with('barang', 'barangbroken');
             } else {

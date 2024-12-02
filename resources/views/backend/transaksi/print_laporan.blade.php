@@ -122,7 +122,15 @@
                             <td colspan="2">Dibuat Oleh: {{ $detailitem->user->name }}</td>
                         </tr>
                         <tr>
-                            <td></td>
+                            <td>
+                                @if ($type == 'barang_masuk')
+                                    <strong>Vendor</strong>
+                                @elseif ($type == 'barang_keluar')
+                                    <strong>Customer</strong>
+                                @else
+                                    
+                                @endif
+                            </td>
                             <td><strong>Part Number</strong></td>
                             <td></td>
                             <td></td>
@@ -130,7 +138,15 @@
                         <!-- Display each item's details under the current invoice -->
                         @foreach ($detailitem->details as $item)
                             <tr>
-                                <td></td>
+                                <td>
+                                    @if ($type == 'barang_masuk')
+                                        {{ $detailitem->purchaseOrder->vendor ?? '-' }}
+                                    @elseif ($type == 'barang_keluar')
+                                        {{ $detailitem->customer->name ?? '-' }}
+                                    @else
+                                        
+                                    @endif
+                                </td>
                                 <td>{{ $item->barang->part_number }}</td>
                                 <td> {{ $item->barang->deskripsi }}</td>
                                 <td class="text-center">{{ $item->qty }}</td>
