@@ -113,13 +113,21 @@
                         <tr class="invoice-header">
                             <td>
                                 @if ($type == 'barang_masuk')
-                                    {{ $detailitem->purchaseOrder->invoice_number }}
+                                    {{ $detailitem->barangMasuk->purchaseOrder->invoice_number }}
+                                @elseif ($type == 'barang_keluar')
+                                    {{ $detailitem->barangKeluar->invoice_number }}
                                 @else
-                                    {{ $detailitem->invoice_number }}
+                                    {{ optional($detailitem->barangbroken)->invoice_number }}
                                 @endif
                             </td>
                             <td>{{ $detailitem->created_at->translatedFormat('d M Y') }}</td>
-                            <td colspan="2">Dibuat Oleh: {{ $detailitem->user->name }}</td>
+                            <td colspan="2">Dibuat Oleh: 
+                                @if ($type == 'barang_masuk')    
+                                    {{ $detailitem->barangMasuk->user->name }}
+                                @else
+                                    {{ $detailitem->user->name }}
+                                @endif
+                            </td>
                         </tr>
                         <tr>
                             <td></td>
@@ -127,28 +135,27 @@
                             <td></td>
                             <td></td>
                         </tr>
-                        <!-- Display each item's details under the current invoice -->
-                        @foreach ($detailitem->details as $item)
+                        <!-- Display each item's details under the current invoice -->                        
                             <tr>
                                 <td></td>
-                                <td>{{ $item->barang->part_number }}</td>
-                                <td> {{ $item->barang->deskripsi }}</td>
-                                <td class="text-center">{{ $item->qty }}</td>
+                                <td>{{ $detailitem->barang->part_number }}</td>
+                                <td> {{ $detailitem->barang->deskripsi }}</td>
+                                <td class="text-center">{{ $detailitem->qty }}</td>
                             </tr>
-                        @endforeach
-
                         <!-- Display the total for the current invoice -->
-                        <tr>
+                        <!-- <tr>
                             <td colspan="3" class="no-line text-left"><strong>Total</strong></td>
-                            <td class="no-line text-center"><strong>{{ $detailitem->details->sum(fn($item) => $item->qty) }}</strong></td>
-                        </tr>
+                            <td class="no-line text-center"><strong>
+                                {{ $datatransaksi->where('id', $detailitem->id)->sum('qty') }}
+                            </td>
+                        </tr> -->
                     @endforeach
                 @endif
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="3" class="text-right"><strong>Sub Total</strong></td>
-                    <td class="text-center"><strong>{{ $datatransaksi->flatMap(function($item) { return $item->details; })->sum('qty'); }}</strong></td>
+                    <td colspan="3" class="text-right"><strong>Total</strong></td>
+                    <td class="text-center"><strong>{{ $datatransaksi->sum('qty'); }}</strong></td>
                 </tr>
             </tfoot>
         </table>

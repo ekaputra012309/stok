@@ -19,7 +19,7 @@ class BarangBrokenDetail extends Model
 
     public function barangbroken()
     {
-        return $this->belongsTo(BarangBroken::class);
+        return $this->belongsTo(BarangBroken::class, 'barang_broken_id');
     }
 
     public function barang()
