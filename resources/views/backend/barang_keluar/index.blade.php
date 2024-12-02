@@ -83,7 +83,11 @@
                                                             </td>
                                                             <td>
                                                                 {{ $barangKeluar->invoice_number }} <br>
-                                                                No PO : <strong>{{ $barangKeluar->po_number }}</strong>
+                                                                @if($barangKeluar->po_number)
+                                                                    No PO : <strong>{{ $barangKeluar->po_number }}</strong>
+                                                                @else
+                                                                    
+                                                                @endif
                                                             </td>
                                                             <td>{{ $barangKeluar->customer->name ?? '' }}</td>
                                                             <td>
