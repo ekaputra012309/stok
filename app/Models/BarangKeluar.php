@@ -13,6 +13,7 @@ class BarangKeluar extends Model
     protected $fillable = [
         'user_id',
         'invoice_number',
+        'customer_id',
         'tanggal_keluar',
     ];
 
@@ -21,8 +22,13 @@ class BarangKeluar extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
     public function details()
     {
-        return $this->hasMany(BarangKeluarDetail::class);
+        return $this->hasMany(BarangKeluarDetail::class, 'barang_keluar_id');
     }
 }

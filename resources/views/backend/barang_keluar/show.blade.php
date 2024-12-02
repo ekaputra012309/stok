@@ -30,12 +30,16 @@
                         <div class="card-body">
                             <table class="table table-bordered">
                                 <tr>
-                                    <th>Invoice Number</th>
+                                    <th>No Surat Jalan</th>
                                     <td>{{ $BarangKeluar->invoice_number }}</td>
                                 </tr>
                                 <tr>
                                     <th>User</th>
                                     <td>{{ $BarangKeluar->user->name ?? 'N/A' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Customer</th>
+                                    <td>{{ $BarangKeluar->customer->name ?? 'N/A' }}</td>
                                 </tr>
                                 <tr>
                                     <th>Tanggal Barang Keluar</th>

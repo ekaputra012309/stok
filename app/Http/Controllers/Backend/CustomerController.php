@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Customer;
 use RealRashid\SweetAlert\Facades\Alert;
+use App\Exports\CustomerExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CustomerController extends Controller
 {
@@ -77,4 +79,10 @@ class CustomerController extends Controller
 
         // return redirect()->route('customer.index');
     }    
+
+    public function export()
+    {
+        $fileName = 'Customer-' . date('Ymd') . '.xlsx';
+        return Excel::download(new CustomerExport, $fileName);
+    }
 }

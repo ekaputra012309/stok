@@ -23,6 +23,6 @@ class BarangBroken extends Model
 
     public function details()
     {
-        return $this->hasMany(BarangBrokenDetail::class);
+        return $this->hasMany(BarangBrokenDetail::class, 'barang_broken_id');
     }
 }

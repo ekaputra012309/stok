@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Satuan;
 use RealRashid\SweetAlert\Facades\Alert;
+use App\Exports\SatuanExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SatuanController extends Controller
 {
@@ -76,5 +78,11 @@ class SatuanController extends Controller
         // Alert::success('Success', 'Satuan deleted successfully.');
 
         // return redirect()->route('satuan.index');
-    }    
+    }
+
+    public function export()
+    {
+        $fileName = 'Satuan-' . date('Ymd') . '.xlsx';
+        return Excel::download(new SatuanExport, $fileName);
+    }
 }

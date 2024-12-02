@@ -11,8 +11,6 @@ use App\Imports\BarangImport;
 use App\Exports\BarangTemplateExport;
 use App\Exports\BarangExport;
 use Maatwebsite\Excel\Facades\Excel;
-use Maatwebsite\Excel\Concerns\FromArray;
-use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class BarangController extends Controller
 {

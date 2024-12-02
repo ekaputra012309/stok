@@ -56,7 +56,8 @@
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
-                                                        <th>No Invoice</th>
+                                                        <th>No Surat Jalan</th>
+                                                        <th>Customer</th>
                                                         <th>Stok Aktual</th>
                                                         <th>Part Number</th>
                                                         <th>Nama Barang</th>
@@ -71,7 +72,7 @@
                                                                     <i class="fas fa-eye"></i> Show
                                                                 </a> <br>
                                                                 <a class="btn btn-xs btn-success" href="{{ route('barang_keluar.print', $barangKeluar->id) }}" target="_blank">
-                                                                    <i class="fas fa-print"></i> Print Order
+                                                                    <i class="fas fa-print"></i> Print Surat Jalan
                                                                 </a> <br>
                                                                 <a class="btn btn-xs btn-primary" href="{{ route('barang_keluar.edit', $barangKeluar->id) }}">
                                                                     <i class="fas fa-edit"></i> Edit
@@ -81,6 +82,7 @@
                                                                 </button>
                                                             </td>
                                                             <td>{{ $barangKeluar->invoice_number }}</td>
+                                                            <td>{{ $barangKeluar->customer->name ?? '' }}</td>
                                                             <td>
                                                                 @foreach ($barangKeluar->details as $item)
                                                                     <strong>({{ $item->barang->stok }} @if ($item->barang->satuan) {{ $item->barang->satuan->name }} @endif)</strong><br>
@@ -182,10 +184,10 @@
             "responsive": true,
             "lengthChange": true,
             "autoWidth": false,
-            scrollY:        "300px",
-            scrollX:        true,
-            scrollCollapse: true,
-            paging:         false,
+            // scrollY:        "300px",
+            // scrollX:        true,
+            // scrollCollapse: true,
+            // paging:         false,
         });
     </script>
     

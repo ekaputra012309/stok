@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id'); // Track the user who created this transaction
             $table->string('invoice_number')->unique(); // Invoice number
+            $table->unsignedBigInteger('customer_id');
             $table->date('tanggal_keluar');
             $table->timestamps();
 
             // Foreign key to users table
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
         });
 
         // Create the barang_keluar_items table

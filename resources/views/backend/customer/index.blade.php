@@ -28,6 +28,9 @@
                         <div class="card-header">
                             <h3 class="card-title"> </h3>
                             <div class="card-tools">
+                                <a href="{{ route('customer.export') }}" class="btn btn-success btn-sm mr-2">
+                                    <i class="fas fa-upload"></i> Export
+                                </a>
                                 <a href="{{ route('customer.create') }}" class="btn btn-primary btn-sm">
                                     <i class="fas fa-plus"></i> Add Data
                                 </a>

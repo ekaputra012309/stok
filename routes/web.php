@@ -35,7 +35,6 @@ Route::delete('satuan/{satuan}', [SatuanController::class, 'destroy'])->name('sa
 Route::delete('barang/{barang}', [BarangController::class, 'destroy'])->name('barang.destroy');
 Route::post('barang/import', [BarangController::class, 'import'])->name('barang.import');
 Route::get('barang/template', [BarangController::class, 'downloadTemplate'])->name('barang.template');
-Route::get('/barang/export', [BarangController::class, 'export'])->name('barang.export');
 Route::post('/barang/delete-selected', [BarangController::class, 'destroy'])->name('barang.destroy');
 
 Route::delete('/purchase_order/{PurchaseOrder}', [PurchaseOrderController::class, 'destroy'])->name('purchase_order.destroy');
@@ -47,6 +46,12 @@ Route::get('/barang-broken/{id}/print', [BarangBrokenController::class, 'print']
 Route::get('/barang-template/{id}/print', [BarangTemplateController::class, 'print'])->name('barang_template.print');
 // Route to get barang template data
 Route::get('barang-template/{id}', [BarangKeluarController::class, 'getBarangTemplateData'])->name('barang_template.get_data');
+
+// export data
+Route::get('/barang/export', [BarangController::class, 'export'])->name('barang.export');
+Route::get('/satuan/export', [SatuanController::class, 'export'])->name('satuan.export');
+Route::get('/customer/export', [CustomerController::class, 'export'])->name('customer.export');
+
 
 Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -47,6 +47,18 @@
                                         <label for="tanggal_keluar">Tanggal Keluar Barang</label>
                                         <input type="date" class="form-control" name="tanggal_keluar" id="tanggal_keluar" value="{{ $barangKeluar->tanggal_keluar }}">
                                     </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="customer_id">Customer</label>
+                                        <select class="form-control select2bs4" id="customer_id" name="customer_id" required>
+                                            <option value="" disabled selected>Select Customer</option>
+                                            @foreach ($customers as $customer_t)
+                                                <option value="{{ $customer_t->id }}" {{ $barangKeluar->customer_id == $customer_t->id ? 'selected' : '' }}>
+                                                    {{ $customer_t->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
 
                                 <!-- Container for Existing Items -->

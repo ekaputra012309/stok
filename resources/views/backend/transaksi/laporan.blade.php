@@ -55,6 +55,9 @@
                                                 <option value="barang_broken">Barang Broken</option>
                                             </select>
                                         </div>
+                                        <div class="form-group">
+                                            <input type="text" id="partnumber" name="partnumber"  class="form-control" placeholder="Part Number">
+                                        </div>
                                         <div class="form-group text-center">
                                             <button type="submit" class="btn btn-primary w-100" id="printButton" disabled>Print Laporan</button>
                                         </div>

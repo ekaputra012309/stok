@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Barang;
 use App\Models\Satuan;
+use App\Models\Customer;
 use App\Models\CompanyProfile;
 use App\Models\BarangKeluar;
 use App\Models\BarangTemplate;
@@ -21,7 +22,7 @@ class BarangKeluarController extends Controller
     {
         $data = [
             'title' => 'Barang Keluar | ',
-            'databarang_keluar' => BarangKeluar::with(['details.barang.satuan'])->orderBy('created_at', 'desc')->get(),
+            'databarang_keluar' => BarangKeluar::with(['details.barang.satuan', 'customer'])->orderBy('created_at', 'desc')->get(),
             'databarang_template' => BarangTemplate::with(['details.barang.satuan'])->orderBy('created_at', 'desc')->get(),
         ];
         return view('backend.barang_keluar.index', $data);
@@ -53,9 +54,11 @@ class BarangKeluarController extends Controller
         $invoiceNumber = $this->generateInvoiceNumber($userId, $datePrefix);
         $barangs = Barang::with('satuan')->where('stok', '>', 0)->get();
         $barang_template = BarangTemplate::with(['details.barang.satuan'])->get();
+        $customers = Customer::all();
         $data = [
             'title' => 'Add Barang Keluar | ',
             'barangs' => $barangs,
+            'customers' => $customers,
             'barang_template' => $barang_template,
             'invoiceNumber' => $invoiceNumber,
         ];
@@ -68,6 +71,7 @@ class BarangKeluarController extends Controller
         $request->validate([
             'invoice_number' => 'required|string|unique:barang_keluar,invoice_number|max:255',
             'user_id' => 'required|exists:users,id',
+            'customer_id' => 'required|exists:customers,id',
             'items' => 'required|array',
             'items.*.barang_id' => 'required|exists:barang,id',
             'items.*.qty' => 'required|integer|min:1',
@@ -79,6 +83,7 @@ class BarangKeluarController extends Controller
             $barangKeluar = BarangKeluar::create([
                 'invoice_number' => $request->invoice_number,
                 'user_id' => auth()->user()->id, // Assuming the user is authenticated
+                'customer_id' => $request->customer_id,
                 'tanggal_keluar' => $request->tanggal_keluar, // Use the provided date
             ]);
 
@@ -117,11 +122,13 @@ class BarangKeluarController extends Controller
     {
         $barangs = Barang::with('satuan')->where('stok', '>', 0)->get();
         $satuans = Satuan::all();
+        $customers = Customer::all();
         $data = [
             'title' => 'Edit Barang Keluar | ',
             'barangKeluar' => $BarangKeluar->load('details.barang'),
             'barangs' => $barangs,
             'satuans' => $satuans,
+            'customers' => $customers,
         ];
         return view('backend.barang_keluar.edit', $data);
     }
@@ -132,6 +139,7 @@ class BarangKeluarController extends Controller
         $request->validate([
             'invoice_number' => 'required|string|unique:barang_keluar,invoice_number,' . $BarangKeluar->id . '|max:255',
             'user_id' => 'required|exists:users,id',
+            'customer_id' => 'required|exists:customers,id',
             'items' => 'required|array',
             'items.*.barang_id' => 'required|exists:barang,id',
             'items.*.qty' => 'required|integer|min:1',
@@ -143,6 +151,7 @@ class BarangKeluarController extends Controller
             $BarangKeluar->update([
                 'user_id' => $request->user_id,
                 'invoice_number' => $request->invoice_number,
+                'customer_id' => $request->customer_id,
                 'tanggal_keluar' => $request->tanggal_keluar,
             ]);
 
@@ -201,7 +210,7 @@ class BarangKeluarController extends Controller
 
     public function print($id)
     {
-        $barangKeluar = BarangKeluar::with('details.barang', 'user')->findOrFail($id); // Fetch the Barang Keluar
+        $barangKeluar = BarangKeluar::with('details.barang', 'user', 'customer')->findOrFail($id); // Fetch the Barang Keluar
         $companyProfile = CompanyProfile::first(); // Retrieve the company profile
         $data = [
             'title' => 'Print Barang Keluar | ',

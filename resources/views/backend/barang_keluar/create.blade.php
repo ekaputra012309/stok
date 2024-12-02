@@ -36,9 +36,9 @@
 
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="form-group col-md-4">
-                                        <label for="invoice_number">No Invoice</label>
-                                        <input type="text" class="form-control @error('invoice_number') is-invalid @enderror" id="invoice_number" name="invoice_number" placeholder="No Invoice" required>
+                                    <div class="form-group col-md-3">
+                                        <label for="invoice_number">No Surat Jalan</label>
+                                        <input type="text" class="form-control @error('invoice_number') is-invalid @enderror" id="invoice_number" name="invoice_number" placeholder="No Surat Jalan" required>
                                         @error('invoice_number')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -52,13 +52,25 @@
                                         <input type="date" class="form-control" name="tanggal_keluar" id="tanggal_keluar" value="{{ now()->format('Y-m-d') }}">
                                     </div>
 
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-3">
                                         <label for="barang_template">Barang Template</label>
                                         <select class="form-control select2bs4" id="barang_template">
                                             <option value="" disabled selected>Select Template</option>
                                             @foreach ($barang_template as $barang_t)
                                                 <option value="{{ $barang_t->id }}">
                                                     {{ $barang_t->nama_template }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-3">
+                                        <label for="customer_id">Customer</label>
+                                        <select class="form-control select2bs4" id="customer_id" name="customer_id" required>
+                                            <option value="" disabled selected>Select Customer</option>
+                                            @foreach ($customers as $customer_t)
+                                                <option value="{{ $customer_t->id }}">
+                                                    {{ $customer_t->name }}
                                                 </option>
                                             @endforeach
                                         </select>

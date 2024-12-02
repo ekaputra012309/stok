@@ -22,7 +22,7 @@ class BarangMasuk extends Model
      */
     public function details()
     {
-        return $this->hasMany(BarangMasukDetail::class);
+        return $this->hasMany(BarangMasukDetail::class, 'barang_masuk_id');
     }
 
     /**
