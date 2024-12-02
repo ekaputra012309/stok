@@ -32,7 +32,7 @@ class BarangKeluarController extends Controller
     {
         // Include "BK" in the matching pattern to avoid mismatches
         $latestInvoice = BarangKeluar::where('user_id', $userId)
-            ->where('invoice_number', 'like', "BK{$datePrefix}{$userId}%")
+            ->where('invoice_number', 'like', "PO{$datePrefix}{$userId}%")
             ->latest('invoice_number')
             ->first();
 
@@ -44,14 +44,14 @@ class BarangKeluarController extends Controller
             $newSequence = '001';
         }
 
-        return "BK{$datePrefix}{$userId}{$newSequence}";
+        return "PO{$datePrefix}{$userId}{$newSequence}";
     }
 
     public function create()
     {
         $userId = auth()->user()->id;
         $datePrefix = Carbon::now()->format('ymd'); // Format: YYMMDD
-        $invoiceNumber = $this->generateInvoiceNumber($userId, $datePrefix);
+        $poNumber = $this->generateInvoiceNumber($userId, $datePrefix);
         $barangs = Barang::with('satuan')->where('stok', '>', 0)->get();
         $barang_template = BarangTemplate::with(['details.barang.satuan'])->get();
         $customers = Customer::all();
@@ -60,7 +60,7 @@ class BarangKeluarController extends Controller
             'barangs' => $barangs,
             'customers' => $customers,
             'barang_template' => $barang_template,
-            'invoiceNumber' => $invoiceNumber,
+            'poNumber' => $poNumber,
         ];
         return view('backend.barang_keluar.create', $data);
     }
@@ -70,6 +70,7 @@ class BarangKeluarController extends Controller
         // dd($request->all());
         $request->validate([
             'invoice_number' => 'required|string|unique:barang_keluar,invoice_number|max:255',
+            'po_number' => 'required|string|unique:barang_keluar,po_number|max:255',
             'user_id' => 'required|exists:users,id',
             'customer_id' => 'required|exists:customers,id',
             'items' => 'required|array',
@@ -82,6 +83,7 @@ class BarangKeluarController extends Controller
             // Create a new BarangKeluar entry
             $barangKeluar = BarangKeluar::create([
                 'invoice_number' => $request->invoice_number,
+                'po_number' => $request->po_number,
                 'user_id' => auth()->user()->id, // Assuming the user is authenticated
                 'customer_id' => $request->customer_id,
                 'tanggal_keluar' => $request->tanggal_keluar, // Use the provided date
@@ -151,6 +153,7 @@ class BarangKeluarController extends Controller
             $BarangKeluar->update([
                 'user_id' => $request->user_id,
                 'invoice_number' => $request->invoice_number,
+                'po_number' => $request->po_number,
                 'customer_id' => $request->customer_id,
                 'tanggal_keluar' => $request->tanggal_keluar,
             ]);

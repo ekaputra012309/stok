@@ -81,7 +81,10 @@
                                                                     <i class="fas fa-trash"></i> Delete
                                                                 </button>
                                                             </td>
-                                                            <td>{{ $barangKeluar->invoice_number }}</td>
+                                                            <td>
+                                                                {{ $barangKeluar->invoice_number }} <br>
+                                                                No PO : <strong>{{ $barangKeluar->po_number }}</strong>
+                                                            </td>
                                                             <td>{{ $barangKeluar->customer->name ?? '' }}</td>
                                                             <td>
                                                                 @foreach ($barangKeluar->details as $item)
@@ -133,7 +136,7 @@
                                                                 <a class="btn btn-xs btn-primary" href="{{ route('barang_template.edit', $barangTemplate->id) }}">
                                                                     <i class="fas fa-edit"></i> Edit
                                                                 </a> <br>  
-                                                                <button class="btn btn-xs btn-danger delete-btn" data-id="{{ $barangTemplate->id }}">
+                                                                <button class="btn btn-xs btn-danger delete-btn-template" data-id="{{ $barangTemplate->id }}">
                                                                     <i class="fas fa-trash"></i> Delete
                                                                 </button>
                                                             </td>
@@ -192,9 +195,58 @@
     </script>
     
     <script>
-        $(document).on('click', '.delete-btn', function() {
+        $(document).on('click', '.delete-btn-template', function() {
             var barangId = $(this).data('id');
             var url = '{{ route('barang_template.destroy', ':id') }}';
+            url = url.replace(':id', barangId); // Replace :id with the actual ID
+            
+            // Show SweetAlert confirmation dialog
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This action cannot be undone.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE', // Set the HTTP method to DELETE
+                        data: {
+                            "_token": "{{ csrf_token() }}" // Include CSRF token
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Deleted!',
+                                text: response.success,
+                                icon: 'success',
+                                timer: 2000, // Close after 2 seconds
+                                showConfirmButton: false, // No OK button
+                                timerProgressBar: true // Show progress bar
+                            }).then(() => {
+                                location.reload(); // Reload the page or update the UI
+                            });
+                        },
+                        error: function(xhr) {
+                            var errorMessage = xhr.responseJSON?.message || 'An error occurred while deleting.';
+                            Swal.fire(
+                                'Error!',
+                                errorMessage,
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+<script>
+        $(document).on('click', '.delete-btn', function() {
+            var barangId = $(this).data('id');
+            var url = '{{ route('barang_keluar.destroy', ':id') }}';
             url = url.replace(':id', barangId); // Replace :id with the actual ID
             
             // Show SweetAlert confirmation dialog

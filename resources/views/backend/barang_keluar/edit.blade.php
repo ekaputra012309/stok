@@ -37,7 +37,12 @@
 
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-3">
+                                        <label for="po_number">No Invoice</label>
+                                        <input type="text" class="form-control" id="po_number" name="po_number" placeholder="No Invoice" value="{{ $barangKeluar->po_number }}" readonly required>
+                                    </div>
+
+                                    <div class="form-group col-md-3">
                                         <label for="invoice_number">No Invoice</label>
                                         <input type="text" class="form-control" id="invoice_number" name="invoice_number" placeholder="No Invoice" value="{{ $barangKeluar->invoice_number }}" readonly required>
                                     </div>
@@ -48,7 +53,7 @@
                                         <input type="date" class="form-control" name="tanggal_keluar" id="tanggal_keluar" value="{{ $barangKeluar->tanggal_keluar }}">
                                     </div>
 
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-3">
                                         <label for="customer_id">Customer</label>
                                         <select class="form-control select2bs4" id="customer_id" name="customer_id" required>
                                             <option value="" disabled selected>Select Customer</option>

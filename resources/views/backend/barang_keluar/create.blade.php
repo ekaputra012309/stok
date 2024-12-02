@@ -37,6 +37,16 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="form-group col-md-3">
+                                        <label for="po_number">No PO</label>
+                                        <input type="text" class="form-control @error('po_number') is-invalid @enderror" id="po_number" name="po_number" value="{{ $poNumber }}" placeholder="No PO" readonly required>
+                                        @error('po_number')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group col-md-3">
                                         <label for="invoice_number">No Surat Jalan</label>
                                         <input type="text" class="form-control @error('invoice_number') is-invalid @enderror" id="invoice_number" name="invoice_number" placeholder="No Surat Jalan" required>
                                         @error('invoice_number')
@@ -45,7 +55,9 @@
                                             </span>
                                         @enderror
                                     </div>
+                                </div>
 
+                                <div class="row">
                                     <!-- Tanggal Keluar Field -->
                                     <div class="form-group col-md-3">
                                         <label for="tanggal_keluar">Tanggal Keluar Barang</label>

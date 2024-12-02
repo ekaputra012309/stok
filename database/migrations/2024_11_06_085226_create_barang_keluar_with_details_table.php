@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id'); // Track the user who created this transaction
             $table->string('invoice_number')->unique(); // Invoice number
+            $table->string('po_number')->unique();
             $table->unsignedBigInteger('customer_id');
             $table->date('tanggal_keluar');
             $table->timestamps();

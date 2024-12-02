@@ -80,7 +80,8 @@
                 </td>
                 <td class="text-right">
                     <p>
-                        <strong>No Surat Jalan.</strong> {{ $barangKeluar->invoice_number }} <br>
+                        <strong>No PO:</strong> {{ $barangKeluar->po_number }} <br>
+                        <strong>No Surat Jalan:</strong> {{ $barangKeluar->invoice_number }} <br>
                         <strong>Customer:</strong> {{ $barangKeluar->customer->name }} <br>
                         <strong>Invoice Date:</strong> {{ $barangKeluar->created_at->translatedFormat('d F Y') }} <br>
                         <strong>Dibuat Oleh:</strong> {{ $barangKeluar->user->name }} <br>

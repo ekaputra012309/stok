@@ -13,6 +13,7 @@ class BarangKeluar extends Model
     protected $fillable = [
         'user_id',
         'invoice_number',
+        'po_number',
         'customer_id',
         'tanggal_keluar',
     ];

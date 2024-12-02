@@ -30,6 +30,10 @@
                         <div class="card-body">
                             <table class="table table-bordered">
                                 <tr>
+                                    <th>No PO</th>
+                                    <td>{{ $BarangKeluar->po_number }}</td>
+                                </tr>
+                                <tr>
                                     <th>No Surat Jalan</th>
                                     <td>{{ $BarangKeluar->invoice_number }}</td>
                                 </tr>
