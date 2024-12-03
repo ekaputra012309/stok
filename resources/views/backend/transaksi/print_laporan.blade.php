@@ -117,7 +117,7 @@
                             @if ($type == 'barang_keluar')
                                 <td>
                                     {{ $detailitem->po_number }}
-                                </td>                                
+                                </td>
                             @endif
                             <td>
                                 @if ($type == 'barang_masuk')
@@ -130,7 +130,10 @@
                             <td colspan="2">Dibuat Oleh: {{ $detailitem->user->name }}</td>
                         </tr>
                         <tr>
-                            <td {{ $type == 'barang_keluar' ? 'colspan=2' : '' }}>
+                            @if ($type == 'barang_keluar')
+                                <td></td>
+                            @endif
+                            <td>
                                 @if ($type == 'barang_masuk')
                                     <strong>Vendor</strong>
                                 @elseif ($type == 'barang_keluar')
@@ -146,7 +149,10 @@
                         <!-- Display each item's details under the current invoice -->
                         @foreach ($detailitem->details as $item)
                             <tr>
-                                <td {{ $type == 'barang_keluar' ? 'colspan=2' : '' }}>
+                                @if ($type == 'barang_keluar')
+                                    <td></td>
+                                @endif
+                                <td>
                                     @if ($type == 'barang_masuk')
                                         {{ $detailitem->purchaseOrder->vendor ?? '-' }}
                                     @elseif ($type == 'barang_keluar')
@@ -163,7 +169,7 @@
 
                         <!-- Display the total for the current invoice -->
                         <tr>
-                            <td {{ $type == 'barang_keluar' ? 'colspan=4' : 'colspan=3' }} class="no-line text-left"><strong>Total</strong></td>
+                            <td {{ $type == 'barang_keluar' ? 'colspan=4' : 'colspan=3' }} class="no-line text-right"><strong>Total</strong></td>
                             <td class="no-line text-center"><strong>{{ $detailitem->details->sum(fn($item) => $item->qty) }}</strong></td>
                         </tr>
                     @endforeach

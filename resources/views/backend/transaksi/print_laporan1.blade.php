@@ -138,14 +138,36 @@
                             </td>
                         </tr>
                         <tr>
-                            <td {{ $type == 'barang_keluar' ? 'colspan=2' : '' }}></td>
+                            @if ($type == 'barang_keluar')
+                                <td></td>
+                            @endif
+                            <td>
+                                @if ($type == 'barang_masuk')
+                                    <strong>Vendor</strong>
+                                @elseif ($type == 'barang_keluar')
+                                    <strong>Customer</strong>
+                                @else
+                                    
+                                @endif
+                            </td>
                             <td><strong>Part Number</strong></td>
                             <td></td>
                             <td></td>
                         </tr>
                         <!-- Display each item's details under the current invoice -->                        
                             <tr>
-                                <td {{ $type == 'barang_keluar' ? 'colspan=2' : '' }}></td>
+                                @if ($type == 'barang_keluar')
+                                    <td></td>
+                                @endif
+                                <td>
+                                    @if ($type == 'barang_masuk')
+                                        {{ $detailitem->barangMasuk->purchaseOrder->vendor ?? '-' }}
+                                    @elseif ($type == 'barang_keluar')
+                                        {{ $detailitem->barangKeluar->customer->name ?? '-' }}
+                                    @else
+                                        
+                                    @endif
+                                </td>
                                 <td>{{ $detailitem->barang->part_number }}</td>
                                 <td> {{ $detailitem->barang->deskripsi }}</td>
                                 <td class="text-center">{{ $detailitem->qty }}</td>
