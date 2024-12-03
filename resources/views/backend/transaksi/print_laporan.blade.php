@@ -9,6 +9,7 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            font-size: 10pt;
         }
         .container {
             width: 100%;

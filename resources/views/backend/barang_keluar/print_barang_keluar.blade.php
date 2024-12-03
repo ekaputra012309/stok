@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="{{ public_path('backend/img/logo.ico') }}" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice - {{ $barangKeluar->invoice_number }}</title>    
+    <title>Surat Jalan - {{ $barangKeluar->invoice_number }}</title>    
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -64,7 +64,7 @@
                     <img src="{{ public_path($companyProfile->image) }}" height="60" alt="Company Logo">
                 </td>
                 <td class="text-right">
-                    <h1>Invoice</h1>
+                    <h1>Surat Jalan</h1>
                 </td>
             </tr>
         </table>
