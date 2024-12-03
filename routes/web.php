@@ -28,7 +28,7 @@ Route::get('/get-role-name', [PrivilageController::class, 'getRoleName'])->name(
 Route::get('/transaksi/print/{id}', [TransaksiController::class, 'print'])->name('transaksi.print');
 Route::post('/clear-session', [TransaksiController::class, 'clearSession'])->name('clear.session');
 Route::get('/transaksi/laporan', [TransaksiController::class, 'laporan'])->name('transaksi.laporan');
-Route::get('/transaksi/laporan/cetak', [TransaksiController::class, 'cetakLaporan'])->name('transaksi.laporan.cetak');
+
 Route::get('/company-profile', [Backend::class, 'editCompany'])->name('companyProfile');
 Route::put('/company-profile/update', [Backend::class, 'updateCompany'])->name('companyProfile.update');
 Route::delete('satuan/{satuan}', [SatuanController::class, 'destroy'])->name('satuan.destroy');
@@ -51,6 +51,7 @@ Route::get('barang-template/{id}', [BarangKeluarController::class, 'getBarangTem
 Route::get('/barang/export', [BarangController::class, 'export'])->name('barang.export');
 Route::get('/satuan/export', [SatuanController::class, 'export'])->name('satuan.export');
 Route::get('/customer/export', [CustomerController::class, 'export'])->name('customer.export');
+Route::get('/transaksi/laporan/cetak', [TransaksiController::class, 'cetakLaporan'])->name('transaksi.laporan.cetak');
 
 
 Route::middleware(['auth'])->group(function () {

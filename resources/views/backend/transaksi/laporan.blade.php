@@ -43,7 +43,7 @@
                                             </button>
                                         </div>
                                         <div class="form-group">
-                                            <input type="text" id="daterange" class="form-control" readonly >
+                                            <input type="text" id="daterange" class="form-control" readonly>
                                             <input type="hidden" name="startDate" id="startDate" class="form-control" readonly> 
                                             <input type="hidden" name="endDate" id="endDate" class="form-control" readonly>
                                         </div>
@@ -56,10 +56,17 @@
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <input type="text" id="partnumber" name="partnumber"  class="form-control" placeholder="Part Number">
+                                            <input type="text" id="partnumber" name="partnumber" class="form-control" placeholder="Part Number">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="downloadType">Pilih Format Laporan</label>
+                                            <select name="downloadType" id="downloadType" class="form-control select2bs4" required>
+                                                <option value="pdf">PDF</option>
+                                                <option value="excel">Excel</option>
+                                            </select>
                                         </div>
                                         <div class="form-group text-center">
-                                            <button type="submit" class="btn btn-primary w-100" id="printButton" disabled>Print Laporan</button>
+                                            <button type="submit" class="btn btn-primary w-100" id="printButton" disabled>Download Laporan</button>
                                         </div>
                                     </div>
                                 </div>
@@ -95,19 +102,25 @@
                     $('#startDate').val(start.format('YYYY-MM-DD'));
                     $('#endDate').val(end.format('YYYY-MM-DD'));
 
-                    // Enable the print button if date range is selected
-                    if ($('#startDate').val() && $('#endDate').val()) {
-                        $('#printButton').prop('disabled', false); // Enable button
-                    } else {
-                        $('#printButton').prop('disabled', true); // Disable button
-                    }
+                    validateForm();
                 }
             );
 
-            // Check if date range is already selected on page load
-            if ($('#startDate').val() && $('#endDate').val()) {
-                $('#printButton').prop('disabled', false); // Enable button if date range is pre-filled
+            // Validate form inputs to enable button
+            function validateForm() {
+                const hasDateRange = $('#startDate').val() && $('#endDate').val();
+                const hasTransactionType = $('#type_transaksi').val();
+                const hasDownloadType = $('#downloadType').val();
+
+                if (hasDateRange && hasTransactionType && hasDownloadType) {
+                    $('#printButton').prop('disabled', false);
+                } else {
+                    $('#printButton').prop('disabled', true);
+                }
             }
+
+            // Revalidate form when dropdown changes
+            $('#type_transaksi, #downloadType').on('change', validateForm);
         });
     </script>
 </div>

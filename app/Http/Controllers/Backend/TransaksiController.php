@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Transaksi;
-use App\Models\TransaksiDetail;
 use App\Models\Barang;
 use App\Models\BarangMasuk;
 use App\Models\BarangMasukDetail;
@@ -18,6 +16,8 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use RealRashid\SweetAlert\Facades\Alert;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
+use App\Exports\LaporanExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TransaksiController extends Controller
 {
@@ -35,6 +35,7 @@ class TransaksiController extends Controller
         $endDate = $request->endDate;
         $type = $request->type_transaksi;
         $partnumber = $request->partnumber;
+        $downloadType = $request->downloadType;
 
         $request->validate([
             'startDate' => 'required|date',
@@ -44,7 +45,7 @@ class TransaksiController extends Controller
         // Convert start and end dates to the appropriate format
         $startDate = \Carbon\Carbon::parse($startDate)->startOfDay();  // Set start of the day
         $endDate = \Carbon\Carbon::parse($endDate)->endOfDay();  // Set end of the day (23:59:59)        
-        
+
         if ($type == 'barang_masuk') {
             $judul = 'Barang Masuk';
             $transaksi = BarangMasuk::with(['details.barang', 'user', 'purchaseOrder'])
@@ -85,9 +86,7 @@ class TransaksiController extends Controller
                     ->whereBetween('created_at', [$startDate, $endDate])
                     ->orderBy('created_at', 'desc');
             }
-        }        
-        
-        $companyProfile = CompanyProfile::first();
+        }
 
         $data = [
             'title' => 'Laporan | ',
@@ -96,15 +95,19 @@ class TransaksiController extends Controller
             'endDate' => $endDate,
             'judul' => $judul,
             'type' => $type,
-            'companyProfile' => $companyProfile,
+            'companyProfile' => CompanyProfile::first(),
         ];
         // dd($data['datatransaksi']);
-        if (!empty($partnumber)) {
-            $pdf = FacadePdf::loadView('backend.transaksi.print_laporan1', $data);
-        } else {
-            $pdf = FacadePdf::loadView('backend.transaksi.print_laporan', $data);
+        if ($downloadType === 'excel') {
+            return Excel::download(
+                new LaporanExport($startDate, $endDate, $type, $partnumber),
+                'Laporan '. $judul . now()->format('Ymd_His') . '.xlsx'
+            );
+        } elseif ($downloadType === 'pdf') {
+            // Generate PDF
+            $view = empty($partnumber) ? 'backend.transaksi.print_laporan' : 'backend.transaksi.print_laporan1';
+            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView($view, $data)->setPaper('A4', 'portrait');
+            return $pdf->stream("Laporan-{$type}-{$startDate}-to-{$endDate}.pdf");
         }
-        $pdf->setPaper('A4', 'portrait');
-        return $pdf->stream('Laporan-'.$judul.'-'.$startDate.'-'.$endDate.'.pdf');
     }
 }
