@@ -38,7 +38,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="form-group col-md-3">
-                                        <label for="po_number">No Invoice</label>
+                                        <label for="po_number">No PO</label>
                                         <input type="text" class="form-control" id="po_number" name="po_number" placeholder="No Invoice" value="{{ $barangKeluar->po_number }}" readonly required>
                                     </div>
 

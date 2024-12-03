@@ -96,6 +96,9 @@
         <table class="table">
             <thead>
                 <tr>
+                    @if ($type == 'barang_keluar')
+                        <th class="text-left"><strong>PO No.</strong></th>
+                    @endif
                     <th class="text-left"><strong>Invoice No.</strong></th>
                     <th class="text-left"><strong>Invoice Date</strong></th>
                     <th class="text-left"><strong>Barang</strong></th>
@@ -105,12 +108,17 @@
             <tbody>
                 @if ($datatransaksi->isEmpty())
                     <tr>
-                        <td colspan="4" class="no-data text-center">Data transaksi tidak ditemukan untuk periode yang dipilih.</td>
+                        <td {{ $type == 'barang_keluar' ? 'colspan=5' : 'colspan=4' }} class="no-data text-center">Data transaksi tidak ditemukan untuk periode yang dipilih.</td>
                     </tr>
                 @else
                     @foreach ($datatransaksi as $detailitem)
                         <!-- Display the invoice header information -->
                         <tr class="invoice-header">
+                            @if ($type == 'barang_keluar')
+                                <td>
+                                    {{ $detailitem->po_number }}
+                                </td>                                
+                            @endif
                             <td>
                                 @if ($type == 'barang_masuk')
                                     {{ $detailitem->purchaseOrder->invoice_number }}
@@ -122,7 +130,7 @@
                             <td colspan="2">Dibuat Oleh: {{ $detailitem->user->name }}</td>
                         </tr>
                         <tr>
-                            <td>
+                            <td {{ $type == 'barang_keluar' ? 'colspan=2' : '' }}>
                                 @if ($type == 'barang_masuk')
                                     <strong>Vendor</strong>
                                 @elseif ($type == 'barang_keluar')
@@ -138,7 +146,7 @@
                         <!-- Display each item's details under the current invoice -->
                         @foreach ($detailitem->details as $item)
                             <tr>
-                                <td>
+                                <td {{ $type == 'barang_keluar' ? 'colspan=2' : '' }}>
                                     @if ($type == 'barang_masuk')
                                         {{ $detailitem->purchaseOrder->vendor ?? '-' }}
                                     @elseif ($type == 'barang_keluar')
@@ -155,7 +163,7 @@
 
                         <!-- Display the total for the current invoice -->
                         <tr>
-                            <td colspan="3" class="no-line text-left"><strong>Total</strong></td>
+                            <td {{ $type == 'barang_keluar' ? 'colspan=4' : 'colspan=3' }} class="no-line text-left"><strong>Total</strong></td>
                             <td class="no-line text-center"><strong>{{ $detailitem->details->sum(fn($item) => $item->qty) }}</strong></td>
                         </tr>
                     @endforeach
@@ -163,7 +171,7 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="3" class="text-right"><strong>Sub Total</strong></td>
+                    <td {{ $type == 'barang_keluar' ? 'colspan=4' : 'colspan=3' }} class="text-right"><strong>Sub Total</strong></td>
                     <td class="text-center"><strong>{{ $datatransaksi->flatMap(function($item) { return $item->details; })->sum('qty'); }}</strong></td>
                 </tr>
             </tfoot>

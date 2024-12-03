@@ -96,6 +96,9 @@
         <table class="table">
             <thead>
                 <tr>
+                    @if ($type == 'barang_keluar')
+                        <th class="text-left"><strong>PO No.</strong></th>
+                    @endif
                     <th class="text-left"><strong>Invoice No.</strong></th>
                     <th class="text-left"><strong>Invoice Date</strong></th>
                     <th class="text-left"><strong>Barang</strong></th>
@@ -105,12 +108,17 @@
             <tbody>
                 @if ($datatransaksi->isEmpty())
                     <tr>
-                        <td colspan="4" class="no-data text-center">Data transaksi tidak ditemukan untuk periode yang dipilih.</td>
+                        <td {{ $type == 'barang_keluar' ? 'colspan=5' : 'colspan=4' }} class="no-data text-center">Data transaksi tidak ditemukan untuk periode yang dipilih.</td>
                     </tr>
                 @else
                     @foreach ($datatransaksi as $detailitem)
                         <!-- Display the invoice header information -->
                         <tr class="invoice-header">
+                            @if ($type == 'barang_keluar')
+                                <td>
+                                    {{ $detailitem->barangKeluar->po_number }}
+                                </td>                                
+                            @endif
                             <td>
                                 @if ($type == 'barang_masuk')
                                     {{ $detailitem->barangMasuk->purchaseOrder->invoice_number }}
@@ -130,14 +138,14 @@
                             </td>
                         </tr>
                         <tr>
-                            <td></td>
+                            <td {{ $type == 'barang_keluar' ? 'colspan=2' : '' }}></td>
                             <td><strong>Part Number</strong></td>
                             <td></td>
                             <td></td>
                         </tr>
                         <!-- Display each item's details under the current invoice -->                        
                             <tr>
-                                <td></td>
+                                <td {{ $type == 'barang_keluar' ? 'colspan=2' : '' }}></td>
                                 <td>{{ $detailitem->barang->part_number }}</td>
                                 <td> {{ $detailitem->barang->deskripsi }}</td>
                                 <td class="text-center">{{ $detailitem->qty }}</td>
@@ -154,7 +162,7 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="3" class="text-right"><strong>Total</strong></td>
+                    <td {{ $type == 'barang_keluar' ? 'colspan=4' : 'colspan=3' }} class="text-right"><strong>Total</strong></td>
                     <td class="text-center"><strong>{{ $datatransaksi->sum('qty'); }}</strong></td>
                 </tr>
             </tfoot>
