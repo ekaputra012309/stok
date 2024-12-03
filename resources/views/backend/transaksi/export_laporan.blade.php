@@ -46,11 +46,9 @@
                     @endif
                     <td style="border: 1px solid black; padding: 8px;">
                         @if ($type_transaksi == 'barang_masuk')
-                            {{ $detailitem->barangMasuk->purchaseOrder->invoice_number }}
-                        @elseif ($type_transaksi == 'barang_keluar')
-                            {{ $detailitem->barangKeluar->invoice_number }}
+                            {{ $detailitem->purchaseOrder->invoice_number ?? 'N/A' }}
                         @else
-                            {{ optional($detailitem->barangbroken)->invoice_number }}
+                            {{ $detailitem->invoice_number }}
                         @endif
                     </td>
                     <td style="border: 1px solid black; padding: 8px;">{{ $detailitem->created_at->translatedFormat('d M Y') }}</td>
@@ -63,12 +61,8 @@
                             {{ '-' }}
                         @endif
                     </td>
-                    <td style="border: 1px solid black; padding: 8px; text-align: center;">
-                        @if ($type_transaksi == 'barang_masuk')    
-                            {{ $detailitem->barangMasuk->user->name }}
-                        @else
-                            {{ $detailitem->user->name }}
-                        @endif
+                    <td style="border: 1px solid black; padding: 8px; text-align: center;">   
+                        {{ $detailitem->user->name ?? 'N/A' }}
                     </td>
                 </tr>
                 

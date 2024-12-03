@@ -101,7 +101,7 @@ class TransaksiController extends Controller
         if ($downloadType === 'excel') {
             return Excel::download(
                 new LaporanExport($startDate, $endDate, $type, $partnumber),
-                'Laporan '. $judul . now()->format('Ymd_His') . '.xlsx'
+                'Laporan '. $judul .' '. now()->format('Ymd_His') . '.xlsx'
             );
         } elseif ($downloadType === 'pdf') {
             // Generate PDF
