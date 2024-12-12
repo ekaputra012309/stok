@@ -64,7 +64,7 @@
                     <img src="{{ public_path($companyProfile->image) }}" height="60" alt="Company Logo">
                 </td>
                 <td class="text-right">
-                    <h1>Invoice</h1>
+                    <h1>Barang Broken</h1>
                 </td>
             </tr>
         </table>
