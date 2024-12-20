@@ -14,6 +14,7 @@ use App\Http\Controllers\Backend\BarangKeluarController;
 use App\Http\Controllers\Backend\BarangBrokenController;
 use App\Http\Controllers\Backend\BarangTemplateController;
 use App\Http\Controllers\Backend\CustomerController;
+use App\Http\Controllers\Backend\BarangLimitController;
 
 // Route::get('/', function () {
 //     return ['Laravel' => app()->version()];
@@ -53,6 +54,7 @@ Route::get('/satuan/export', [SatuanController::class, 'export'])->name('satuan.
 Route::get('/customer/export', [CustomerController::class, 'export'])->name('customer.export');
 Route::get('/transaksi/laporan/cetak', [TransaksiController::class, 'cetakLaporan'])->name('transaksi.laporan.cetak');
 
+Route::delete('/barang-limit/{baranglimit}', [BarangLimitController::class, 'destroy'])->name('barang_limit.destroy');
 
 Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -69,6 +71,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('barang_broken', BarangBrokenController::class); //barang_broken
     Route::resource('barang_template', BarangTemplateController::class); //barang_template
     Route::resource('customer', CustomerController::class); //customer
+    Route::resource('barang_limit', BarangLimitController::class); //barang_limit
 
 });
 
