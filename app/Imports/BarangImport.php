@@ -22,7 +22,8 @@ class BarangImport implements ToCollection, WithHeadingRow
             if (
                 $row['deskripsi'] === 'Example Description' &&
                 $row['part_number'] === 'EX-12345' &&
-                $row['satuan_name'] === 'Kilogram'
+                $row['limit'] === '10' &&
+                $row['satuan_name'] === 'PCS'
             ) {
                 continue; // Skip this row
             }
@@ -69,6 +70,7 @@ class BarangImport implements ToCollection, WithHeadingRow
             Barang::create([
                 'deskripsi'   => $row['deskripsi'],
                 'part_number' => $row['part_number'],
+                'limit'       => $row['limit'],
                 'satuan_id'   => $satuan->id,
                 'user_id'     => auth()->id(), // Set the authenticated user's ID
             ]);

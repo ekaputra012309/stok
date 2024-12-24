@@ -75,12 +75,13 @@
                                         <th>Part Number</th>
                                         <th>Deskripsi</th>
                                         <th>Stok</th>
+                                        <th>Limit</th>
                                         <th>Uom</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($databarang as $barang)
-                                    <tr class="bg-{{ $barang->stok < 5 ? 'warning' : '' }}">
+                                    <tr class="bg-{{ $barang->stok <= $barang->limit ? 'warning' : '' }}">
                                         <td>
                                             @if (in_array($role, ['superadmin', 'owner', 'admin']))
                                             <input type="checkbox" class="select-item" data-id="{{ $barang->id }}">
@@ -96,6 +97,7 @@
                                         <td>{{ $barang->part_number }}</td>
                                         <td>{{ $barang->deskripsi }}</td>
                                         <td>{{ $barang->stok }}</td>
+                                        <td>{{ $barang->limit }}</td>
                                         <td>{{ $barang->satuan->name }}</td>
                                     </tr>
                                     @endforeach

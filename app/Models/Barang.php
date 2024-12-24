@@ -16,6 +16,7 @@ class Barang extends Model
         'deskripsi',
         'part_number',
         'stok',
+        'limit',
         'satuan_id',
     ];
 

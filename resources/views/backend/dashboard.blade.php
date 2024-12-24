@@ -98,16 +98,13 @@
                                 <span class="text-danger font-italic font-weight-bold">* Data barang dengan stok limit *</span>
                             </h3>
                             <div class="card-tools">
-                                <a href="{{ route('barang_limit.create') }}" class="btn btn-primary btn-sm">
-                                    <i class="fas fa-plus"></i> Tambah barang limit
-                                </a>
+                                
                             </div>
                         </div>
                         <div class="card-body table-responsive">
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
                                         <th>Deskripsi</th>
                                         <th>Stok sistem</th>
                                         <th>Stok limit</th>
@@ -117,15 +114,10 @@
                                 <tbody>
                                     @foreach ($databarang as $brg)
                                     <tr>
-                                        <td>
-                                        <button class="btn btn-xs btn-danger delete-btn" data-id="{{ $brg->id }}">
-                                            <i class="fas fa-trash"></i> Delete
-                                        </button>
-                                        </td>
-                                        <td><strong>({{$brg->barang->part_number}})</strong> {{ $brg->barang->deskripsi }}</td>
-                                        <td>{{ $brg->barang->stok }}</td>
-                                        <td>{{ $brg->qtyLimit }}</td>
-                                        <td>{{ $brg->barang->satuan->name }}</td>
+                                        <td><strong>({{$brg->part_number}})</strong> {{ $brg->deskripsi }}</td>
+                                        <td>{{ $brg->stok }}</td>
+                                        <td>{{ $brg->limit }}</td>
+                                        <td>{{ $brg->satuan->name }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -211,55 +203,6 @@
             "pageLength": 5,
             // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
         });
-    </script>
-    <script>
-        $(document).on('click', '.delete-btn', function() {
-            var barangId = $(this).data('id');
-            var url = '{{ route('barang_limit.destroy', ':id') }}';
-            url = url.replace(':id', barangId); // Replace :id with the actual ID
-            console.log(barangId);
-
-            // Show SweetAlert confirmation dialog
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "This action cannot be undone.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: url,
-                        type: 'DELETE', // Set the HTTP method to DELETE
-                        data: {
-                            "_token": "{{ csrf_token() }}" // Include CSRF token
-                        },
-                        success: function(response) {
-                            Swal.fire({
-                                title: 'Deleted!',
-                                text: response.success,
-                                icon: 'success',
-                                timer: 2000, // Close after 2 seconds
-                                showConfirmButton: false, // No OK button
-                                timerProgressBar: true // Show progress bar
-                            }).then(() => {
-                                location.reload(); // Reload the page or update the UI
-                            });
-                        },
-                        error: function(xhr) {
-                            var errorMessage = xhr.responseJSON?.message || 'An error occurred while deleting.';
-                            Swal.fire(
-                                'Error!',
-                                errorMessage,
-                                'error'
-                            );
-                        }
-                    });
-                }
-            });
-        });
-    </script>
+    </script>    
 </div>
 @endsection

@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('deskripsi'); // Adjust as necessary
             $table->string('part_number')->unique(); // Add custom code column, make it unique
             $table->integer('stok')->default(0);
+            $table->integer('limit')->default(0);
             $table->foreignId('satuan_id')->constrained('satuan')->onDelete('cascade'); // Foreign key referencing satuan
             $table->timestamps();
 
