@@ -54,7 +54,7 @@
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label for="limit">Limit</label>
-                                        <input type="number" class="form-control @error('limit') is-invalid @enderror" id="limit" name="limit" placeholder="Limit" required>
+                                        <input type="number" class="form-control @error('limit') is-invalid @enderror" id="limit" name="limit" placeholder="Limit" value="0" required>
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="satuan_id">UOM</label>

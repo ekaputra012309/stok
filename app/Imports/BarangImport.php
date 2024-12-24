@@ -31,7 +31,12 @@ class BarangImport implements ToCollection, WithHeadingRow
             // Validate the row data
             $validator = Validator::make($row->toArray(), [
                 'deskripsi'   => 'required|string|max:255',
-                'part_number' => 'required|string|max:255|unique:barang,part_number',
+                'part_number' => [
+                    'required',
+                    'max:255',
+                    'regex:/^[\p{L}\p{N}\p{P}\p{S}]+$/u', // Allows letters, numbers, punctuation, and symbols
+                    'unique:barang,part_number'
+                ],
                 'satuan_name' => 'required|string|exists:satuan,name',
             ]);
 

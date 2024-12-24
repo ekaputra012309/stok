@@ -84,21 +84,19 @@ class BarangController extends Controller
 
     public function destroy(Request $request, Barang $barang = null)
     {
-        // $barang->delete();
-        // return response()->json(['success' => 'Barang deleted successfully.']);
-        if ($request->has('ids') && is_array($request->input('ids'))) {
-            // If there is an array of IDs, delete the selected records
+        if ($request->has('ids')) {
+            // Handle multiple deletions
             Barang::whereIn('id', $request->input('ids'))->delete();
             return response()->json(['success' => 'Selected barang records deleted successfully.']);
         }
-    
+
         if ($barang) {
-            // If there's a single Barang model, delete it
+            // Handle single deletion
             $barang->delete();
             return response()->json(['success' => 'Barang deleted successfully.']);
         }
-    
-        return response()->json(['error' => 'No items selected'], 400);
+
+        return response()->json(['error' => 'Invalid request.'], 400);
     }
 
     public function import(Request $request)

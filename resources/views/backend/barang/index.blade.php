@@ -191,7 +191,8 @@
                     if (result.isConfirmed) {
                         // Send AJAX request to delete selected rows
                         $.ajax({
-                            url: '{{ route('barang.destroy', ['barang' => 'delete-selected']) }}', // Use the same route for multiple deletion
+                            url: '{{ route('barang.destroy') }}', // Same route
+                            // url: '{{ route('barang.destroy', ['barang' => 'delete-selected']) }}', // Use the same route for multiple deletion
                             type: 'POST',
                             data: {
                                 "_token": "{{ csrf_token() }}",
@@ -229,7 +230,7 @@
         var barangId = $(this).data('id');
         var url = '{{ route('barang.destroy', ':id') }}';
         url = url.replace(':id', barangId); // Replace :id with the actual ID
-
+        // console.log(url);
         Swal.fire({
             title: 'Are you sure?',
             text: "This action cannot be undone.",
@@ -242,7 +243,7 @@
             if (result.isConfirmed) {
                 $.ajax({
                     url: url,
-                    type: 'DELETE',
+                    type: 'POST',
                     data: {
                         "_token": "{{ csrf_token() }}"
                     },

@@ -35,7 +35,7 @@ Route::delete('satuan/{satuan}', [SatuanController::class, 'destroy'])->name('sa
 Route::delete('barang/{barang}', [BarangController::class, 'destroy'])->name('barang.destroy');
 Route::post('barang/import', [BarangController::class, 'import'])->name('barang.import');
 Route::get('barang/template', [BarangController::class, 'downloadTemplate'])->name('barang.template');
-Route::post('/barang/delete-selected', [BarangController::class, 'destroy'])->name('barang.destroy');
+Route::post('/barang/destroy/{barang?}', [BarangController::class, 'destroy'])->name('barang.destroy');
 
 Route::delete('/purchase_order/{PurchaseOrder}', [PurchaseOrderController::class, 'destroy'])->name('purchase_order.destroy');
 Route::post('purchase_order/{id}/approve', [PurchaseOrderController::class, 'approve'])->name('purchase_order.approve');
