@@ -31,6 +31,7 @@ class BarangExport implements FromCollection, WithHeadings, WithMapping, WithCol
             ++$this->index,                // Increment and include the row number
             $barang->part_number,
             $barang->deskripsi,
+            $barang->stok,
             $barang->limit,
             $barang->satuan->name ?? 'N/A', // Handle cases where 'satuan' might be null
         ];
@@ -41,7 +42,7 @@ class BarangExport implements FromCollection, WithHeadings, WithMapping, WithCol
      */
     public function headings(): array
     {
-        return ['No', 'Part Number', 'Deskripsi', 'Limit', 'Satuan Name'];
+        return ['No', 'Part Number', 'Deskripsi', 'Stok', 'Limit', 'Satuan Name'];
     }
 
     public function columnWidths(): array
@@ -50,15 +51,18 @@ class BarangExport implements FromCollection, WithHeadings, WithMapping, WithCol
             'A' => 5,  // Column 'No' (A) width
             'B' => 20, // Column 'Part Number' (B) width
             'C' => 40, // Column 'Deskripsi' (C) width
-            'D' => 20, // Column 'Limit' (D) width
-            'E' => 15, // Column 'Satuan Name' (E) width
+            'D' => 20, // Column 'Stok' (D) width
+            'E' => 20, // Column 'Limit' (E) width
+            'F' => 15, // Column 'Satuan Name' (F) width
         ];
     }
 
     public function styles(Worksheet $sheet)
     {
         $sheet->getStyle('A')->getAlignment()->setHorizontal('center'); // Center-align column A
+        $sheet->getStyle('D')->getAlignment()->setHorizontal('center'); // Center-align column D
         $sheet->getStyle('E')->getAlignment()->setHorizontal('center'); // Center-align column E
+        $sheet->getStyle('F')->getAlignment()->setHorizontal('center'); // Center-align column F
 
         return [];
     }
