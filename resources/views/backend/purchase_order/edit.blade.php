@@ -38,7 +38,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="form-group col-md-4">
-                                        <label for="invoice_number">Invoice Number</label>
+                                        <label for="invoice_number">No PO</label>
                                         <input type="text" class="form-control @error('invoice_number') is-invalid @enderror" id="invoice_number" name="invoice_number" value="{{ $purchaseOrder->invoice_number }}" readonly required>
                                         @error('invoice_number')
                                             <span class="invalid-feedback" role="alert">

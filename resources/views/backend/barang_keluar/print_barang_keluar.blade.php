@@ -83,9 +83,10 @@
                         <strong>No PO:</strong> {{ $barangKeluar->po_number }} <br>
                         <strong>No Surat Jalan:</strong> {{ $barangKeluar->invoice_number }} <br>
                         <strong>Customer:</strong> {{ $barangKeluar->customer->name }} <br>
-                        <strong>Invoice Date:</strong> {{ $barangKeluar->created_at->translatedFormat('d F Y') }} <br>
-                        <strong>Dibuat Oleh:</strong> {{ $barangKeluar->user->name }} <br>
-                        <strong>Dicetak Oleh:</strong> {{ auth()->user()->name }} <br>
+                        <strong>PO Date:</strong> {{ $barangKeluar->created_at->translatedFormat('d F Y') }} <br>
+                        <strong>Tgl Surat Jalan:</strong> {{ now()->translatedFormat('d F Y') }} <br>
+                        <!-- <strong>Dibuat Oleh:</strong> {{ $barangKeluar->user->name }} <br>
+                        <strong>Dicetak Oleh:</strong> {{ auth()->user()->name }} <br> -->
                     </p>
                 </td>
             </tr>

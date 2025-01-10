@@ -36,7 +36,7 @@
                                 <div class="row">
                                     <!-- Invoice Number Field -->
                                     <div class="form-group col-md-3">
-                                        <label for="invoice_number">Invoice Number</label>
+                                        <label for="invoice_number">No PO</label>
                                         <input type="text" class="form-control" name="invoice_number" id="invoice_number" readonly value="{{ $purchaseOrder->invoice_number }}">
                                         <input type="hidden" name="invoice_number_hidden" value="{{ $purchaseOrder->invoice_number }}">
                                     </div>

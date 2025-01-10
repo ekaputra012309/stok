@@ -36,8 +36,8 @@
 
                             <div class="card-body">
                                 <div class="form-group col-md-4">
-                                    <label for="invoice_number">Invoice Number</label>
-                                    <input type="text" class="form-control @error('invoice_number') is-invalid @enderror" id="invoice_number" name="invoice_number" placeholder="Invoice Number" required>
+                                    <label for="invoice_number">No PO</label>
+                                    <input type="text" class="form-control @error('invoice_number') is-invalid @enderror" id="invoice_number" name="invoice_number" placeholder="No PO" required>
                                     @error('invoice_number')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>

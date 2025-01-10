@@ -30,7 +30,7 @@
                         <div class="card-body">
                             <table class="table table-bordered">
                                 <tr>
-                                    <th>Invoice Number</th>
+                                    <th>No PO</th>
                                     <td>{{ $BarangMasuk->purchaseOrder->invoice_number }}</td>
                                 </tr>
                                 <tr>

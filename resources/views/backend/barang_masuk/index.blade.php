@@ -48,7 +48,7 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>No Invoice</th>
+                                        <th>No PO</th>
                                         <th>Stok Aktual</th>
                                         <th>Part Number</th>
                                         <th>Nama Barang (Qty Masuk)</th>
