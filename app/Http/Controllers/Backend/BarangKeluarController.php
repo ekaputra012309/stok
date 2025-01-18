@@ -76,7 +76,7 @@ class BarangKeluarController extends Controller
             'items' => 'required|array',
             'items.*.barang_id' => 'required|exists:barang,id',
             'items.*.qty' => 'required|integer|min:1',
-            'items.*.remarks' => 'required|string|max:255',
+            'items.*.remarks' => 'nullable|string|max:255',
             'tanggal_keluar' => 'required|date',
         ]);        
 
@@ -103,7 +103,7 @@ class BarangKeluarController extends Controller
                     'barang_keluar_id' => $barangKeluar->id,
                     'barang_id' => $item['barang_id'],
                     'qty' => $item['qty'],
-                    'remarks' => $item['remarks'],
+                    'remarks' => $item['remarks'] ?? '',
                     'user_id' => $request->user_id,
                 ]);
             }
@@ -147,7 +147,7 @@ class BarangKeluarController extends Controller
             'items' => 'required|array',
             'items.*.barang_id' => 'required|exists:barang,id',
             'items.*.qty' => 'required|integer|min:1',
-            'items.*.remarks' => 'required|string|max:255',
+            'items.*.remarks' => 'nullable|string|max:255',
             'tanggal_keluar' => 'required|date',
         ]);
 
@@ -182,7 +182,7 @@ class BarangKeluarController extends Controller
                     'barang_keluar_id' => $BarangKeluar->id,
                     'barang_id' => $item['barang_id'],
                     'qty' => $item['qty'],
-                    'remarks' => $item['remarks'],
+                    'remarks' => $item['remarks'] ?? '',
                     'user_id' => $request->user_id,
                 ]);
             }
