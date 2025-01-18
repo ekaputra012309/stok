@@ -170,7 +170,7 @@
             <tbody>
                 <tr class="text-center">
                     <td style="width: 30%">
-                        {{ $barangKeluar->customer->name }}
+                    {{ $companyProfile->name }}
                     </td>
                     <td></td>
                     <td style="width: 30%">
