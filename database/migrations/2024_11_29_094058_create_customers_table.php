@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id'); // Add user_id column
             $table->string('name'); // Adjust as necessary
+            $table->string('alamat')->nullable();
+            $table->string('phone')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

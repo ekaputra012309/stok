@@ -28,6 +28,8 @@ class CustomerExport implements FromCollection, WithHeadings, WithMapping, WithC
         return [
             ++$this->index,
             $customer->name ?? 'N/A', // Handle cases where 'customer' might be null
+            $customer->alamat ?? 'N/A',
+            $customer->phone ?? 'N/A',
         ];
     }
 
@@ -36,14 +38,16 @@ class CustomerExport implements FromCollection, WithHeadings, WithMapping, WithC
      */
     public function headings(): array
     {
-        return ['No', 'Nama Customer'];
+        return ['No', 'Nama Customer', 'Alamat', 'No Telp'];
     }
 
     public function columnWidths(): array
     {
         return [
             'A' => 5,  // Column 'No' (A) width
-            'B' => 30, // Column 'Part Number' (B) width
+            'B' => 30, // Column 'Customer' (B) width
+            'C' => 50, // Column 'Alamat' (C) width
+            'D' => 20, // Column 'No telp' (D) width
         ];
     }
 }

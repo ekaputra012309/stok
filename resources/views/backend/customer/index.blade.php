@@ -42,6 +42,8 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Nama Customer</th>
+                                        <th>Alamat</th>
+                                        <th>No Telp</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -56,6 +58,8 @@
                                             </button>
                                         </td>
                                         <td>{{ $customer->name }}</td>
+                                        <td>{{ $customer->alamat }}</td>
+                                        <td>{{ $customer->phone }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>

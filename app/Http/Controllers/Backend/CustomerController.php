@@ -32,6 +32,8 @@ class CustomerController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'alamat' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
             'user_id' => 'required|exists:users,id', // Adjust as necessary
         ]);
 
@@ -62,6 +64,8 @@ class CustomerController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'alamat' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
             'user_id' => 'required|exists:users,id',
         ]);
 

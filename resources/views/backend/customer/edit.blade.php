@@ -35,10 +35,20 @@
                             @endauth
 
                             <div class="card-body">
-                                <div class="form-group col-md-4">
-                                    <label for="name">Nama Customer</label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{ $customer->name }}" placeholder="Nama customer" required>
-                                </div>                                
+                                <div class="row">
+                                    <div class="form-group col-md-3">
+                                        <label for="name">Nama Customer</label>
+                                        <input type="text" class="form-control" id="name" name="name"  value="{{ $customer->name }}" placeholder="Nama customer" required>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="alamat">Alamat</label>
+                                        <input type="text" class="form-control" id="alamat" name="alamat"  value="{{ $customer->alamat }}" placeholder="Alamat" required>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="phone">No Telp</label>
+                                        <input type="tel" class="form-control" id="phone" name="phone"  value="{{ $customer->phone }}" placeholder="No Telp" required>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="card-footer">

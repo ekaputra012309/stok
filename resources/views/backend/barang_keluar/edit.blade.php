@@ -89,6 +89,10 @@
                                                 <label for="qty">Quantity</label>
                                                 <input type="number" class="form-control qty-input" name="items[{{ $index }}][qty]" placeholder="Quantity" required min="1" value="{{ $item->qty }}">
                                             </div>
+                                            <div class="form-group col-md-2">
+                                                <label for="remarks">Remarks</label>
+                                                <input type="text" class="form-control remarks-input" name="items[{{ $index }}][remarks]" placeholder="Remarks" value="{{ $item->remarks }}">
+                                            </div>
                                             <div class="form-group col-md-2 d-flex align-items-end">
                                                 <button type="button" class="btn btn-danger btn-sm remove-item">Remove</button>
                                             </div>
@@ -171,6 +175,10 @@
                         <div class="form-group col-md-2">
                             <label for="qty">Quantity</label>
                             <input type="number" class="form-control qty-input" name="items[${itemIndex}][qty]" placeholder="Quantity" required min="1">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="remarks">Remarks</label>
+                            <input type="text" class="form-control remarks-input" name="items[${itemIndex}][remarks]" placeholder="Remarks" >
                         </div>
                         <div class="form-group col-md-2 d-flex align-items-end">
                             <button type="button" class="btn btn-danger btn-sm remove-item">Remove</button>

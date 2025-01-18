@@ -103,7 +103,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="form-group col-md-3">
+                                        <div class="form-group col-md-2">
                                             <label>Deskripsi</label>
                                             <input type="text" class="form-control" id="items[0][deskripsi]" readonly>
                                         </div>
@@ -115,6 +115,15 @@
                                             <label for="qty">Quantity</label>
                                             <input type="number" class="form-control qty-input @error('items.0.qty') is-invalid @enderror" name="items[0][qty]" placeholder="Quantity" required min="1">
                                             @error('items.0.qty')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="remarks">Remarks</label>
+                                            <input type="text" class="form-control remarks-input @error('items.0.remarks') is-invalid @enderror" name="items[0][remarks]" placeholder="Remarks" >
+                                            @error('items.0.remarks')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -201,7 +210,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-2">
                             <label>Deskripsi</label>
                             <input type="text" class="form-control" id="items[${itemIndex}][deskripsi]" readonly>
                         </div>
@@ -213,6 +222,15 @@
                             <label for="qty">Quantity</label>
                             <input type="number" class="form-control qty-input @error('items.${itemIndex}.qty') is-invalid @enderror" name="items[${itemIndex}][qty]" placeholder="Quantity" required min="1">
                             @error('items.${itemIndex}.qty')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="remarks">Remarks</label>
+                            <input type="text" class="form-control remarks-input @error('items.${itemIndex}.remarks') is-invalid @enderror" name="items[${itemIndex}][remarks]" placeholder="Remarks" >
+                            @error('items.${itemIndex}.remarks')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -278,7 +296,7 @@
                                                 <option value="${item.barang.id}" selected>${item.barang.part_number}</option>
                                             </select>
                                         </div>
-                                        <div class="form-group col-md-3">
+                                        <div class="form-group col-md-2">
                                             <label>Deskripsi</label>
                                             <input type="text" class="form-control" id="items[${index}][deskripsi]" value="${item.barang.deskripsi}" readonly>
                                         </div>
@@ -289,6 +307,10 @@
                                         <div class="form-group col-md-2">
                                             <label for="qty">Quantity</label>
                                             <input type="number" class="form-control qty-input" name="items[${index}][qty]" value="${item.qty}" placeholder="Quantity" required min="1" max="${item.barang.stok}">
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="remarks">Remarks</label>
+                                            <input type="text" class="form-control remarks-input" name="items[${index}][remarks]" value="${item.remarks}" placeholder="Remarks">
                                         </div>
                                         <div class="form-group col-md-2 d-flex align-items-end">
                                             <button type="button" class="btn btn-danger btn-sm remove-item">Remove</button>
