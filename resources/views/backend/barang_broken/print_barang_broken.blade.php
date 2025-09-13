@@ -60,9 +60,9 @@
     <div class="row">
         <table class="w-100">
             <tr>
-                <td>
+                {{-- <td>
                     <img src="{{ public_path($companyProfile->image) }}" height="60" alt="Company Logo">
-                </td>
+                </td> --}}
                 <td class="text-right">
                     <h1>Barang Broken</h1>
                 </td>
@@ -74,16 +74,27 @@
                     <p>
                         {{ $companyProfile->name }} <br>
                         {{ $companyProfile->address }} <br>
-                        Phone: {{ $companyProfile->phone }} <br> 
+                        Phone: {{ $companyProfile->phone }} 
+                        @if ($companyProfile->email)
+                            <br> 
                         Email: {{ $companyProfile->email }}
+                        @endif
                     </p>
                 </td>
-                <td class="text-right">
+                <td class="text-left">
                     <p>
-                        <strong>Invoice No.</strong> {{ $barangBroken->invoice_number }} <br>
-                        <strong>Invoice Date:</strong> {{ $barangBroken->created_at->translatedFormat('d F Y') }} <br>
-                        <strong>Dibuat Oleh:</strong> {{ $barangBroken->user->name }} <br>
-                        <strong>Dicetak Oleh:</strong> {{ auth()->user()->name }} <br>
+                        <strong>Invoice No.</strong> <br>
+                        <strong>Invoice Date</strong> <br>
+                        <strong>Dibuat Oleh</strong> <br>
+                        <strong>Dicetak Oleh</strong> <br>
+                    </p>
+                </td>
+                <td class="text-left" style="width: 150px">
+                    <p>
+                        : {{ $barangBroken->invoice_number }} <br>
+                        : {{ $barangBroken->created_at->translatedFormat('d F Y') }} <br>
+                        : {{ $barangBroken->user->name }} <br>
+                        : {{ auth()->user()->name }} <br>
                     </p>
                 </td>
             </tr>
@@ -96,8 +107,8 @@
                 <tr>
                     <th class="text-left"><strong>Part Number</strong></th>
                     <th class="text-left"><strong>Barang</strong></th>
-                    <th class="text-center"><strong>Qty</strong></th>
                     <th class="text-left"><strong>Remarks</strong></th>
+                    <th class="text-center"><strong>Qty</strong></th>                    
                 </tr>
             </thead>
             <tbody>
@@ -105,8 +116,8 @@
                     <tr>
                         <td><strong>({{ $item->barang->part_number }})</strong></td>
                         <td>{{ $item->barang->deskripsi }}</td>
-                        <td class="text-center">{{ $item->qty }}</td>
                         <td class="text-left">{{ $item->remarks }}</td>
+                        <td class="text-center">{{ $item->qty }}</td>                        
                     </tr>
                 @endforeach
                 <tr>
