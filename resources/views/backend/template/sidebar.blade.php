@@ -58,6 +58,7 @@
                 </li>
                 @endif
 
+                @if (in_array($role, ['superadmin', 'owner', 'admin', 'gudang']))
                 <li class="nav-header">Transaksi</li>
 
                 <li class="nav-item">
@@ -84,6 +85,7 @@
                         <p>Barang Broken</p>
                     </a>
                 </li>
+                @endif
                 
                 @if (in_array($role, ['superadmin', 'owner', 'admin']))
                 <li class="nav-header">Laporan</li>
