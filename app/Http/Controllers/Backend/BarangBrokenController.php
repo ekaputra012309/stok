@@ -82,6 +82,11 @@ class BarangBrokenController extends Controller
 
             // Loop through the items to create BarangBrokenDetail entries and update stock
             foreach ($request->items as $item) {
+                // Update stock in Barang table
+                $barang = Barang::find($item['barang_id']);
+                if ($barang) {
+                    $barang->decrement('stok', $item['qty']); // Increment stock by the quantity received
+                }
                 // Create a BarangBrokenDetail entry
                 BarangBrokenDetail::create([
                     'barang_broken_id' => $barangBroken->id,
@@ -140,13 +145,22 @@ class BarangBrokenController extends Controller
                 'tanggal_broken' => $request->tanggal_broken,
             ]);
 
-            // Revert stock changes for existing items
+             // Revert stock changes for existing items
             foreach ($barangBroken->details as $item) {
+                $barang = Barang::find($item->barang_id);
+                if ($barang) {
+                    $barang->increment('stok', $item->qty); // Add back previous stock amount
+                }
                 $item->delete(); // Delete old detail
             }
 
             // Insert updated items and decrement stock accordingly
             foreach ($request->items as $item) {
+                $barang = Barang::find($item['barang_id']);
+                if ($barang) {
+                    $barang->decrement('stok', $item['qty']); // Reduce stock by the updated qty
+                }
+
                 // Create new BarangBrokenDetail entry
                 BarangBrokenDetail::create([
                     'barang_broken_id' => $barangBroken->id,
@@ -165,6 +179,14 @@ class BarangBrokenController extends Controller
     public function destroy(BarangBroken $barangBroken)
     {
         DB::transaction(function () use ($barangBroken) {
+            // Loop through details and update stock in Barang
+            foreach ($barangBroken->details as $item) {
+                // Find the Barang record and decrement the stock if it exists
+                $barang = Barang::find($item->barang_id);
+                if ($barang) {
+                    $barang->increment('stok', $item->qty); // Restore the stock quantity
+                }
+            }
             // Delete related BarangBrokenDetail entries
             $barangBroken->details()->delete();
 

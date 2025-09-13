@@ -61,13 +61,17 @@
                                             <select class="form-control select2bs4 barang-select" name="items[0][barang_id]" required>
                                                 <option value="" data-deskripsi="" disabled selected>Select Part Number</option>
                                                 @foreach ($barangs as $barang)
-                                                    <option value="{{ $barang->id }}" data-deskripsi="{{ $barang->deskripsi }}">{{ $barang->part_number }}</option>
+                                                    <option value="{{ $barang->id }}" data-deskripsi="{{ $barang->deskripsi }}" data-stok="{{ $barang->stok }}">{{ $barang->part_number }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                         <div class="form-group col-md-4">
                                             <label for="deskripsi">Deskripsi</label>
                                             <input type="text" class="form-control deskripsi-input" name="deskripsi_display" placeholder="Deskripsi" readonly>
+                                        </div>
+                                        <div class="form-group col-md-1">
+                                            <label for="stok">Stok</label>
+                                            <input type="text" class="form-control stok-input" name="stok_display" placeholder="stok" readonly>
                                         </div>
                                         <div class="form-group col-md-2">
                                             <label for="qty">Quantity</label>
@@ -87,7 +91,7 @@
                                                 </span>
                                             @enderror
                                         </div>
-                                        <div class="form-group col-md-2 d-flex align-items-end">
+                                        <div class="form-group col-md-1 d-flex align-items-end">
                                             <button type="button" class="btn btn-danger btn-sm remove-item">Remove</button>
                                         </div>
                                     </div>
@@ -151,6 +155,10 @@
                             <label for="deskripsi">Deskripsi</label>
                             <input type="text" class="form-control deskripsi-input" name="deskripsi_display" placeholder="Deskripsi" readonly>
                         </div>
+                         <div class="form-group col-md-1">
+                            <label for="Stok">stok</label>
+                            <input type="text" class="form-control stok-input" name="stok_display" placeholder="stok" readonly>
+                        </div>
                         <div class="form-group col-md-2">
                             <label for="qty">Quantity</label>
                             <input type="number" class="form-control qty-input @error('items.${itemIndex}.qty') is-invalid @enderror" name="items[${itemIndex}][qty]" placeholder="Quantity" required min="1">
@@ -169,7 +177,7 @@
                                 </span>
                             @enderror
                         </div>
-                        <div class="form-group col-md-2 d-flex align-items-end">
+                        <div class="form-group col-md-1 d-flex align-items-end">
                             <button type="button" class="btn btn-danger btn-sm remove-item">Remove</button>
                         </div>
                     </div>`;
@@ -187,7 +195,9 @@
 
             $(document).on('change', '.barang-select', function() {
                 const deskripsi = $(this).find('option:selected').data('deskripsi');
+                const stok = $(this).find('option:selected').data('stok');
                 $(this).closest('.item-row').find('.deskripsi-input').val(deskripsi);
+                $(this).closest('.item-row').find('.stok-input').val(stok);
             });
         });
     </script>
