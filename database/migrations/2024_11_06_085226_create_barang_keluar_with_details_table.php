@@ -11,6 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('customers', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('user_id'); // Add user_id column
+            $table->string('name'); // Adjust as necessary
+            $table->string('alamat')->nullable();
+            $table->string('phone')->nullable();
+            $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        });
+
         Schema::create('barang_keluar', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id'); // Track the user who created this transaction
@@ -48,6 +59,7 @@ return new class extends Migration
     public function down()
     {
         // Drop barang_keluar_items table first due to foreign key constraints
+        Schema::dropIfExists('customers');
         Schema::dropIfExists('barang_keluar_items');
         Schema::dropIfExists('barang_keluar');
     }
