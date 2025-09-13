@@ -24,7 +24,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Invoice: {{ $BarangMasuk->purchaseOrder->invoice_number }}</h3>
+                            <h3 class="card-title">No PO: {{ $BarangMasuk->purchaseOrder->invoice_number }}</h3>
                         </div>
 
                         <div class="card-body">

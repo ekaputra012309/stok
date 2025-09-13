@@ -100,8 +100,8 @@
                     @if ($type == 'barang_keluar')
                         <th class="text-left"><strong>PO No.</strong></th>
                     @endif
-                    <th class="text-left"><strong>Invoice No.</strong></th>
-                    <th class="text-left"><strong>Invoice Date</strong></th>
+                    <th class="text-left"><strong>{{ $type == 'barang_keluar' ? 'Invoice' : 'PO'}} No.</strong></th>
+                    <th class="text-left"><strong>{{ $type == 'barang_keluar' ? 'Invoice' : 'PO'}} Date</strong></th>
                     <th class="text-left"><strong>Barang</strong></th>
                     <th class="text-center"><strong>Qty</strong></th>
                 </tr>
