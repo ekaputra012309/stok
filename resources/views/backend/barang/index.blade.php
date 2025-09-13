@@ -45,6 +45,10 @@
                                             </button>
                                         </form>
                                     </div>
+                                    @else
+                                    <div class="col-md-6 d-flex align-items-center">
+                                        <span>&nbsp;</span>
+                                    </div>
                                     @endif
 
                                     <div class="col-md-6 d-flex justify-content-end align-items-center">
@@ -67,11 +71,10 @@
                         <div class="card-body table-responsive">
                             <table id="example1" class="table table-bordered table-striped w-100">
                                 <thead>
-                                    <tr>
-                                        <th>
-                                            @if (in_array($role, ['superadmin', 'owner', 'admin']))
-                                            <input type="checkbox" id="select-all" class="select-all"></th> <!-- Checkbox to select all rows -->
-                                            @endif
+                                    <tr>                                        
+                                        @if (in_array($role, ['superadmin', 'owner', 'admin']))
+                                            <th><input type="checkbox" id="select-all" class="select-all"></th> <!-- Checkbox to select all rows -->
+                                        @endif
                                         <th>Part Number</th>
                                         <th>Deskripsi</th>
                                         <th>Stok</th>
@@ -82,11 +85,12 @@
                                 <tbody>
                                     @foreach ($databarang as $barang)
                                     <tr class="bg-{{ $barang->stok <= $barang->limit ? 'warning' : '' }}">
+                                        
+                                        @if (in_array($role, ['superadmin', 'owner', 'admin']))
                                         <td>
-                                            @if (in_array($role, ['superadmin', 'owner', 'admin']))
                                             <input type="checkbox" class="select-item" data-id="{{ $barang->id }}">
                                             &nbsp;
-                                            @endif
+                                            
                                             <a class="btn btn-xs btn-primary" href="{{ route('barang.edit', $barang->id) }}">
                                                 <i class="fas fa-edit"></i> Edit
                                             </a>
@@ -94,6 +98,8 @@
                                                 <i class="fas fa-trash"></i> Delete
                                             </button>
                                         </td>
+                                        @endif
+                                        
                                         <td>{{ $barang->part_number }}</td>
                                         <td>{{ $barang->deskripsi }}</td>
                                         <td>{{ $barang->stok }}</td>
