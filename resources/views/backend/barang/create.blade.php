@@ -52,7 +52,11 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-2">
+                                        <label for="stok">Stok</label>
+                                        <input type="number" class="form-control @error('stok') is-invalid @enderror" id="stok" name="stok" placeholder="stok" value="0" required>
+                                    </div>
+                                    <div class="form-group col-md-2">
                                         <label for="limit">Limit</label>
                                         <input type="number" class="form-control @error('limit') is-invalid @enderror" id="limit" name="limit" placeholder="Limit" value="0" required>
                                     </div>
