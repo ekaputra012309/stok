@@ -51,6 +51,7 @@
                                             <th>Part Number</th>
                                             <th>Barang</th>
                                             <th>Quantity</th>
+                                            <th>Remarks</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -59,12 +60,13 @@
                                                 <td><strong>({{ $item->barang->part_number }})</strong></td>
                                                 <td> {{ $item->barang->deskripsi }}</td>
                                                 <td>{{ $item->qty .' '.$item->barang->satuan->name }}</td>
+                                                <td> {{ $item->remarks }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="2" class="text-right">Grand Total</th>
+                                            <th colspan="3" class="text-right">Grand Total</th>
                                             <th>{{ number_format($barangBroken->details->sum(fn($item) => $item->qty ), 0, ',', '.') }}</th>
                                         </tr>
                                     </tfoot>

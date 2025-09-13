@@ -42,6 +42,7 @@
                                         <th>Part Number</th>
                                         <th>Nama Barang</th>
                                         <th>Qty</th>
+                                        <th>Remarks</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -77,6 +78,11 @@
                                                     $totalQty = $barangBroken->details->sum('qty');
                                                     echo $totalQty; // Total quantity of details
                                                 @endphp
+                                            </td>
+                                            <td>
+                                                @foreach ($barangBroken->details as $item)
+                                                    {{ $item->remarks }}<br>
+                                                @endforeach
                                             </td>
                                         </tr>
                                     @endforeach

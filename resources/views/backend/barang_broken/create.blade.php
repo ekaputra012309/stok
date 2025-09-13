@@ -78,6 +78,15 @@
                                                 </span>
                                             @enderror
                                         </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="remarks">Remarks</label>
+                                            <input type="text" class="form-control remarks-input @error('items.0.remarks') is-invalid @enderror" name="items[0][remarks]" placeholder="Remarks" >
+                                            @error('items.0.remarks')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
                                         <div class="form-group col-md-2 d-flex align-items-end">
                                             <button type="button" class="btn btn-danger btn-sm remove-item">Remove</button>
                                         </div>
@@ -146,6 +155,15 @@
                             <label for="qty">Quantity</label>
                             <input type="number" class="form-control qty-input @error('items.${itemIndex}.qty') is-invalid @enderror" name="items[${itemIndex}][qty]" placeholder="Quantity" required min="1">
                             @error('items.${itemIndex}.qty')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="remarks">Remarks</label>
+                            <input type="text" class="form-control remarks-input @error('items.${itemIndex}.remarks') is-invalid @enderror" name="items[${itemIndex}][remarks]" placeholder="Remarks" >
+                            @error('items.${itemIndex}.remarks')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>

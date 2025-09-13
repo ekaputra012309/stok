@@ -15,6 +15,7 @@ class BarangBrokenDetail extends Model
         'barang_id',
         'user_id',
         'qty',
+        'remarks',
     ];
 
     public function barangbroken()

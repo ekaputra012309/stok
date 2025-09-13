@@ -97,6 +97,7 @@
                     <th class="text-left"><strong>Part Number</strong></th>
                     <th class="text-left"><strong>Barang</strong></th>
                     <th class="text-center"><strong>Qty</strong></th>
+                    <th class="text-left"><strong>Remarks</strong></th>
                 </tr>
             </thead>
             <tbody>
@@ -105,10 +106,11 @@
                         <td><strong>({{ $item->barang->part_number }})</strong></td>
                         <td>{{ $item->barang->deskripsi }}</td>
                         <td class="text-center">{{ $item->qty }}</td>
+                        <td class="text-left">{{ $item->remarks }}</td>
                     </tr>
                 @endforeach
                 <tr>
-                    <td colspan="2" class="no-line text-left"><strong>Total</strong></td>
+                    <td colspan="3" class="no-line text-left"><strong>Total</strong></td>
                     <td class="no-line text-center"><strong>{{ $barangBroken->details->sum(fn($item) => $item->qty) }}</strong></td>
                 </tr>
             </tbody>

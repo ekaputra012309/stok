@@ -67,6 +67,7 @@ class BarangBrokenController extends Controller
             'items' => 'required|array',
             'items.*.barang_id' => 'required|exists:barang,id',
             'items.*.qty' => 'required|integer|min:1',
+            'items.*.remarks' => 'nullable|string|max:255',
             'tanggal_broken' => 'required|date',
         ]);        
 
@@ -86,6 +87,7 @@ class BarangBrokenController extends Controller
                     'barang_broken_id' => $barangBroken->id,
                     'barang_id' => $item['barang_id'],
                     'qty' => $item['qty'],
+                    'remarks' => $item['remarks'],
                     'user_id' => $request->user_id,
                 ]);
             }
@@ -126,6 +128,7 @@ class BarangBrokenController extends Controller
             'items' => 'required|array',
             'items.*.barang_id' => 'required|exists:barang,id',
             'items.*.qty' => 'required|integer|min:1',
+            'items.*.remarks' => 'nullable|string|max:255',
             'tanggal_broken' => 'required|date',
         ]);
 
@@ -149,6 +152,7 @@ class BarangBrokenController extends Controller
                     'barang_broken_id' => $barangBroken->id,
                     'barang_id' => $item['barang_id'],
                     'qty' => $item['qty'],
+                    'remarks' => $item['remarks'],
                     'user_id' => $request->user_id,
                 ]);
             }
