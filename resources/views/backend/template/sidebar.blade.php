@@ -5,7 +5,8 @@
 
 <aside class="main-sidebar sidebar-light-primary elevation-4">
     <a href="{{ route('dashboard') }}" class="brand-link">
-        <img src="{{ asset($companyProfile->image) }}" alt="AdminLTE Logo" style="width: 75px;"> {{ $companyProfile->name }}
+        <img src="{{ asset($companyProfile->image) }}" alt="AdminLTE Logo" style="height: 45px;"> 
+        {{-- {{ $companyProfile->name }} --}}
     </a>
     <div class="sidebar">
         <br>
@@ -29,7 +30,7 @@
                     </a>
                 </li>
 
-                @if (in_array($role, ['superadmin', 'owner', 'admin']))
+                @if (in_array($role, ['superadmin', 'owner', 'admin', 'sales']))
                 <li class="nav-header">Master</li>
 
                 <li class="nav-item">
@@ -43,12 +44,12 @@
                                 <p>Barang</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item {{$role == 'sales' ? 'd-none' : ''}}">
                             <a href="{{ route('satuan.index') }}" class="nav-link {{ request()->routeIs('satuan.index') ? 'active' : '' }}">
                                 <p>Satuan</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item {{$role == 'sales' ? 'd-none' : ''}}">
                             <a href="{{ route('customer.index') }}" class="nav-link {{ request()->routeIs('customer.index') ? 'active' : '' }}">
                                 <p>Customer</p>
                             </a>
