@@ -58,11 +58,11 @@
 
 <div class="container">
     <div class="row">
-        <table class="w-100">
+        {{-- <table class="w-100">
             <tr>
-                {{-- <td style="width: 10%">
+                <td style="width: 10%">
                     <img src="{{ public_path($companyProfile->image) }}" height="80" alt="Company Logo">
-                </td> --}}
+                </td>
                 <td class="text-left">
                     <p>
                         <span style="font-size: 1.5em">
@@ -76,7 +76,7 @@
                     </p>
                 </td>
             </tr>
-        </table>
+        </table> --}}
         <h2 class="text-center"><u>SURAT JALAN</u> </h2>
         <table class="w-100">
             <tr> 
@@ -92,12 +92,12 @@
                         Phone: {{ $barangKeluar->customer->phone ?? '' }}
                     </p>
                 </td>
-                <td class="text-right">
+                <td class="text-left">
                     <p>
-                        <strong>No :</strong> <br>
-                        <strong>Date :</strong> <br>
-                        <strong>No PO :</strong> <br>
-                        <strong>PO Date :</strong> <br>
+                        <strong>No </strong> <br>
+                        <strong>Date </strong> <br>
+                        <strong>No PO </strong> <br>
+                        <strong>PO Date </strong> <br>
                         <!-- <strong>Customer:</strong> {{ $barangKeluar->customer->name }} <br> -->
                         
                         
@@ -105,12 +105,12 @@
                         <strong>Dicetak Oleh:</strong> {{ auth()->user()->name }} <br> -->
                     </p>
                 </td>
-                <td>
+                <td style="width: 150px">
                     <p>
-                        {{ $barangKeluar->invoice_number }} <br>
-                        {{ now()->translatedFormat('d F Y') }} <br>
-                        {{ $barangKeluar->po_number }} <br>
-                        {{ $barangKeluar->created_at->translatedFormat('d F Y') }} <br>
+                        : {{ $barangKeluar->invoice_number }} <br>
+                        : {{ now()->translatedFormat('d F Y') }} <br>
+                        : {{ $barangKeluar->po_number }} <br>
+                        : {{ $barangKeluar->created_at->translatedFormat('d F Y') }} <br>
                     </p>
                 </td>
             </tr>
