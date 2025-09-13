@@ -60,9 +60,9 @@
     <div class="row">
         <table class="w-100">
             <tr>
-                <td style="width: 10%">
+                {{-- <td style="width: 10%">
                     <img src="{{ public_path($companyProfile->image) }}" height="80" alt="Company Logo">
-                </td>
+                </td> --}}
                 <td class="text-left">
                     <p>
                         <span style="font-size: 1.5em">
