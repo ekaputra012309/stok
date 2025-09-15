@@ -47,6 +47,14 @@ class SuperAdminUserSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'name' => 'Admin Sales',
+                'email' => 'sales@gmail.com',
+                'email_verified_at' => now(),
+                'password' => Hash::make('12345678'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
 
         DB::table('roles')->insert([
@@ -74,6 +82,13 @@ class SuperAdminUserSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'nama_role' => 'Sales',
+                'kode_role' => 'sales',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
         ]);
 
         DB::table('privilages')->insert([
@@ -98,6 +113,12 @@ class SuperAdminUserSeeder extends Seeder
             [
                 'role_id' => 4,
                 'user_id' => 4,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'role_id' => 5,
+                'user_id' => 5,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
