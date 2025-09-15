@@ -126,7 +126,7 @@
                 "responsive": true,
                 "lengthChange": true,
                 "autoWidth": true,
-                scrollY: "300px",
+                scrollY: "500px",
                 scrollX: true,
                 scrollCollapse: true,
                 paging: false,
