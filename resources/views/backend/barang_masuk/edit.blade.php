@@ -73,8 +73,9 @@
                                                 <div class="form-group col-md-2">
                                                     <label for="qty">Quantity</label>
                                                     <input type="number" class="form-control qty-input"
-                                                        name="items[{{ $index }}][qty]" value="{{ $item->qty }}"
-                                                        required min="1">
+                                                        name="items[{{ $index }}][qty]" value="{{ $qty }}"
+                                                        required min="1" data-po-qty="{{ $item->qty }}">
+
                                                 </div>
                                                 <div class="form-group col-md-2">
                                                     <label for="verify_{{ $index }}">Verifikasi Qty Barang</label>
@@ -113,13 +114,47 @@
 
         <script>
             $(function() {
-                // Toggle quantity input based on verification toggle
+                // Toggle qty input based on checkbox
                 $(document).on('change', '.toggle-verify', function() {
                     const qtyInput = $(this).closest('.item-row').find('.qty-input');
-                    qtyInput.prop('readonly', $(this).is(':checked')); // Make quantity read-only if checked
+                    qtyInput.prop('readonly', $(this).is(':checked'));
+                });
+
+                // Validate before submit
+                $('#barang-masuk-form').on('submit', function(e) {
+                    let isValid = true;
+
+                    $('.item-row').each(function() {
+                        const qtyInput = $(this).find('.qty-input');
+                        const userQty = parseInt(qtyInput.val());
+                        const poQty = parseInt(qtyInput.data('po-qty'));
+
+                        if (userQty > poQty) {
+                            isValid = false;
+                            qtyInput.addClass('is-invalid');
+
+                            if (!$(this).find('.invalid-feedback').length) {
+                                qtyInput.after(
+                                    '<div class="invalid-feedback">Qty tidak boleh lebih dari qty PO (' +
+                                    poQty + ').</div>');
+                            }
+                        } else {
+                            qtyInput.removeClass('is-invalid');
+                            $(this).find('.invalid-feedback').remove();
+                        }
+                    });
+
+                    if (!isValid) {
+                        e.preventDefault();
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Qty Melebihi PO',
+                            text: 'Qty yang dimasukkan tidak boleh lebih dari qty yang ada di PO. Mohon konfirmasi jumlah barang di PO kembali.',
+                            confirmButtonText: 'OK'
+                        });
+                    }
                 });
             });
         </script>
-
     </div>
 @endsection
