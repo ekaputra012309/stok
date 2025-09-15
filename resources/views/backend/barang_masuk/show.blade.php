@@ -94,10 +94,11 @@
                                                             <tr>
                                                                 <td>
                                                                     <i class="fas fa-calendar-alt"></i>
-                                                                    {{ $bm->created_at->translatedFormat('d F Y,') }}
+                                                                    {{ \Carbon\Carbon::parse($bm->tanggal_masuk)->translatedFormat('d F Y,') }}
                                                                     <i class="fas fa-clock"></i>
                                                                     {{ $bm->created_at->translatedFormat('H:i') }}
                                                                 </td>
+
                                                                 <td>{{ $detail->qty }}</td>
                                                                 <td>{{ $detail->barang->satuan->name ?? '-' }}</td>
                                                             </tr>
