@@ -20,7 +20,7 @@ class PurchaseOrderController extends Controller
     {
         $data = [
             'title' => 'Purchase Order | ',
-            'datapurchase_order' => PurchaseOrder::with(['items.barang.satuan'])->orderBy('created_at', 'desc')->get(),
+            'datapurchase_order' => PurchaseOrder::with(['items.barang.satuan', 'barangMasuk.details'])->orderBy('created_at', 'desc')->get(),
         ];
         return view('backend.purchase_order.index', $data);
     }
