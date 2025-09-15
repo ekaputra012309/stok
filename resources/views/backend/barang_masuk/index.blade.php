@@ -59,61 +59,87 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($databarang_masuk as $barangMasuk)
+                                        @foreach ($groupedBarangMasuk as $poId => $barangMasukGroup)
+                                            @php
+                                                $purchaseOrder = $barangMasukGroup->first()->purchaseOrder;
+                                                $poItems = $purchaseOrder->items;
+
+                                                // Sum total received qty per barang_id
+                                                $receivedItems = [];
+
+                                                foreach ($barangMasukGroup as $barangMasuk) {
+                                                    foreach ($barangMasuk->details as $detail) {
+                                                        $barangId = $detail->barang_id;
+                                                        $receivedItems[$barangId] =
+                                                            ($receivedItems[$barangId] ?? 0) + $detail->qty;
+                                                    }
+                                                }
+
+                                                $totalReceived = array_sum($receivedItems);
+                                                $totalOrdered = $poItems->sum('qty');
+                                            @endphp
+
                                             <tr>
                                                 <td>
                                                     <a class="btn btn-xs btn-dark"
-                                                        href="{{ route('barang_masuk.show', $barangMasuk->id) }}">
+                                                        href="{{ route('barang_masuk.show', $barangMasukGroup->first()->id) }}">
                                                         <i class="fas fa-eye"></i> Show
                                                     </a>
-                                                    @php
-                                                        $totalQty = $barangMasuk->details->sum('qty');
-                                                        $totalQtyPo = $barangMasuk->purchaseOrder->items->sum('qty');
-                                                    @endphp
-                                                    @if ($totalQty < $totalQtyPo)
+
+                                                    @if ($totalReceived < $totalOrdered)
                                                         <form action="{{ route('barang_masuk.process') }}" method="POST"
-                                                            class="form-inline">
+                                                            class="form-inline mt-1">
                                                             @csrf
                                                             <input type="hidden" name="purchase_order_id"
-                                                                class="form-control"
-                                                                value="{{ $barangMasuk->purchaseOrder->id }}">
-                                                            <button type="submit" class="btn btn-xs btn-primary mt-1"> <i
-                                                                    class="fas fa-pen"></i> Proses</button>
+                                                                value="{{ $purchaseOrder->id }}">
+                                                            <button type="submit" class="btn btn-xs btn-primary">
+                                                                <i class="fas fa-pen"></i> Proses
+                                                            </button>
                                                         </form>
                                                     @endif
                                                 </td>
-                                                <td>{{ $barangMasuk->purchaseOrder->invoice_number }}</td>
+
+                                                <td>{{ $purchaseOrder->invoice_number }}</td>
+
                                                 <td>
-                                                    @foreach ($barangMasuk->details as $item)
-                                                        <strong>({{ $item->barang->stok }} @if ($item->barang->satuan)
-                                                                {{ $item->barang->satuan->name }}
-                                                            @endif)</strong><br>
+                                                    @foreach ($poItems as $item)
+                                                        {{ $item->barang->stok }}
+                                                        @if ($item->barang->satuan)
+                                                            {{ $item->barang->satuan->name }}
+                                                        @endif
+                                                        <br>
                                                     @endforeach
                                                 </td>
+
                                                 <td>
-                                                    @foreach ($barangMasuk->details as $item)
-                                                        <strong>({{ $item->barang->part_number }})</strong> <br>
+                                                    @foreach ($poItems as $item)
+                                                        {{ $item->barang->part_number }} <br>
                                                     @endforeach
                                                 </td>
+
                                                 <td>
-                                                    @foreach ($barangMasuk->details as $item)
-                                                        {{ $item->barang->deskripsi }} <strong>({{ $item->qty }}
+                                                    @foreach ($poItems as $item)
+                                                        {{ $item->barang->deskripsi }}
+                                                        <strong>
+                                                            ({{ $receivedItems[$item->barang_id] ?? 0 }}
                                                             @if ($item->barang->satuan)
                                                                 {{ $item->barang->satuan->name }}
                                                             @endif)
-                                                        </strong><br>
+                                                        </strong>
+                                                        <br>
                                                     @endforeach
                                                 </td>
+
+                                                <td>{{ $totalReceived }}</td>
+
                                                 <td>
-                                                    @php
-                                                        $totalQty = $barangMasuk->details->sum('qty');
-                                                        echo $totalQty;
-                                                    @endphp
+                                                    {{-- Sort descending and get first to get the latest note --}}
+                                                    {{ $barangMasukGroup->sortByDesc('created_at')->first()->note ?? '-' }}
                                                 </td>
-                                                <td>{{ $barangMasuk->note }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
+
                                 </table>
                             </div>
                         </div>

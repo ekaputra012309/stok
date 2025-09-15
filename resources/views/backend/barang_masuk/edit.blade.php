@@ -56,27 +56,46 @@
                                         @foreach ($purchaseOrder->items as $index => $item)
                                             @php
                                                 $barangId = $item->barang->id;
-                                                $detail = $existingDetails[$barangId] ?? null;
+                                                $poQty = $item->qty;
 
-                                                $qty = $detail->qty ?? $item->qty;
-                                                $isVerified = $detail && $detail->qty_verified == 1;
+                                                // Sum all qty received for this barang_id under this PO
+                                                $receivedQty = $purchaseOrder->barangMasuk->flatMap->details
+                                                    ->where('barang_id', $barangId)
+                                                    ->sum('qty');
+
+                                                $remainingQty = $poQty - $receivedQty;
                                             @endphp
 
                                             <div class="item-row row">
                                                 <div class="form-group col-md-4">
-                                                    <label for="barang_id">Barang</label>
+                                                    <label>Barang</label>
                                                     <input type="text" class="form-control"
                                                         value="{{ $item->barang->deskripsi }}" readonly>
                                                     <input type="hidden" name="items[{{ $index }}][barang_id]"
                                                         value="{{ $item->barang->id }}">
                                                 </div>
-                                                <div class="form-group col-md-2">
-                                                    <label for="qty">Quantity</label>
-                                                    <input type="number" class="form-control qty-input"
-                                                        name="items[{{ $index }}][qty]" value="{{ $qty }}"
-                                                        required min="1" data-po-qty="{{ $item->qty }}">
 
+                                                <div class="form-group col-md-1">
+                                                    <label>Qty PO</label>
+                                                    <input type="text" class="form-control" value="{{ $poQty }}"
+                                                        readonly>
                                                 </div>
+
+                                                <div class="form-group col-md-1">
+                                                    <label>Qty Masuk</label>
+                                                    <input type="text" class="form-control" value="{{ $receivedQty }}"
+                                                        readonly>
+                                                </div>
+
+                                                <div class="form-group col-md-1">
+                                                    <label>Jumlah</label>
+                                                    <input type="number" class="form-control qty-input"
+                                                        name="items[{{ $index }}][qty]" value="0" required
+                                                        min="0" max="{{ $remainingQty }}"
+                                                        data-po-qty="{{ $poQty }}"
+                                                        data-received-qty="{{ $receivedQty }}">
+                                                </div>
+
                                                 <div class="form-group col-md-2">
                                                     <label for="verify_{{ $index }}">Verifikasi Qty Barang</label>
                                                     <div class="custom-control custom-switch">
@@ -84,14 +103,14 @@
                                                             name="items[{{ $index }}][qty_verified]" value="0">
                                                         <input type="checkbox" class="custom-control-input toggle-verify"
                                                             id="verify_{{ $index }}"
-                                                            name="items[{{ $index }}][qty_verified]" value="1"
-                                                            {{ $isVerified ? 'checked' : '' }}>
+                                                            name="items[{{ $index }}][qty_verified]" value="1">
                                                         <label class="custom-control-label"
                                                             for="verify_{{ $index }}"></label>
                                                     </div>
                                                 </div>
                                             </div>
                                         @endforeach
+
                                     </div>
 
                                     <div class="form-group">
@@ -126,17 +145,19 @@
 
                     $('.item-row').each(function() {
                         const qtyInput = $(this).find('.qty-input');
-                        const userQty = parseInt(qtyInput.val());
+                        const enteredQty = parseInt(qtyInput.val());
+                        const receivedQty = parseInt(qtyInput.data('received-qty'));
                         const poQty = parseInt(qtyInput.data('po-qty'));
+                        const total = enteredQty + receivedQty;
 
-                        if (userQty > poQty) {
+                        if (total > poQty) {
                             isValid = false;
                             qtyInput.addClass('is-invalid');
 
                             if (!$(this).find('.invalid-feedback').length) {
                                 qtyInput.after(
-                                    '<div class="invalid-feedback">Qty tidak boleh lebih dari qty PO (' +
-                                    poQty + ').</div>');
+                                    `<div class="invalid-feedback">Qty total melebihi PO (${poQty}). Sudah diterima: ${receivedQty}.</div>`
+                                );
                             }
                         } else {
                             qtyInput.removeClass('is-invalid');
@@ -147,13 +168,13 @@
                     if (!isValid) {
                         e.preventDefault();
                         Swal.fire({
-                            icon: 'warning',
-                            title: 'Qty Melebihi PO',
-                            text: 'Qty yang dimasukkan tidak boleh lebih dari qty yang ada di PO. Mohon konfirmasi jumlah barang di PO kembali.',
-                            confirmButtonText: 'OK'
+                            icon: 'error',
+                            title: 'Validasi Gagal',
+                            text: 'Jumlah barang masuk melebihi jumlah yang dipesan di PO.'
                         });
                     }
                 });
+
             });
         </script>
     </div>

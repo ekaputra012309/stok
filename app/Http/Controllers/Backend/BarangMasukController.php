@@ -8,6 +8,7 @@ use App\Models\Barang;
 use App\Models\BarangMasuk;
 use App\Models\BarangMasukDetail;
 use App\Models\PurchaseOrder;
+use App\Models\PurchaseOrderItem;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\DB;
 
@@ -15,19 +16,25 @@ class BarangMasukController extends Controller
 {
     public function index()
     {
+        $approvedPurchaseOrders = PurchaseOrder::where('status_order', 'Approved')
+            ->whereNotIn('id', function ($query) {
+                $query->select('purchase_order_id')
+                    ->from('barang_masuk');
+            })
+            ->with(['items.barang.satuan'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Get barang_masuk records and group by purchase_order_id
+        $groupedBarangMasuk = BarangMasuk::with(['purchaseOrder', 'details.barang.satuan'])
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->groupBy('purchase_order_id');
+
         $data = [
             'title' => 'Barang Masuk | ',
-            'approvedPurchaseOrders' => PurchaseOrder::where('status_order', 'Approved')
-                ->whereNotIn('id', function($query) {
-                    $query->select('purchase_order_id')
-                        ->from('barang_masuk');
-                })
-                ->with(['items.barang.satuan'])
-                ->orderBy('created_at', 'desc')
-                ->get(),
-            'databarang_masuk' => BarangMasuk::with(['purchaseOrder', 'details.barang.satuan'])
-                ->orderBy('created_at', 'desc')
-                ->get(),
+            'approvedPurchaseOrders' => $approvedPurchaseOrders,
+            'groupedBarangMasuk' => $groupedBarangMasuk,
         ];
 
         return view('backend.barang_masuk.index', $data);
@@ -69,27 +76,13 @@ class BarangMasukController extends Controller
             'purchase_order_id' => 'required|exists:purchase_order,id',
             'items' => 'required|array',
             'items.*.barang_id' => 'required|exists:barang,id',
-            'items.*.qty' => 'required|integer|min:1',
+            'items.*.qty' => 'required|integer|min:0',
             'items.*.qty_verified' => 'nullable|integer',
             'note' => 'nullable|string',
             'tanggal_masuk' => 'required|date',
         ]);
 
-        DB::transaction(function () use ($request) {
-            // Check if a BarangMasuk already exists for the same purchase_order_id
-            $barangMasuk = BarangMasuk::where('purchase_order_id', $request->purchase_order_id)->first();
-
-            if ($barangMasuk) {
-                // Update existing record
-                $barangMasuk->update([
-                    'tanggal_masuk' => $request->tanggal_masuk,
-                    'note' => $request->note,
-                    'user_id' => auth()->id(),
-                ]);
-
-                // Delete previous details to avoid duplication
-                $barangMasuk->details()->delete();
-            } else {
+        DB::transaction(function () use ($request) {            
                 // Create new
                 $barangMasuk = BarangMasuk::create([
                     'purchase_order_id' => $request->purchase_order_id,
@@ -97,38 +90,64 @@ class BarangMasukController extends Controller
                     'tanggal_masuk' => $request->tanggal_masuk,
                     'note' => $request->note,
                 ]);
-            }
+            
 
             // Loop through and re-create details
             foreach ($request->items as $item) {
-                $qtyVerified = isset($item['qty_verified']) ? (int)$item['qty_verified'] : 0;
-
-                // Update stock
-                $barang = Barang::find($item['barang_id']);
-                if ($barang) {
-                    $barang->increment('stok', $item['qty']);
+                $barangId = $item['barang_id'];
+                $currentQty = (int) $item['qty'];
+            
+                // Total qty received so far
+                $receivedQty = BarangMasukDetail::whereHas('barangMasuk', function ($query) use ($request) {
+                    $query->where('purchase_order_id', $request->purchase_order_id);
+                })->where('barang_id', $barangId)
+                  ->sum('qty');
+            
+                // PO qty
+                $poQty = PurchaseOrderItem::where('purchase_order_id', $request->purchase_order_id)
+                          ->where('barang_id', $barangId)
+                          ->value('qty');
+            
+                // Check if adding this qty would exceed PO
+                if ($receivedQty + $currentQty > $poQty) {
+                    throw ValidationException::withMessages([
+                        "items.$barangId.qty" => "Jumlah barang masuk melebihi jumlah pada PO.",
+                    ]);
                 }
-
-                // Create detail
+            
+                // Process as usual
                 BarangMasukDetail::create([
                     'barang_masuk_id' => $barangMasuk->id,
-                    'barang_id' => $item['barang_id'],
-                    'qty' => $item['qty'],
-                    'qty_verified' => $qtyVerified,
+                    'barang_id' => $barangId,
+                    'qty' => $currentQty,
+                    'qty_verified' => isset($item['qty_verified']) ? 1 : 0,
                 ]);
             }
+            
         });
 
         Alert::success('Success', 'Barang Masuk successfully saved.')->autoClose(2000);
         return redirect()->route('barang_masuk.index');
     }
 
-    public function show(BarangMasuk $BarangMasuk)
+    public function show(BarangMasuk $barangMasuk)
     {
+        // Load related data
+        $purchaseOrder = $barangMasuk->purchaseOrder()->with(['items.barang.satuan'])->first();
+
+        // Get all BarangMasuk records for the same PO, ordered by date
+        $allBarangMasuk = BarangMasuk::with(['details.barang.satuan'])
+                            ->where('purchase_order_id', $purchaseOrder->id)
+                            ->orderBy('created_at', 'asc')
+                            ->get();
+
         $data = [
-            'title' => 'Detail Purchase Order | ',
-            'BarangMasuk' => $BarangMasuk->load(['purchaseOrder', 'details.barang.satuan']),
+            'title' => 'Detail Barang Masuk',
+            'barangMasuk' => $barangMasuk,
+            'purchaseOrder' => $purchaseOrder,
+            'allBarangMasuk' => $allBarangMasuk,
         ];
+
         return view('backend.barang_masuk.show', $data);
     }
 }
