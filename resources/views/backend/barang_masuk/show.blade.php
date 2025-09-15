@@ -74,47 +74,49 @@
                                             {{ $poItem->barang->deskripsi }} ({{ $poItem->barang->part_number }})
                                         </span>
 
-                                        <table class="table table-bordered mb-4">
-                                            <thead>
-                                                <tr>
-                                                    <th>Tanggal Barang Masuk</th>
-                                                    <th>Qty Masuk</th>
-                                                    <th>Satuan</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @php $totalQty = 0; @endphp
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered mb-4" style="width: 100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Tanggal Barang Masuk</th>
+                                                        <th>Qty Masuk</th>
+                                                        <th>Satuan</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @php $totalQty = 0; @endphp
 
-                                                @foreach ($allBarangMasuk as $bm)
-                                                    @php
-                                                        $detail = $bm->details->firstWhere('barang_id', $barangId);
-                                                    @endphp
-                                                    @if ($detail && $detail->qty > 0)
-                                                        <tr>
-                                                            <td>
-                                                                <i class="fas fa-calendar-alt"></i>
-                                                                {{ $bm->created_at->translatedFormat('d F Y,') }}
-                                                                <i class="fas fa-clock"></i>
-                                                                {{ $bm->created_at->translatedFormat('H:i') }}
-                                                            </td>
-                                                            <td>{{ $detail->qty }}</td>
-                                                            <td>{{ $detail->barang->satuan->name ?? '-' }}</td>
-                                                        </tr>
-                                                        @php $totalQty += $detail->qty; @endphp
-                                                    @endif
-                                                @endforeach
+                                                    @foreach ($allBarangMasuk as $bm)
+                                                        @php
+                                                            $detail = $bm->details->firstWhere('barang_id', $barangId);
+                                                        @endphp
+                                                        @if ($detail && $detail->qty > 0)
+                                                            <tr>
+                                                                <td>
+                                                                    <i class="fas fa-calendar-alt"></i>
+                                                                    {{ $bm->created_at->translatedFormat('d F Y,') }}
+                                                                    <i class="fas fa-clock"></i>
+                                                                    {{ $bm->created_at->translatedFormat('H:i') }}
+                                                                </td>
+                                                                <td>{{ $detail->qty }}</td>
+                                                                <td>{{ $detail->barang->satuan->name ?? '-' }}</td>
+                                                            </tr>
+                                                            @php $totalQty += $detail->qty; @endphp
+                                                        @endif
+                                                    @endforeach
 
-                                                <tr>
-                                                    <th>Total Qty Masuk</th>
-                                                    <th>{{ $totalQty }}</th>
-                                                    <th>{{ $poItem->barang->satuan->name ?? '-' }}</th>
-                                                </tr>
-                                                <tr>
-                                                    <th>Qty PO</th>
-                                                    <th colspan="2">{{ $poItem->qty }}</th>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                                    <tr>
+                                                        <th>Total Qty Masuk</th>
+                                                        <th>{{ $totalQty }}</th>
+                                                        <th>{{ $poItem->barang->satuan->name ?? '-' }}</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Qty PO</th>
+                                                        <th colspan="2">{{ $poItem->qty }}</th>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     @endif
                                 @endforeach
                             </div>
