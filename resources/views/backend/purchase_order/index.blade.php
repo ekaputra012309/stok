@@ -67,12 +67,13 @@
                                                         </a> <br>
                                                     @endif
                                                     @if (in_array($role, ['superadmin', 'owner']))
+                                                        <a class="btn btn-xs btn-primary"
+                                                            href="{{ route('purchase_order.edit', $purchaseOrder->id) }}">
+                                                            <i class="fas fa-edit"></i> Edit
+                                                        </a> <br>
                                                         @if ($purchaseOrder->status_order !== 'Approved')
                                                             <!-- Conditional check -->
-                                                            <a class="btn btn-xs btn-primary"
-                                                                href="{{ route('purchase_order.edit', $purchaseOrder->id) }}">
-                                                                <i class="fas fa-edit"></i> Edit
-                                                            </a> <br>
+
                                                             <button class="btn btn-xs btn-danger delete-btn"
                                                                 data-id="{{ $purchaseOrder->id }}">
                                                                 <i class="fas fa-trash"></i> Delete
