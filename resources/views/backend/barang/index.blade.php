@@ -151,9 +151,13 @@
                 });
 
                 // Select all checkbox functionality
-                $('#select-all').on('click', function() {
+                $(document).on('change', 'input.select-all', function() {
                     var checked = $(this).prop('checked');
-                    $('.select-item').prop('checked', checked);
+                    // Sync all header checkbox clones to the same state
+                    $('input.select-all').prop('checked', checked);
+                    // Toggle only the actual table tbody checkboxes (real rows)
+                    $('#example1 tbody input.select-item').prop('checked', checked);
+                    // Update counter
                     updateSelectedCount();
                 });
 
