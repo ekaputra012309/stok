@@ -12,7 +12,8 @@
     <title>{{ $title . $companyProfile->name }}</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="https://adminlte.io/themes/v3/plugins/fontawesome-free/css/all.min.css">
 
     <link rel="stylesheet" href="{{ asset('backend/css/OverlayScrollbars.min.css') }}">
@@ -55,7 +56,8 @@
 
     <!-- datatable fixcolumn -->
     <link rel="stylesheet" href="https://datatables.net/release-datatables/media/css/dataTables.bootstrap4.css">
-    <link rel="stylesheet" href="https://datatables.net/release-datatables/extensions/FixedColumns/css/fixedColumns.bootstrap4.css">
+    <link rel="stylesheet"
+        href="https://datatables.net/release-datatables/extensions/FixedColumns/css/fixedColumns.bootstrap4.css">
     <script src="https://datatables.net/release-datatables/media/js/jquery.dataTables.js"></script>
     <script src="https://datatables.net/release-datatables/media/js/dataTables.bootstrap4.js"></script>
     <script src="https://datatables.net/release-datatables/extensions/FixedColumns/js/dataTables.fixedColumns.js"></script>
@@ -104,7 +106,7 @@
             <div class="float-right d-none d-sm-block">
                 <b>Version</b> 1.1.0
             </div>
-            <strong>Copyright &copy; {{ date('Y') >= 2024 ? '2024' : '2024-' . date('Y') }}
+            <strong>Copyright &copy; {{ date('Y') >= 2025 ? '2025' : '2025-' . date('Y') }}
                 {{ $companyProfile->name }}
             </strong>
             All rights
@@ -117,7 +119,7 @@
     <script>
         $(document).ready(function() {
             $.ajax({
-                url: '{{ route("get.role.name") }}',
+                url: '{{ route('get.role.name') }}',
                 type: 'GET',
                 success: function(response) {
                     if (response.role_name) {

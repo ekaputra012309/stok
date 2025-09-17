@@ -42,7 +42,7 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>No Surat Jalan</th>
+                                            <th>No PO</th>
                                             <th>Vendor</th>
                                             <th>Part Number</th>
                                             <th>Nama Barang</th>
