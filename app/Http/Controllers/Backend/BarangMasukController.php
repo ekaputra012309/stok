@@ -122,6 +122,12 @@ class BarangMasukController extends Controller
                     'qty' => $currentQty,
                     'qty_verified' => isset($item['qty_verified']) ? 1 : 0,
                 ]);
+
+                // ✅ Update stok after detail created
+                $barang = Barang::find($barangId);
+                if ($barang) {
+                    $barang->increment('stok', $currentQty);
+                }
             }
             
         });
