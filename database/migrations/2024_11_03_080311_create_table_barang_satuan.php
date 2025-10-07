@@ -22,6 +22,17 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
 
+        // Create the satuan table
+        Schema::create('lokasi', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('user_id'); // Add user_id column
+            $table->string('nama_lokasi'); // Adjust as necessary
+            $table->timestamps();
+
+            // Optional: Add foreign key constraint if users table exists
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        });
+
         // Create the barang table
         Schema::create('barang', function (Blueprint $table) {
             $table->id();
@@ -31,6 +42,7 @@ return new class extends Migration
             $table->integer('stok')->default(0);
             $table->integer('limit')->default(0);
             $table->foreignId('satuan_id')->constrained('satuan')->onDelete('cascade'); // Foreign key referencing satuan
+            $table->foreignId('lokasi_id')->constrained('lokasi')->onDelete('cascade')->nullable(); // Foreign key referencing satuan
             $table->timestamps();
 
             // Optional: Add foreign key constraint if users table exists
@@ -48,5 +60,6 @@ return new class extends Migration
         // Drop the barang table first due to foreign key constraint
         Schema::dropIfExists('barang');
         Schema::dropIfExists('satuan');
+        Schema::dropIfExists('lokasi');
     }
 };
