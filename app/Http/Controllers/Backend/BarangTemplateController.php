@@ -12,6 +12,7 @@ use App\Models\BarangTemplateDetail;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 
 class BarangTemplateController extends Controller
@@ -22,7 +23,7 @@ class BarangTemplateController extends Controller
             'title' => 'Barang Template | ',
             'databarang_template' => BarangTemplate::with(['details.barang.satuan'])->orderBy('created_at', 'desc')->get(),
         ];
-        return view('backend.barang_keluar.index', $data);
+        return view('backend.barang_template.index', $data);
     }
 
     public function create()
@@ -91,7 +92,7 @@ class BarangTemplateController extends Controller
         return view('backend.barang_template.edit', $data);
     }
 
-    public function update(Request $request, BarangTemplate $BarangTemplate)
+    public function update(Request $request, BarangTemplate $barang_assy)
     {
         // dd($request->all());
         $request->validate([
@@ -102,15 +103,15 @@ class BarangTemplateController extends Controller
             'items.*.qty' => 'required|integer|min:1',
         ]);
 
-        DB::transaction(function () use ($request, $BarangTemplate) {
-            // Update the BarangTemplate entry
-            $BarangTemplate->update([
+        DB::transaction(function () use ($request, $barang_assy) {
+            // Update the barang_assy entry
+            $barang_assy->update([
                 'user_id' => $request->user_id,
                 'nama_template' => $request->nama_template,
             ]);
 
             // Revert stock changes for existing items
-            foreach ($BarangTemplate->details as $item) {
+            foreach ($barang_assy->details as $item) {
                 $item->delete(); // Delete old detail
             }
 
@@ -118,7 +119,7 @@ class BarangTemplateController extends Controller
             foreach ($request->items as $item) {
                 // Create new BarangTemplateDetail entry
                 BarangTemplateDetail::create([
-                    'barang_template_id' => $BarangTemplate->id,
+                    'barang_template_id' => $barang_assy->id,
                     'barang_id' => $item['barang_id'],
                     'qty' => $item['qty'],
                     'user_id' => $request->user_id,
@@ -145,15 +146,19 @@ class BarangTemplateController extends Controller
 
     public function print($id)
     {
-        $BarangTemplate = BarangTemplate::with('details.barang', 'user')->findOrFail($id); // Fetch the Barang Broken
-        $companyProfile = CompanyProfile::first(); // Retrieve the company profile
+        $BarangTemplate = BarangTemplate::with('details.barang', 'user')->findOrFail($id);
+        $companyProfile = CompanyProfile::first();
+
         $data = [
             'title' => 'Print Barang Template | ',
             'barangTemplate' => $BarangTemplate,
             'companyProfile' => $companyProfile,
         ];
-        // dd($data);
+
         $pdf = FacadePdf::loadView('backend.barang_template.print_barang_template', $data);
-        return $pdf->stream(''.$BarangTemplate->nama_template.'.pdf'); // Stream the PDF
+        // Clean the file name to avoid invalid characters
+        $safeFileName = Str::slug($BarangTemplate->nama_template, '_') . '.pdf';
+        // Example: "HOSE ASSY HOSE REEL 1-1/2"" → "hose_assy_hose_reel_1-1_2.pdf"
+        return $pdf->stream($safeFileName);
     }
 }

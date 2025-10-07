@@ -6,13 +6,13 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Barang Keluar</h1>
+                        <h1>Barang Assy</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <!-- <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li> -->
                             {{-- <li class="breadcrumb-item"><a href="#">Layout</a></li> --}}
-                            <li class="breadcrumb-item active">Barang Keluar</li>
+                            <li class="breadcrumb-item active">Barang Assy</li>
                         </ol>
                     </div>
                 </div>
@@ -28,71 +28,53 @@
                             <div class="card-header">
                                 <h3 class="card-title"> </h3>
                                 <div class="card-tools">
-                                    <a href="{{ route('barang_keluar.create') }}" class="btn btn-primary btn-sm">
+                                    <a href="{{ route('barang_template.create') }}" class="btn btn-info btn-sm">
                                         <i class="fas fa-plus"></i> Add Data
                                     </a>
                                 </div>
                             </div>
-
                             <div class="card-body">
-                                <table id="example1" class="table table-bordered table-striped w-100">
+
+                                <table id="example2" class="table table-bordered table-striped w-100">
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>No Surat Jalan</th>
-                                            <th>Customer</th>
-                                            <th>Stok Aktual</th>
+                                            <th>Nama Template</th>
                                             <th>Part Number</th>
                                             <th>Nama Barang</th>
                                             <th>Total Qty</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($databarang_keluar as $barangKeluar)
+                                        @foreach ($databarang_template as $barangTemplate)
                                             <tr>
                                                 <td>
-                                                    <a class="btn btn-xs btn-dark"
-                                                        href="{{ route('barang_keluar.show', $barangKeluar->id) }}">
-                                                        <i class="fas fa-eye"></i> Show
-                                                    </a> <br>
+                                                    <!-- <a class="btn btn-xs btn-dark" href="{{ route('barang_template.show', $barangTemplate->id) }}">
+                                                                                            <i class="fas fa-eye"></i> Show
+                                                                                        </a> <br> -->
                                                     <a class="btn btn-xs btn-success"
-                                                        href="{{ route('barang_keluar.print', $barangKeluar->id) }}"
+                                                        href="{{ route('barang_template.print', $barangTemplate->id) }}"
                                                         target="_blank">
-                                                        <i class="fas fa-print"></i> Print Surat Jalan
+                                                        <i class="fas fa-print"></i> Print Template
                                                     </a> <br>
                                                     <a class="btn btn-xs btn-primary"
-                                                        href="{{ route('barang_keluar.edit', $barangKeluar->id) }}">
+                                                        href="{{ route('barang_template.edit', $barangTemplate->id) }}">
                                                         <i class="fas fa-edit"></i> Edit
                                                     </a> <br>
-                                                    <button class="btn btn-xs btn-danger delete-btn"
-                                                        data-id="{{ $barangKeluar->id }}">
+                                                    <button class="btn btn-xs btn-danger delete-btn-template"
+                                                        data-id="{{ $barangTemplate->id }}">
                                                         <i class="fas fa-trash"></i> Delete
                                                     </button>
                                                 </td>
+                                                <td>{{ $barangTemplate->nama_template }}</td>
                                                 <td>
-                                                    {{ $barangKeluar->invoice_number }} <br>
-                                                    @if ($barangKeluar->po_number)
-                                                        No PO :
-                                                        <strong>{{ $barangKeluar->po_number }}</strong>
-                                                    @else
-                                                    @endif
-                                                </td>
-                                                <td>{{ $barangKeluar->customer->name ?? '' }}</td>
-                                                <td>
-                                                    @foreach ($barangKeluar->details as $item)
-                                                        <strong>({{ $item->barang->stok }} @if ($item->barang->satuan)
-                                                                {{ $item->barang->satuan->name }}
-                                                            @endif)</strong><br>
-                                                    @endforeach
-                                                </td>
-                                                <td>
-                                                    @foreach ($barangKeluar->details as $item)
+                                                    @foreach ($barangTemplate->details as $item)
                                                         <strong>({{ $item->barang->part_number }})</strong>
                                                         <br>
                                                     @endforeach
                                                 </td>
                                                 <td>
-                                                    @foreach ($barangKeluar->details as $item)
+                                                    @foreach ($barangTemplate->details as $item)
                                                         {{ $item->barang->deskripsi }}
                                                         <strong>({{ $item->qty }} @if ($item->barang->satuan)
                                                                 {{ $item->barang->satuan->name }}
@@ -101,10 +83,9 @@
                                                 </td>
                                                 <td>
                                                     {{-- @php
-                                                        $totalQty = $barangKeluar->details->sum('qty');
+                                                        $totalQty = $barangTemplate->details->sum('qty');
                                                         echo $totalQty; // Total quantity of details
                                                     @endphp --}}
-                                                    1
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -140,9 +121,9 @@
         </script>
 
         <script>
-            $(document).on('click', '.delete-btn', function() {
+            $(document).on('click', '.delete-btn-template', function() {
                 var barangId = $(this).data('id');
-                var url = '{{ route('barang_keluar.destroy', ':id') }}';
+                var url = '{{ route('barang_template.destroy', ':id') }}';
                 url = url.replace(':id', barangId); // Replace :id with the actual ID
 
                 // Show SweetAlert confirmation dialog

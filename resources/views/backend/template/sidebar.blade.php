@@ -48,6 +48,12 @@
                                     <p>Barang</p>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('barang_template.index') }}"
+                                    class="nav-link {{ request()->routeIs('barang_template.index') ? 'active' : '' }}">
+                                    <p>Barang Assy</p>
+                                </a>
+                            </li>
                             <li class="nav-item {{ $role == 'sales' ? 'd-none' : '' }}">
                                 <a href="{{ route('satuan.index') }}"
                                     class="nav-link {{ request()->routeIs('satuan.index') ? 'active' : '' }}">
