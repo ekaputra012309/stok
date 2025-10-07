@@ -80,6 +80,7 @@
                                             @endif
                                             <th>Part Number</th>
                                             <th>Deskripsi</th>
+                                            <th>Lokasi Part</th>
                                             <th>Stok</th>
                                             <th>Limit</th>
                                             <th>Uom</th>
@@ -108,9 +109,10 @@
 
                                                 <td>{{ $barang->part_number }}</td>
                                                 <td>{{ $barang->deskripsi }}</td>
+                                                <td>{{ $barang->lokasi->nama_lokasi ?? '' }}</td>
                                                 <td>{{ $barang->stok }}</td>
                                                 <td>{{ $barang->limit }}</td>
-                                                <td>{{ $barang->satuan->name }}</td>
+                                                <td>{{ $barang->satuan->name ?? '' }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

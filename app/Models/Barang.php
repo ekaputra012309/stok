@@ -17,6 +17,7 @@ class Barang extends Model
         'part_number',
         'stok',
         'limit',
+        'lokasi_id',
         'satuan_id',
     ];
 
@@ -24,6 +25,11 @@ class Barang extends Model
     public function satuan()
     {
         return $this->belongsTo(Satuan::class);
+    }
+
+    public function lokasi()
+    {
+        return $this->belongsTo(Lokasi::class);
     }
 
     // Optionally, define the relationship with User if needed

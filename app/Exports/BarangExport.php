@@ -19,7 +19,7 @@ class BarangExport implements FromCollection, WithHeadings, WithMapping, WithCol
      */
     public function collection()
     {
-        return Barang::with('satuan')->get(); // Fetch data with related 'satuan'
+        return Barang::with('satuan', 'lokasi')->get(); // Fetch data with related 'satuan'
     }
 
     /**
@@ -33,6 +33,7 @@ class BarangExport implements FromCollection, WithHeadings, WithMapping, WithCol
             $barang->deskripsi,
             $barang->stok,
             $barang->limit,
+            $barang->lokasi->name ?? 'N/A',
             $barang->satuan->name ?? 'N/A', // Handle cases where 'satuan' might be null
         ];
     }

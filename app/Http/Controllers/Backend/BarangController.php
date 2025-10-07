@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Barang;
 use App\Models\Satuan;
+use App\Models\Lokasi;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Imports\BarangImport;
 use App\Exports\BarangTemplateExport;
@@ -26,9 +27,11 @@ class BarangController extends Controller
     public function create()
     {
         $satuans = Satuan::all(); // Get all satuans for dropdown
+        $lokasis = Lokasi::all();
         $data = [
             'title' => 'Add Barang | ',
             'satuans' => $satuans,
+            'lokasis' => $lokasis,
         ];
         return view('backend.barang.create', $data);
     }
@@ -39,6 +42,7 @@ class BarangController extends Controller
             'deskripsi' => 'required|string|max:255',
             'part_number' => 'required|string|unique:barang,part_number|max:255',
             'satuan_id' => 'required|exists:satuan,id',
+            'lokasi_id' => 'nullable|exists:lokasi,id',
             'user_id' => 'required|exists:users,id', // Adjust as necessary
         ]);
 
@@ -59,10 +63,12 @@ class BarangController extends Controller
     public function edit(Barang $barang)
     {
         $satuans = Satuan::all(); // Get all satuans for dropdown
+        $lokasis = Lokasi::all();
         $data = [
             'title' => 'Edit Barang | ',
             'barang' => $barang,
             'satuans' => $satuans,
+            'lokasis' => $lokasis,
         ];
         return view('backend.barang.edit', $data);
     }
@@ -73,6 +79,7 @@ class BarangController extends Controller
             'deskripsi' => 'required|string|max:255',
             'part_number' => 'required|string|max:255|unique:barang,part_number,' . $barang->id,
             'satuan_id' => 'required|exists:satuan,id',
+            'lokasi_id' => 'nullable|exists:lokasi,id',
             'user_id' => 'required|exists:users,id',
         ]);
 

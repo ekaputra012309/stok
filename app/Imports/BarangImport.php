@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Models\Barang;
 use App\Models\Satuan;
+use App\Models\Lokasi;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -24,6 +25,7 @@ class BarangImport implements ToCollection, WithHeadingRow
                 $row['part_number'] === 'EX-12345' &&
                 $row['stok'] === '10' &&
                 $row['limit'] === '10' &&
+                $row['lokasi_name'] === 'A1' &&
                 $row['satuan_name'] === 'PCS'
             ) {
                 continue; // Skip this row
@@ -39,6 +41,7 @@ class BarangImport implements ToCollection, WithHeadingRow
                     'unique:barang,part_number'
                 ],
                 'satuan_name' => 'required|string|exists:satuan,name',
+                'lokasi_name' => 'required|string|exists:lokasi,nama_lokasi',
             ]);
 
             if ($validator->fails()) {
@@ -71,6 +74,7 @@ class BarangImport implements ToCollection, WithHeadingRow
 
             // Find the Satuan by name
             $satuan = Satuan::where('name', $row['satuan_name'])->first();
+            $lokasi = Lokasi::where('nama_lokasi', $row['lokasi_name'])->first();
 
             // Create Barang
             Barang::create([
@@ -78,6 +82,7 @@ class BarangImport implements ToCollection, WithHeadingRow
                 'part_number' => $row['part_number'],
                 'stok'        => $row['stok'],
                 'limit'       => $row['limit'],
+                'lokasi_id'   => $lokasi->id,
                 'satuan_id'   => $satuan->id,
                 'user_id'     => auth()->id(), // Set the authenticated user's ID
             ]);

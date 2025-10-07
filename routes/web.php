@@ -14,6 +14,7 @@ use App\Http\Controllers\Backend\BarangKeluarController;
 use App\Http\Controllers\Backend\BarangBrokenController;
 use App\Http\Controllers\Backend\BarangTemplateController;
 use App\Http\Controllers\Backend\CustomerController;
+use App\Http\Controllers\Backend\LokasiController;
 
 // Route::get('/', function () {
 //     return ['Laravel' => app()->version()];
@@ -37,6 +38,8 @@ Route::post('barang/import', [BarangController::class, 'import'])->name('barang.
 Route::get('barang/template', [BarangController::class, 'downloadTemplate'])->name('barang.template');
 Route::post('/barang/destroy/{barang?}', [BarangController::class, 'destroy'])->name('barang.destroy');
 
+Route::delete('lokasi/{lokasi}', [LokasiController::class, 'destroy'])->name('lokasi.destroy');
+
 Route::delete('/purchase_order/{PurchaseOrder}', [PurchaseOrderController::class, 'destroy'])->name('purchase_order.destroy');
 Route::post('purchase_order/{id}/approve', [PurchaseOrderController::class, 'approve'])->name('purchase_order.approve');
 Route::get('/purchase-order/{id}/print', [PurchaseOrderController::class, 'print'])->name('purchase_order.print');
@@ -53,6 +56,8 @@ Route::get('/satuan/export', [SatuanController::class, 'export'])->name('satuan.
 Route::get('/customer/export', [CustomerController::class, 'export'])->name('customer.export');
 Route::get('/transaksi/laporan/cetak', [TransaksiController::class, 'cetakLaporan'])->name('transaksi.laporan.cetak');
 
+Route::get('/lokasi/export', [LokasiController::class, 'export'])->name('lokasi.export');
+
 Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
@@ -68,6 +73,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('barang_broken', BarangBrokenController::class); //barang_broken
     Route::resource('barang_template', BarangTemplateController::class); //barang_template
     Route::resource('customer', CustomerController::class); //customer
+
+    Route::resource('lokasi', LokasiController::class); //lokasi
 });
 
 require __DIR__.'/auth.php';
