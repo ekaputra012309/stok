@@ -31,9 +31,9 @@ class BarangExport implements FromCollection, WithHeadings, WithMapping, WithCol
             ++$this->index,                // Increment and include the row number
             $barang->part_number,
             $barang->deskripsi,
-            $barang->stok,
-            $barang->limit,
-            $barang->lokasi->name ?? 'N/A',
+            $barang->stok ?: '0',
+            $barang->limit ?: '0',
+            $barang->lokasi->nama_lokasi ?? 'N/A',
             $barang->satuan->name ?? 'N/A', // Handle cases where 'satuan' might be null
         ];
     }
@@ -43,7 +43,7 @@ class BarangExport implements FromCollection, WithHeadings, WithMapping, WithCol
      */
     public function headings(): array
     {
-        return ['No', 'Part Number', 'Deskripsi', 'Stok', 'Limit', 'Satuan Name'];
+        return ['No', 'Part Number', 'Deskripsi', 'Stok', 'Limit', 'Lokasi Part', 'Satuan Name'];
     }
 
     public function columnWidths(): array
@@ -54,7 +54,8 @@ class BarangExport implements FromCollection, WithHeadings, WithMapping, WithCol
             'C' => 40, // Column 'Deskripsi' (C) width
             'D' => 20, // Column 'Stok' (D) width
             'E' => 20, // Column 'Limit' (E) width
-            'F' => 15, // Column 'Satuan Name' (F) width
+            'F' => 15, // Column 'Lokasi Name' (F) width
+            'G' => 15, // Column 'Satuan Name' (G) width
         ];
     }
 
@@ -64,6 +65,7 @@ class BarangExport implements FromCollection, WithHeadings, WithMapping, WithCol
         $sheet->getStyle('D')->getAlignment()->setHorizontal('center'); // Center-align column D
         $sheet->getStyle('E')->getAlignment()->setHorizontal('center'); // Center-align column E
         $sheet->getStyle('F')->getAlignment()->setHorizontal('center'); // Center-align column F
+        $sheet->getStyle('G')->getAlignment()->setHorizontal('center'); // Center-align column G
 
         return [];
     }
