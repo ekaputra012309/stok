@@ -52,7 +52,7 @@
                                             <label for="qty">Total Quantity</label>
                                             <input type="number"
                                                 class="form-control qty-input @error('totalQty') is-invalid @enderror"
-                                                name="totalQty" placeholder="Quantity" required min="1">
+                                                name="totalQty" placeholder="Quantity">
                                             @error('totalQty')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>

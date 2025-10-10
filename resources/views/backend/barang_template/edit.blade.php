@@ -48,8 +48,7 @@
                                         <div class="form-group col-md-2">
                                             <label for="totalQty">Total Quantity</label>
                                             <input type="text" class="form-control" id="totalQty" name="totalQty"
-                                                placeholder="Total Quantity" value="{{ $barangTemplate->totalQty }}"
-                                                required>
+                                                placeholder="Total Quantity" value="{{ $barangTemplate->totalQty }}">
                                         </div>
                                     </div>
 
