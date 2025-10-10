@@ -45,6 +45,12 @@
                                                 name="nama_template" placeholder="Part Number Assy"
                                                 value="{{ $barangTemplate->nama_template }}" required>
                                         </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="totalQty">Total Quantity</label>
+                                            <input type="text" class="form-control" id="totalQty" name="totalQty"
+                                                placeholder="Total Quantity" value="{{ $barangTemplate->totalQty }}"
+                                                required>
+                                        </div>
                                     </div>
 
                                     <!-- Container for Existing Items -->

@@ -50,8 +50,8 @@
                                             <tr>
                                                 <td>
                                                     <!-- <a class="btn btn-xs btn-dark" href="{{ route('barang_template.show', $barangTemplate->id) }}">
-                                                                                            <i class="fas fa-eye"></i> Show
-                                                                                        </a> <br> -->
+                                                                                                <i class="fas fa-eye"></i> Show
+                                                                                            </a> <br> -->
                                                     <a class="btn btn-xs btn-success"
                                                         href="{{ route('barang_template.print', $barangTemplate->id) }}"
                                                         target="_blank">
@@ -82,6 +82,7 @@
                                                     @endforeach
                                                 </td>
                                                 <td>
+                                                    {{ $barangTemplate->totalQty }}
                                                     {{-- @php
                                                         $totalQty = $barangTemplate->details->sum('qty');
                                                         echo $totalQty; // Total quantity of details

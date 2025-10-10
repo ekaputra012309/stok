@@ -37,12 +37,23 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="form-group col-md-4">
-                                            <label for="nama_template">Part Number Assy</label>
+                                            <label for="nama_template">Part Number 1Assy</label>
                                             <input type="text"
                                                 class="form-control @error('nama_template') is-invalid @enderror"
                                                 id="nama_template" name="nama_template" placeholder="Part Number Assy"
                                                 required>
                                             @error('nama_template')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="qty">Total Quantity</label>
+                                            <input type="number"
+                                                class="form-control qty-input @error('totalQty') is-invalid @enderror"
+                                                name="totalQty" placeholder="Quantity" required min="1">
+                                            @error('totalQty')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>

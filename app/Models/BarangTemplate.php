@@ -13,6 +13,7 @@ class BarangTemplate extends Model
     protected $fillable = [
         'user_id',
         'nama_template',
+        'totalQty',
     ];
 
     public function user()

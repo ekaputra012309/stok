@@ -41,6 +41,7 @@ class BarangTemplateController extends Controller
         // dd($request->all());
         $request->validate([
             'nama_template' => 'required|string|max:255',
+            'totalQty' => 'nullable|integer',
             'user_id' => 'required|exists:users,id',
             'items' => 'required|array',
             'items.*.barang_id' => 'required|exists:barang,id',
@@ -51,6 +52,7 @@ class BarangTemplateController extends Controller
             // Create a new BarangTemplate entry
             $BarangTemplate = BarangTemplate::create([
                 'nama_template' => $request->nama_template,
+                'totalQty' => $request->totalQty,
                 'user_id' => auth()->user()->id, // Assuming the user is authenticated
             ]);
 
@@ -67,7 +69,7 @@ class BarangTemplateController extends Controller
         });
         
         Alert::success('Success', 'Barang Template transaction created successfully.')->autoClose(2000);
-        return redirect()->route('barang_keluar.index');
+        return redirect()->route('barang_template.index');
     }
 
     public function show(BarangTemplate $BarangTemplate)
@@ -92,26 +94,28 @@ class BarangTemplateController extends Controller
         return view('backend.barang_template.edit', $data);
     }
 
-    public function update(Request $request, BarangTemplate $barang_assy)
+    public function update(Request $request, BarangTemplate $BarangTemplate)
     {
         // dd($request->all());
         $request->validate([
             'nama_template' => 'required|string|max:255',
+            'totalQty' => 'nullable|integer',
             'user_id' => 'required|exists:users,id',
             'items' => 'required|array',
             'items.*.barang_id' => 'required|exists:barang,id',
             'items.*.qty' => 'required|integer|min:1',
         ]);
 
-        DB::transaction(function () use ($request, $barang_assy) {
-            // Update the barang_assy entry
-            $barang_assy->update([
+        DB::transaction(function () use ($request, $BarangTemplate) {
+            // Update the BarangTemplate entry
+            $BarangTemplate->update([
                 'user_id' => $request->user_id,
                 'nama_template' => $request->nama_template,
+                'totalQty' => $request->totalQty,
             ]);
 
             // Revert stock changes for existing items
-            foreach ($barang_assy->details as $item) {
+            foreach ($BarangTemplate->details as $item) {
                 $item->delete(); // Delete old detail
             }
 
@@ -119,7 +123,7 @@ class BarangTemplateController extends Controller
             foreach ($request->items as $item) {
                 // Create new BarangTemplateDetail entry
                 BarangTemplateDetail::create([
-                    'barang_template_id' => $barang_assy->id,
+                    'barang_template_id' => $BarangTemplate->id,
                     'barang_id' => $item['barang_id'],
                     'qty' => $item['qty'],
                     'user_id' => $request->user_id,
@@ -128,7 +132,7 @@ class BarangTemplateController extends Controller
         });
 
         Alert::success('Success', 'Barang Template updated successfully.')->autoClose(2000);
-        return redirect()->route('barang_keluar.index');
+        return redirect()->route('barang_template.index');
     }
 
     public function destroy(BarangTemplate $BarangTemplate)

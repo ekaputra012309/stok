@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id'); // Track the user who created this transaction
             $table->string('nama_template');
+            $table->integer('totalQty')->nullable();
             $table->timestamps();
 
             // Foreign key to users table
