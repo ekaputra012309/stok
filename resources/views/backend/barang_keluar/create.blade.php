@@ -40,7 +40,7 @@
                                             <label for="po_number">No PO</label>
                                             <input type="text"
                                                 class="form-control @error('po_number') is-invalid @enderror" id="po_number"
-                                                name="po_number" maxlength="15" placeholder="No PO" required>
+                                                name="po_number" placeholder="No PO" required>
                                             @error('po_number')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
