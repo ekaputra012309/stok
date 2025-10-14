@@ -320,19 +320,17 @@
                 });
 
                 $(document).on('change', '#barang_template', function() {
-                    const templateId = $(this).val(); // Get selected template ID
+                    const templateId = $(this).val();
+                    const totalQtyValue = parseFloat($('[name="totalQty"]').val()) || 1; // default 1 if empty
 
                     if (templateId) {
-                        // $('#items-container').hide();
-                        // $('#add-item').hide();
-                        // Replace :id with the actual template ID in the URL
                         const url = barangTemplateUrl.replace(':id', templateId);
 
                         $.ajax({
-                            url: url, // Dynamic URL for fetching template data
+                            url: url,
                             type: 'GET',
                             success: function(details) {
-                                $('#items-container').empty(); // Clear current details if any
+                                $('#items-container').empty();
 
                                 if (details.length === 0) {
                                     Swal.fire({
@@ -346,46 +344,58 @@
                                 details.forEach((item, index) => {
                                     const satuanName = item.barang && item.barang.satuan ?
                                         item.barang.satuan.name : 'N/A';
-                                    const newItemRow = `
-                                    <div class="item-row row">
-                                        <div class="form-group col-md-2">
-                                            <label for="barang_id">Barang</label>
-                                            <select class="form-control select2bs4" name="items[${index}][barang_id]" required>
-                                                <option value="${item.barang.id}" selected>${item.barang.part_number}</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            <label>Deskripsi</label>
-                                            <input type="text" class="form-control" id="items[${index}][deskripsi]" value="${item.barang.deskripsi}" readonly>
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            <label>Stock</label>
-                                            <input type="text" class="form-control" id="items[${index}][stok]" value="${item.barang.stok}" readonly>
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            <label for="qty">Quantity</label>
-                                            <input type="number" class="form-control qty-input" name="items[${index}][qty]" value="${item.qty}" placeholder="Quantity" required min="1" max="${item.barang.stok}">
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            <label for="remarks">Remarks</label>
-                                            <input type="text" class="form-control remarks-input" name="items[${index}][remarks]" value="${item.remarks ?? ''}" placeholder="Remarks">
-                                        </div>
-                                        <div class="form-group col-md-2 d-flex align-items-end">
-                                            <button type="button" class="btn btn-danger btn-sm remove-item">Remove</button>
-                                        </div>
-                                    </div>`;
 
-                                    $('#items-container').append(
-                                        newItemRow); // Append new row
+                                    // Use base qty × totalQtyValue if totalQty not empty
+                                    const calculatedQty = item.qty * totalQtyValue;
+
+                                    const newItemRow = `
+                        <div class="item-row row">
+                            <div class="form-group col-md-2">
+                                <label for="barang_id">Barang</label>
+                                <select class="form-control select2bs4" name="items[${index}][barang_id]" required>
+                                    <option value="${item.barang.id}" selected>${item.barang.part_number}</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label>Deskripsi</label>
+                                <input type="text" class="form-control" id="items[${index}][deskripsi]" value="${item.barang.deskripsi}" readonly>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label>Stock</label>
+                                <input type="text" class="form-control" id="items[${index}][stok]" value="${item.barang.stok}" readonly>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="qty">Quantity</label>
+                                <input type="number"
+                                       class="form-control qty-input"
+                                       name="items[${index}][qty]"
+                                       value="${calculatedQty}"
+                                       data-original="${item.qty}"
+                                       placeholder="Quantity"
+                                       required min="1"
+                                       max="${item.barang.stok}">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="remarks">Remarks</label>
+                                <input type="text"
+                                       class="form-control remarks-input"
+                                       name="items[${index}][remarks]"
+                                       value="${item.remarks ?? ''}"
+                                       placeholder="Remarks">
+                            </div>
+                            <div class="form-group col-md-2 d-flex align-items-end">
+                                <button type="button" class="btn btn-danger btn-sm remove-item">Remove</button>
+                            </div>
+                        </div>`;
+                                    $('#items-container').append(newItemRow);
                                 });
 
-                                // Reinitialize select2 for the new items
                                 $('.select2bs4').select2({
                                     theme: 'bootstrap4'
                                 });
                             },
                             error: function(xhr) {
-                                console.error(xhr.responseText); // Log the error
+                                console.error(xhr.responseText);
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Error',
