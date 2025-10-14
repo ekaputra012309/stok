@@ -16,6 +16,7 @@ class BarangKeluar extends Model
         'po_number',
         'customer_id',
         'tanggal_keluar',
+        'totalQty',
     ];
 
     public function user()

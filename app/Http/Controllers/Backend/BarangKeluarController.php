@@ -73,6 +73,7 @@ class BarangKeluarController extends Controller
             'po_number' => 'required|string|unique:barang_keluar,po_number|max:255',
             'user_id' => 'required|exists:users,id',
             'customer_id' => 'required|exists:customers,id',
+            'totalQty' => 'nullable|integer',
             'items' => 'required|array',
             'items.*.barang_id' => 'required|exists:barang,id',
             'items.*.qty' => 'required|integer|min:1',
@@ -87,6 +88,7 @@ class BarangKeluarController extends Controller
                 'po_number' => $request->po_number,
                 'user_id' => auth()->user()->id, // Assuming the user is authenticated
                 'customer_id' => $request->customer_id,
+                'totalQty' => $request->totalQty,
                 'tanggal_keluar' => $request->tanggal_keluar, // Use the provided date
             ]);
 
@@ -144,6 +146,7 @@ class BarangKeluarController extends Controller
             'invoice_number' => 'required|string|unique:barang_keluar,invoice_number,' . $BarangKeluar->id . '|max:255',
             'user_id' => 'required|exists:users,id',
             'customer_id' => 'required|exists:customers,id',
+            'totalQty' => 'nullable|integer',
             'items' => 'required|array',
             'items.*.barang_id' => 'required|exists:barang,id',
             'items.*.qty' => 'required|integer|min:1',
@@ -158,6 +161,7 @@ class BarangKeluarController extends Controller
                 'invoice_number' => $request->invoice_number,
                 'po_number' => $request->po_number,
                 'customer_id' => $request->customer_id,
+                'totalQty' => $request->totalQty,
                 'tanggal_keluar' => $request->tanggal_keluar,
             ]);
 

@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('po_number')->unique();
             $table->unsignedBigInteger('customer_id');
             $table->date('tanggal_keluar');
+            $table->integer('totalQty')->nullable();
             $table->timestamps();
 
             // Foreign key to users table

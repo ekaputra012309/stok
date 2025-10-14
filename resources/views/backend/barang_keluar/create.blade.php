@@ -94,64 +94,101 @@
                                                 @endforeach
                                             </select>
                                         </div>
+
+                                        <div class="form-group col-md-2">
+                                            <label for="totalQty">Total Quantity</label>
+                                            <input type="number"
+                                                class="form-control qty-input @error('totalQty') is-invalid @enderror"
+                                                name="totalQty" placeholder="Quantity">
+                                            @error('totalQty')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
                                     </div>
 
                                     <!-- Container for Dynamic Barang Items -->
-                                    <div id="items-container">
-                                        <div class="item-row row">
-                                            <div class="form-group col-md-2">
-                                                <label for="barang_id">Barang</label>
-                                                <select class="form-control select2bs4" name="items[0][barang_id]" required>
-                                                    <option value="" disabled selected>Select Barang</option>
-                                                    @foreach ($barangs as $barang)
-                                                        <option value="{{ $barang->id }}"
-                                                            data-stok="{{ $barang->stok }}"
-                                                            data-deskripsi="{{ $barang->deskripsi }}">
-                                                            {{ $barang->part_number }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
+                                    <div class="accordion" id="accordionExample">
+                                        <div class="card">
+                                            <div class="card-header" id="headingOne">
+                                                <h2 class="mb-0">
+                                                    <button class="btn btn-link btn-block text-left collapsed"
+                                                        type="button" data-toggle="collapse" data-target="#collapseOne"
+                                                        aria-expanded="true" aria-controls="collapseOne">
+                                                        Detail Items
+                                                    </button>
+                                                </h2>
                                             </div>
-                                            <div class="form-group col-md-2">
-                                                <label>Deskripsi</label>
-                                                <input type="text" class="form-control" id="items[0][deskripsi]"
-                                                    readonly>
-                                            </div>
-                                            <div class="form-group col-md-2">
-                                                <label>Stock</label>
-                                                <input type="text" class="form-control" id="items[0][stok]" readonly>
-                                            </div>
-                                            <div class="form-group col-md-2">
-                                                <label for="qty">Quantity</label>
-                                                <input type="number"
-                                                    class="form-control qty-input @error('items.0.qty') is-invalid @enderror"
-                                                    name="items[0][qty]" placeholder="Quantity" required min="1">
-                                                @error('items.0.qty')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                            <div class="form-group col-md-2">
-                                                <label for="remarks">Remarks</label>
-                                                <input type="text"
-                                                    class="form-control remarks-input @error('items.0.remarks') is-invalid @enderror"
-                                                    name="items[0][remarks]" placeholder="Remarks">
-                                                @error('items.0.remarks')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                            <div class="form-group col-md-2 d-flex align-items-end">
-                                                <button type="button"
-                                                    class="btn btn-danger btn-sm remove-item">Remove</button>
+
+                                            <div id="collapseOne" class="collapse " aria-labelledby="headingOne"
+                                                data-parent="#accordionExample">
+                                                <div class="card-body">
+                                                    <div id="items-container">
+                                                        <div class="item-row row">
+                                                            <div class="form-group col-md-2">
+                                                                <label for="barang_id">Barang</label>
+                                                                <select class="form-control select2bs4"
+                                                                    name="items[0][barang_id]" required>
+                                                                    <option value="" disabled selected>Select Barang
+                                                                    </option>
+                                                                    @foreach ($barangs as $barang)
+                                                                        <option value="{{ $barang->id }}"
+                                                                            data-stok="{{ $barang->stok }}"
+                                                                            data-deskripsi="{{ $barang->deskripsi }}">
+                                                                            {{ $barang->part_number }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group col-md-2">
+                                                                <label>Deskripsi</label>
+                                                                <input type="text" class="form-control"
+                                                                    id="items[0][deskripsi]" readonly>
+                                                            </div>
+                                                            <div class="form-group col-md-2">
+                                                                <label>Stock</label>
+                                                                <input type="text" class="form-control"
+                                                                    id="items[0][stok]" readonly>
+                                                            </div>
+                                                            <div class="form-group col-md-2">
+                                                                <label for="qty">Quantity</label>
+                                                                <input type="number"
+                                                                    class="form-control qty-input @error('items.0.qty') is-invalid @enderror"
+                                                                    name="items[0][qty]" placeholder="Quantity" required
+                                                                    min="1">
+                                                                @error('items.0.qty')
+                                                                    <span class="invalid-feedback" role="alert">
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </span>
+                                                                @enderror
+                                                            </div>
+                                                            <div class="form-group col-md-2">
+                                                                <label for="remarks">Remarks</label>
+                                                                <input type="text"
+                                                                    class="form-control remarks-input @error('items.0.remarks') is-invalid @enderror"
+                                                                    name="items[0][remarks]" placeholder="Remarks">
+                                                                @error('items.0.remarks')
+                                                                    <span class="invalid-feedback" role="alert">
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </span>
+                                                                @enderror
+                                                            </div>
+                                                            <div class="form-group col-md-2 d-flex align-items-end">
+                                                                <button type="button"
+                                                                    class="btn btn-danger btn-sm remove-item">Remove</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <button type="button" id="add-item"
+                                                        class="btn btn-success btn-sm">Add Another
+                                                        Item</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <button type="button" id="add-item" class="btn btn-success btn-sm">Add Another
-                                        Item</button>
                                 </div>
 
                                 <div class="card-footer">
@@ -286,8 +323,8 @@
                     const templateId = $(this).val(); // Get selected template ID
 
                     if (templateId) {
-                        $('#items-container').hide();
-                        $('#add-item').hide();
+                        // $('#items-container').hide();
+                        // $('#add-item').hide();
                         // Replace :id with the actual template ID in the URL
                         const url = barangTemplateUrl.replace(':id', templateId);
 
@@ -357,6 +394,34 @@
                             }
                         });
                     }
+                });
+
+                // Always store the original qty when the value changes (either manual or loaded)
+                $(document).on('change input', '.qty-input', function() {
+                    const val = parseFloat($(this).val()) || 0;
+                    $(this).data('original', val);
+                });
+
+                // Multiply all item qty by totalQty multiplier
+                $(document).on('input', '[name="totalQty"]', function() {
+                    const multiplier = parseFloat($(this).val());
+
+                    // If empty or zero, don't modify anything
+                    if (isNaN(multiplier) || multiplier === 0) return;
+
+                    $('#items-container .item-row').each(function() {
+                        const qtyInput = $(this).find('.qty-input');
+                        let originalQty = qtyInput.data('original');
+
+                        // If not yet stored, use current value as original
+                        if (originalQty === undefined) {
+                            originalQty = parseFloat(qtyInput.val()) || 0;
+                            qtyInput.data('original', originalQty);
+                        }
+
+                        const newQty = originalQty * multiplier;
+                        qtyInput.val(newQty);
+                    });
                 });
 
             });
