@@ -48,7 +48,7 @@
                                                 </span>
                                             @enderror
                                         </div>
-                                        <div class="form-group col-md-2">
+                                        {{-- <div class="form-group col-md-2">
                                             <label for="qty">Total Quantity</label>
                                             <input type="number"
                                                 class="form-control qty-input @error('totalQty') is-invalid @enderror"
@@ -58,7 +58,7 @@
                                                     <strong>{{ $message }}</strong>
                                                 </span>
                                             @enderror
-                                        </div>
+                                        </div> --}}
                                     </div>
 
                                     <!-- Container for Dynamic Barang Items -->

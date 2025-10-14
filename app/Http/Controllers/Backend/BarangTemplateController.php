@@ -41,7 +41,7 @@ class BarangTemplateController extends Controller
         // dd($request->all());
         $request->validate([
             'nama_template' => 'required|string|max:255',
-            'totalQty' => 'nullable|integer',
+            // 'totalQty' => 'nullable|integer',
             'user_id' => 'required|exists:users,id',
             'items' => 'required|array',
             'items.*.barang_id' => 'required|exists:barang,id',
@@ -52,7 +52,7 @@ class BarangTemplateController extends Controller
             // Create a new BarangTemplate entry
             $BarangTemplate = BarangTemplate::create([
                 'nama_template' => $request->nama_template,
-                'totalQty' => $request->totalQty,
+                // 'totalQty' => $request->totalQty,
                 'user_id' => auth()->user()->id, // Assuming the user is authenticated
             ]);
 
@@ -99,7 +99,7 @@ class BarangTemplateController extends Controller
         // dd($request->all());
         $request->validate([
             'nama_template' => 'required|string|max:255',
-            'totalQty' => 'nullable|integer',
+            // 'totalQty' => 'nullable|integer',
             'user_id' => 'required|exists:users,id',
             'items' => 'required|array',
             'items.*.barang_id' => 'required|exists:barang,id',
@@ -111,7 +111,7 @@ class BarangTemplateController extends Controller
             $BarangTemplate->update([
                 'user_id' => $request->user_id,
                 'nama_template' => $request->nama_template,
-                'totalQty' => $request->totalQty,
+                // 'totalQty' => $request->totalQty,
             ]);
 
             // Revert stock changes for existing items
