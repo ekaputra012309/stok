@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Lokasi;
 use RealRashid\SweetAlert\Facades\Alert;
+use App\Imports\LokasiPartImport;
+use App\Exports\LokasiTemplateExport;
 use App\Exports\LokasiExport;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -87,6 +89,34 @@ class LokasiController extends Controller
         // Alert::success('Success', 'lokasi deleted successfully.');
 
         // return redirect()->route('lokasi.index');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv',
+        ]);
+
+        $import = new LokasiPartImport();
+        Excel::import($import, $request->file('file'));
+
+        // dd($import->errors);
+
+        if (count($import->errors) > 0) {
+            // Pass formatted errors to the view
+            return redirect()->route('lokasi.index')->with([
+                'success' => 'lokasi imported with some errors.',
+                'errors' => $import->errors, // Pass errors to the view
+            ]);
+        }
+
+        Alert::success('Success', 'lokasi imported successfully.')->autoClose(2000);
+        return redirect()->route('lokasi.index');
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new LokasiTemplateExport, 'lokasi_template.xlsx');
     }
 
     public function export()

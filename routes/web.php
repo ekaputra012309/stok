@@ -38,6 +38,8 @@ Route::post('barang/import', [BarangController::class, 'import'])->name('barang.
 Route::get('barang/template', [BarangController::class, 'downloadTemplate'])->name('barang.template');
 Route::post('/barang/destroy/{barang?}', [BarangController::class, 'destroy'])->name('barang.destroy');
 
+Route::post('lokasi/import', [LokasiController::class, 'import'])->name('lokasi.import');
+Route::get('lokasi/template', [LokasiController::class, 'downloadTemplate'])->name('lokasi.template');
 Route::delete('lokasi/{lokasi}', [LokasiController::class, 'destroy'])->name('lokasi.destroy');
 
 Route::delete('/purchase_order/{PurchaseOrder}', [PurchaseOrderController::class, 'destroy'])->name('purchase_order.destroy');

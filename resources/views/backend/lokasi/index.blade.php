@@ -1,3 +1,7 @@
+@php
+    $role = App\Models\Privilage::getRoleKodeForAuthenticatedUser();
+@endphp
+
 @extends('backend/template/app')
 
 @section('content')
@@ -26,14 +30,41 @@
 
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title"> </h3>
-                                <div class="card-tools">
-                                    <a href="{{ route('lokasi.export') }}" class="btn btn-success btn-sm mr-2">
-                                        <i class="fas fa-upload"></i> Export
-                                    </a>
-                                    <a href="{{ route('lokasi.create') }}" class="btn btn-primary btn-sm">
-                                        <i class="fas fa-plus"></i> Add Data
-                                    </a>
+                                <div class="card-title d-flex align-items-center w-100">
+                                    <div class="row w-100">
+                                        @if (in_array($role, ['superadmin', 'owner', 'admin']))
+                                            <div class="col-md-6 d-flex align-items-center">
+                                                <form action="{{ route('lokasi.import') }}" method="POST"
+                                                    enctype="multipart/form-data" class="d-flex align-items-center w-100">
+                                                    @csrf
+                                                    <div class="form-group mb-0 mr-2 w-75">
+                                                        <label for="file" class="sr-only">Import Excel</label>
+                                                        <input type="file" name="file"
+                                                            class="form-control form-control-sm" required>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-success btn-sm ml-2">
+                                                        <i class="fas fa-file-import"></i> Import
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        @else
+                                            <div class="col-md-6 d-flex align-items-center">
+                                                <span>&nbsp;</span>
+                                            </div>
+                                        @endif
+
+                                        <div class="col-md-6 d-flex justify-content-end align-items-center">
+                                            <a href="{{ route('lokasi.template') }}" class="btn btn-info btn-sm mr-2">
+                                                <i class="fas fa-download"></i> Template
+                                            </a>
+                                            <a href="{{ route('lokasi.export') }}" class="btn btn-success btn-sm mr-2">
+                                                <i class="fas fa-upload"></i> Export
+                                            </a>
+                                            <a href="{{ route('lokasi.create') }}" class="btn btn-primary btn-sm">
+                                                <i class="fas fa-plus"></i> Add Data
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="card-body">
