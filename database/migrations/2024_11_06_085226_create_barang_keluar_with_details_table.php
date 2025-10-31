@@ -43,6 +43,7 @@ return new class extends Migration
             $table->unsignedBigInteger('barang_keluar_id'); // Link to barang_keluar
             $table->unsignedBigInteger('barang_id'); // Link to barang
             $table->unsignedBigInteger('user_id'); // Track the user who created this item entry
+            $table->unsignedBigInteger('template_id')->nullable();
             $table->integer('qty'); // Quantity added
             $table->string('remarks')->nullable();
             $table->timestamps();
@@ -51,6 +52,7 @@ return new class extends Migration
             $table->foreign('barang_keluar_id')->references('id')->on('barang_keluar')->onDelete('cascade');
             $table->foreign('barang_id')->references('id')->on('barang')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('template_id')->references('id')->on('barang_template')->onDelete('set null'); // <— optional FK
         });
     }
 

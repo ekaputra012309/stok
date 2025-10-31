@@ -14,6 +14,7 @@ class BarangKeluarDetail extends Model
         'barang_keluar_id',
         'barang_id',
         'user_id',
+        'template_id',
         'qty',
         'remarks',
     ];
@@ -31,5 +32,10 @@ class BarangKeluarDetail extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function template()
+    {
+        return $this->belongsTo(BarangTemplate::class, 'template_id');
     }
 }

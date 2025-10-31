@@ -75,42 +75,39 @@ class BarangKeluarController extends Controller
             'customer_id' => 'required|exists:customers,id',
             'totalQty' => 'nullable|integer',
             'items' => 'required|array',
-            'items.*.barang_id' => 'required|exists:barang,id',
-            'items.*.qty' => 'required|integer|min:1',
-            'items.*.remarks' => 'nullable|string|max:255',
             'tanggal_keluar' => 'required|date',
-        ]);        
+        ]);
 
         DB::transaction(function () use ($request) {
-            // Create a new BarangKeluar entry
             $barangKeluar = BarangKeluar::create([
                 'invoice_number' => $request->invoice_number,
                 'po_number' => $request->po_number,
-                'user_id' => auth()->user()->id, // Assuming the user is authenticated
+                'user_id' => auth()->user()->id,
                 'customer_id' => $request->customer_id,
                 'totalQty' => $request->totalQty,
-                'tanggal_keluar' => $request->tanggal_keluar, // Use the provided date
+                'tanggal_keluar' => $request->tanggal_keluar,
             ]);
 
-            // Loop through the items to create BarangKeluarDetail entries and update stock
-            foreach ($request->items as $item) {
-                // Update stock in Barang table
-                $barang = Barang::find($item['barang_id']);
-                if ($barang) {
-                    $barang->decrement('stok', $item['qty']); // Increment stock by the quantity received
+            // Loop through groups and items
+            foreach ($request->items as $templateId => $groupItems) {
+                foreach ($groupItems as $item) {
+                    $barang = Barang::find($item['barang_id']);
+                    if ($barang) {
+                        $barang->decrement('stok', $item['qty']);
+                    }
+            
+                    BarangKeluarDetail::create([
+                        'barang_keluar_id' => $barangKeluar->id,
+                        'barang_id' => $item['barang_id'],
+                        'qty' => $item['qty'],
+                        'remarks' => $item['remarks'] ?? '',
+                        'user_id' => $request->user_id,
+                        'template_id' => $templateId, // ✅ save the group/template
+                    ]);
                 }
-
-                // Create a BarangKeluarDetail entry
-                BarangKeluarDetail::create([
-                    'barang_keluar_id' => $barangKeluar->id,
-                    'barang_id' => $item['barang_id'],
-                    'qty' => $item['qty'],
-                    'remarks' => $item['remarks'] ?? '',
-                    'user_id' => $request->user_id,
-                ]);
-            }
+            }            
         });
-        
+
         Alert::success('Success', 'Barang Keluar transaction created successfully.')->autoClose(2000);
         return redirect()->route('barang_keluar.index');
     }
@@ -129,12 +126,14 @@ class BarangKeluarController extends Controller
         $barangs = Barang::with('satuan')->where('stok', '>', 0)->get();
         $satuans = Satuan::all();
         $customers = Customer::all();
+        $barang_template = BarangTemplate::with(['details.barang.satuan'])->get();
         $data = [
             'title' => 'Edit Barang Keluar | ',
             'barangKeluar' => $BarangKeluar->load('details.barang'),
             'barangs' => $barangs,
             'satuans' => $satuans,
             'customers' => $customers,
+            'barang_template' => $barang_template,
         ];
         return view('backend.barang_keluar.edit', $data);
     }
@@ -148,14 +147,14 @@ class BarangKeluarController extends Controller
             'customer_id' => 'required|exists:customers,id',
             'totalQty' => 'nullable|integer',
             'items' => 'required|array',
-            'items.*.barang_id' => 'required|exists:barang,id',
-            'items.*.qty' => 'required|integer|min:1',
-            'items.*.remarks' => 'nullable|string|max:255',
+            'items.*.*.barang_id' => 'required|exists:barang,id', // nested: template_id -> index -> barang_id
+            'items.*.*.qty' => 'required|integer|min:1',
+            'items.*.*.remarks' => 'nullable|string|max:255',
             'tanggal_keluar' => 'required|date',
-        ]);
+        ]);        
 
         DB::transaction(function () use ($request, $BarangKeluar) {
-            // Update the BarangKeluar entry
+            // Update main BarangKeluar record
             $BarangKeluar->update([
                 'user_id' => $request->user_id,
                 'invoice_number' => $request->invoice_number,
@@ -164,32 +163,34 @@ class BarangKeluarController extends Controller
                 'totalQty' => $request->totalQty,
                 'tanggal_keluar' => $request->tanggal_keluar,
             ]);
-
-            // Revert stock changes for existing items
-            foreach ($BarangKeluar->details as $item) {
-                $barang = Barang::find($item->barang_id);
+        
+            // Revert stock for existing items and delete details
+            foreach ($BarangKeluar->details as $detail) {
+                $barang = Barang::find($detail->barang_id);
                 if ($barang) {
-                    $barang->increment('stok', $item->qty); // Add back previous stock amount
+                    $barang->increment('stok', $detail->qty);
                 }
-                $item->delete(); // Delete old detail
+                $detail->delete();
             }
-
-            // Insert updated items and decrement stock accordingly
-            foreach ($request->items as $item) {
-                $barang = Barang::find($item['barang_id']);
-                if ($barang) {
-                    $barang->decrement('stok', $item['qty']); // Reduce stock by the updated qty
+        
+            // Insert new items (grouped by template)
+            foreach ($request->items as $templateId => $groupItems) {
+                foreach ($groupItems as $item) {
+                    $barang = Barang::find($item['barang_id']);
+                    if ($barang) {
+                        $barang->decrement('stok', $item['qty']);
+                    }
+            
+                    BarangKeluarDetail::create([
+                        'barang_keluar_id' => $BarangKeluar->id,
+                        'barang_id' => $item['barang_id'],
+                        'template_id' => $templateId !== 'unknown' ? $templateId : null,
+                        'qty' => $item['qty'],
+                        'remarks' => $item['remarks'] ?? '',
+                        'user_id' => $request->user_id,
+                    ]);
                 }
-
-                // Create new BarangKeluarDetail entry
-                BarangKeluarDetail::create([
-                    'barang_keluar_id' => $BarangKeluar->id,
-                    'barang_id' => $item['barang_id'],
-                    'qty' => $item['qty'],
-                    'remarks' => $item['remarks'] ?? '',
-                    'user_id' => $request->user_id,
-                ]);
-            }
+            }            
         });
 
         Alert::success('Success', 'Barang Keluar updated successfully.')->autoClose(2000);
@@ -234,14 +235,28 @@ class BarangKeluarController extends Controller
         return $pdf->stream(''.$barangKeluar->invoice_number.'.pdf'); // Stream the PDF
     }
 
+    // public function getBarangTemplateData($id)
+    // {
+    //     $template = BarangTemplate::with(['details.barang.satuan'])->find($id);
+    //     // dd($template);
+    //     if ($template) {
+    //         return response()->json($template->details);
+    //     }
+
+    //     return response()->json([], 404); // Return empty response if template not found
+    // }
     public function getBarangTemplateData($id)
     {
         $template = BarangTemplate::with(['details.barang.satuan'])->find($id);
-        // dd($template);
+
         if ($template) {
-            return response()->json($template->details);
+            return response()->json([
+                'nama_template' => $template->nama_template,
+                'details' => $template->details,
+            ]);
         }
 
-        return response()->json([], 404); // Return empty response if template not found
+        return response()->json([], 404);
     }
+
 }

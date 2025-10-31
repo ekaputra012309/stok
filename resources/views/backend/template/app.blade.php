@@ -92,6 +92,16 @@
         .input-subtotal {
             min-width: 140px;
         }
+
+        .assy-group {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .assy-group .card-header {
+            background-color: #f8f9fa;
+            cursor: pointer;
+        }
     </style>
 </head>
 

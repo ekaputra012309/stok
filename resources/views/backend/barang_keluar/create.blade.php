@@ -72,8 +72,8 @@
 
                                         <div class="form-group col-md-3">
                                             <label for="barang_template">Barang Assy</label>
-                                            <select class="form-control select2bs4" id="barang_template">
-                                                <option value="" disabled selected>Select Assy</option>
+                                            <select class="form-control select2bs4" id="barang_template" multiple>
+                                                <option value="" disabled>Select Assy</option>
                                                 @foreach ($barang_template as $barang_t)
                                                     <option value="{{ $barang_t->id }}">
                                                         {{ $barang_t->nama_template }}
@@ -124,66 +124,11 @@
                                             <div id="collapseOne" class="collapse " aria-labelledby="headingOne"
                                                 data-parent="#accordionExample">
                                                 <div class="card-body">
-                                                    <div id="items-container">
-                                                        <div class="item-row row">
-                                                            <div class="form-group col-md-2">
-                                                                <label for="barang_id">Barang</label>
-                                                                <select class="form-control select2bs4"
-                                                                    name="items[0][barang_id]" required>
-                                                                    <option value="" disabled selected>Select Barang
-                                                                    </option>
-                                                                    @foreach ($barangs as $barang)
-                                                                        <option value="{{ $barang->id }}"
-                                                                            data-stok="{{ $barang->stok }}"
-                                                                            data-deskripsi="{{ $barang->deskripsi }}">
-                                                                            {{ $barang->part_number }}
-                                                                        </option>
-                                                                    @endforeach
-                                                                </select>
-                                                            </div>
-                                                            <div class="form-group col-md-2">
-                                                                <label>Deskripsi</label>
-                                                                <input type="text" class="form-control"
-                                                                    id="items[0][deskripsi]" readonly>
-                                                            </div>
-                                                            <div class="form-group col-md-2">
-                                                                <label>Stock</label>
-                                                                <input type="text" class="form-control"
-                                                                    id="items[0][stok]" readonly>
-                                                            </div>
-                                                            <div class="form-group col-md-2">
-                                                                <label for="qty">Quantity</label>
-                                                                <input type="number"
-                                                                    class="form-control qty-input @error('items.0.qty') is-invalid @enderror"
-                                                                    name="items[0][qty]" placeholder="Quantity" required
-                                                                    min="1">
-                                                                @error('items.0.qty')
-                                                                    <span class="invalid-feedback" role="alert">
-                                                                        <strong>{{ $message }}</strong>
-                                                                    </span>
-                                                                @enderror
-                                                            </div>
-                                                            <div class="form-group col-md-2">
-                                                                <label for="remarks">Remarks</label>
-                                                                <input type="text"
-                                                                    class="form-control remarks-input @error('items.0.remarks') is-invalid @enderror"
-                                                                    name="items[0][remarks]" placeholder="Remarks">
-                                                                @error('items.0.remarks')
-                                                                    <span class="invalid-feedback" role="alert">
-                                                                        <strong>{{ $message }}</strong>
-                                                                    </span>
-                                                                @enderror
-                                                            </div>
-                                                            <div class="form-group col-md-2 d-flex align-items-end">
-                                                                <button type="button"
-                                                                    class="btn btn-danger btn-sm remove-item">Remove</button>
-                                                            </div>
+                                                    <div class="accordion" id="assyAccordion">
+                                                        <div id="assy-groups-container">
+
                                                         </div>
                                                     </div>
-
-                                                    <button type="button" id="add-item"
-                                                        class="btn btn-success btn-sm">Add Another
-                                                        Item</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -249,57 +194,51 @@
                     }
                 }
 
-                $('#add-item').on('click', function() {
-                    const newItemRow = `
-                    <div class="item-row row">
-                        <div class="form-group col-md-2">
-                            <label for="barang_id">Barang</label>
-                            <select class="form-control select2bs4" name="items[${itemIndex}][barang_id]" required>
-                                <option value="" disabled selected>Select Barang</option>
-                                @foreach ($barangs as $barang)
-                                    <option value="{{ $barang->id }}" data-stok="{{ $barang->stok }}" data-deskripsi="{{ $barang->deskripsi }}">
-                                        {{ $barang->part_number }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label>Deskripsi</label>
-                            <input type="text" class="form-control" id="items[${itemIndex}][deskripsi]" readonly>
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label>Stock</label>
-                            <input type="text" class="form-control" id="items[${itemIndex}][stok]" readonly>
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label for="qty">Quantity</label>
-                            <input type="number" class="form-control qty-input @error('items.${itemIndex}.qty') is-invalid @enderror" name="items[${itemIndex}][qty]" placeholder="Quantity" required min="1">
-                            @error('items.${itemIndex}.qty')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label for="remarks">Remarks</label>
-                            <input type="text" class="form-control remarks-input @error('items.${itemIndex}.remarks') is-invalid @enderror" name="items[${itemIndex}][remarks]" placeholder="Remarks" >
-                            @error('items.${itemIndex}.remarks')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="form-group col-md-2 d-flex align-items-end">
-                            <button type="button" class="btn btn-danger btn-sm remove-item">Remove</button>
-                        </div>
-                    </div>`;
+                // Add new item inside specific Assy group
+                $(document).on('click', '.add-item', function() {
+                    const templateId = $(this).data('template');
+                    const $groupBody = $(`#assy-items-${templateId}`);
+                    const index = $groupBody.find('.item-row').length;
 
-                    $('#items-container').append(newItemRow);
+                    const newItemRow = `
+        <div class="item-row row">
+            <div class="form-group col-md-2">
+                <label>Barang</label>
+                <select class="form-control select2bs4" name="items[${templateId}][${index}][barang_id]" required>
+                    <option value="" disabled selected>Select Barang</option>
+                    @foreach ($barangs as $barang)
+                        <option value="{{ $barang->id }}" data-stok="{{ $barang->stok }}" data-deskripsi="{{ $barang->deskripsi }}">
+                            {{ $barang->part_number }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group col-md-2">
+                <label>Deskripsi</label>
+                <input type="text" class="form-control" readonly>
+            </div>
+            <div class="form-group col-md-2">
+                <label>Stock</label>
+                <input type="text" class="form-control" readonly>
+            </div>
+            <div class="form-group col-md-2">
+                <label>Quantity</label>
+                <input type="number" class="form-control qty-input" name="items[${templateId}][${index}][qty]" placeholder="Quantity" required min="1">
+            </div>
+            <div class="form-group col-md-2">
+                <label>Remarks</label>
+                <input type="text" class="form-control" name="items[${templateId}][${index}][remarks]" placeholder="Remarks">
+            </div>
+            <div class="form-group col-md-2 d-flex align-items-end">
+                <button type="button" class="btn btn-danger btn-sm remove-item">Remove</button>
+            </div>
+        </div>
+    `;
+
+                    $groupBody.append(newItemRow);
                     $('.select2bs4').select2({
                         theme: 'bootstrap4'
                     });
-                    itemIndex++;
-                    updateOptions();
                 });
 
                 $(document).on('click', '.remove-item', function() {
@@ -320,74 +259,137 @@
                 });
 
                 $(document).on('change', '#barang_template', function() {
-                    const templateId = $(this).val();
-                    const totalQtyValue = parseFloat($('[name="totalQty"]').val()) || 1; // default 1 if empty
+                    const selectedTemplates = $(this).val() || []; // multiple IDs
+                    const totalQtyValue = parseFloat($('[name="totalQty"]').val()) || 1;
 
-                    if (templateId) {
+                    // Remove groups for unselected Assy
+                    $('#assy-groups-container .assy-group').each(function() {
+                        const groupId = $(this).data('template-id').toString();
+                        if (!selectedTemplates.includes(groupId)) {
+                            $(this).remove();
+                        }
+                    });
+
+                    // For each selected Assy, load if not already loaded
+                    selectedTemplates.forEach(templateId => {
+                        if ($(`#assy-group-${templateId}`).length) return; // already loaded
+
                         const url = barangTemplateUrl.replace(':id', templateId);
 
                         $.ajax({
                             url: url,
                             type: 'GET',
-                            success: function(details) {
-                                $('#items-container').empty();
+                            success: function(response) {
+                                const details = response.details || [];
+                                const assyName = `Barang Assy ${response.nama_template}` ??
+                                    `Barang Assy ${templateId}`;
 
                                 if (details.length === 0) {
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'No Data Found',
-                                        text: 'No template items found for this template.',
+                                        text: `No template items found for ${assyName}.`,
                                     });
                                     return;
                                 }
 
-                                details.forEach((item, index) => {
-                                    const satuanName = item.barang && item.barang.satuan ?
-                                        item.barang.satuan.name : 'N/A';
+                                const groupCard = `
+                                    <div class="assy-group card mt-3" id="assy-group-${templateId}" data-template-id="${templateId}">
+                                        <div class="card-header">
+                                            <h3 class="card-title"> 
+                                                <button class="btn btn-link text-left collapsed"
+                                                        type="button"
+                                                        data-toggle="collapse"
+                                                        data-target="#collapse-${templateId}"
+                                                        aria-expanded="false"
+                                                        aria-controls="collapse-${templateId}">
+                                                    🔹 ${assyName}
+                                                </button>
+                                            </h3>
+                                            <div class="card-tools">
+                                                <button type="button"
+                                                    class="btn btn-danger btn-sm remove-assy ms-auto"
+                                                    data-id="${templateId}">
+                                                Remove Group
+                                            </button>
+                                            </div>
+                                        </div>
 
-                                    // Use base qty × totalQtyValue if totalQty not empty
+                                        <div id="collapse-${templateId}"
+                                            class="collapse"
+                                            aria-labelledby="heading-${templateId}"
+                                            data-parent="#assyAccordion">
+                                            <div class="card-body" id="assy-items-${templateId}"></div>
+                                        </div>
+
+                                        <div id="collapse-${templateId}" class="collapse" aria-labelledby="heading-${templateId}" data-parent="#assyAccordion">
+                                            <div class="card-body" id="assy-items-${templateId}">
+                                            </div>
+                                            <div class="card-footer text-right">
+                                                <button type="button" class="btn btn-success btn-sm add-item" data-template="${templateId}">
+                                                    Add Another Item
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                                $('#assy-groups-container').append(groupCard);
+
+                                const $groupBody = $(`#assy-items-${templateId}`);
+
+                                details.forEach((item, index) => {
+                                    const satuanName =
+                                        item.barang && item.barang.satuan ?
+                                        item.barang.satuan.name :
+                                        'N/A';
                                     const calculatedQty = item.qty * totalQtyValue;
 
                                     const newItemRow = `
-                        <div class="item-row row">
-                            <div class="form-group col-md-2">
-                                <label for="barang_id">Barang</label>
-                                <select class="form-control select2bs4" name="items[${index}][barang_id]" required>
-                                    <option value="${item.barang.id}" selected>${item.barang.part_number}</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-2">
-                                <label>Deskripsi</label>
-                                <input type="text" class="form-control" id="items[${index}][deskripsi]" value="${item.barang.deskripsi}" readonly>
-                            </div>
-                            <div class="form-group col-md-2">
-                                <label>Stock</label>
-                                <input type="text" class="form-control" id="items[${index}][stok]" value="${item.barang.stok}" readonly>
-                            </div>
-                            <div class="form-group col-md-2">
-                                <label for="qty">Quantity</label>
-                                <input type="number"
-                                       class="form-control qty-input"
-                                       name="items[${index}][qty]"
-                                       value="${calculatedQty}"
-                                       data-original="${item.qty}"
-                                       placeholder="Quantity"
-                                       required min="1"
-                                       max="${item.barang.stok}">
-                            </div>
-                            <div class="form-group col-md-2">
-                                <label for="remarks">Remarks</label>
-                                <input type="text"
-                                       class="form-control remarks-input"
-                                       name="items[${index}][remarks]"
-                                       value="${item.remarks ?? ''}"
-                                       placeholder="Remarks">
-                            </div>
-                            <div class="form-group col-md-2 d-flex align-items-end">
-                                <button type="button" class="btn btn-danger btn-sm remove-item">Remove</button>
-                            </div>
-                        </div>`;
-                                    $('#items-container').append(newItemRow);
+                                        <div class="item-row row">
+                                            <div class="form-group col-md-2">
+                                                <label>Barang</label>
+                                                <select class="form-control select2bs4"
+                                                        name="items[${templateId}][${index}][barang_id]" required>
+                                                    <option value="${item.barang.id}" selected>
+                                                        ${item.barang.part_number}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <label>Deskripsi</label>
+                                                <input type="text" class="form-control"
+                                                    value="${item.barang.deskripsi}" readonly>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <label>Stock</label>
+                                                <input type="text" class="form-control"
+                                                    value="${item.barang.stok}" readonly>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <label>Quantity</label>
+                                                <input type="number"
+                                                    class="form-control qty-input"
+                                                    name="items[${templateId}][${index}][qty]"
+                                                    value="${calculatedQty}"
+                                                    data-original="${item.qty}"
+                                                    placeholder="Quantity"
+                                                    required min="1" max="${item.barang.stok}">
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <label>Remarks</label>
+                                                <input type="text"
+                                                    class="form-control"
+                                                    name="items[${templateId}][${index}][remarks]"
+                                                    value="${item.remarks ?? ''}"
+                                                    placeholder="Remarks">
+                                            </div>
+                                            <div class="form-group col-md-2 d-flex align-items-end">
+                                                <button type="button"
+                                                        class="btn btn-danger btn-sm remove-item">Remove</button>
+                                            </div>
+                                        </div>
+                                    `;
+                                    $groupBody.append(newItemRow);
                                 });
 
                                 $('.select2bs4').select2({
@@ -403,7 +405,19 @@
                                 });
                             }
                         });
-                    }
+                    });
+                });
+
+                // Remove whole group
+                $(document).on('click', '.remove-assy', function() {
+                    const templateId = $(this).data('id');
+                    $(`#assy-group-${templateId}`).remove();
+
+                    // Deselect in Select2
+                    const $select = $('#barang_template');
+                    let values = $select.val() || [];
+                    values = values.filter(v => v !== templateId.toString());
+                    $select.val(values).trigger('change');
                 });
 
                 // Always store the original qty when the value changes (either manual or loaded)
@@ -419,7 +433,7 @@
                     // If empty or zero, don't modify anything
                     if (isNaN(multiplier) || multiplier === 0) return;
 
-                    $('#items-container .item-row').each(function() {
+                    $('#assy-groups-container .item-row').each(function() {
                         const qtyInput = $(this).find('.qty-input');
                         let originalQty = qtyInput.data('original');
 
