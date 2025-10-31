@@ -15,6 +15,7 @@ class BarangKeluarDetail extends Model
         'barang_id',
         'user_id',
         'template_id',
+        'total_group_qty',
         'qty',
         'remarks',
     ];

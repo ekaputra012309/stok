@@ -94,18 +94,6 @@
                                                 @endforeach
                                             </select>
                                         </div>
-
-                                        <div class="form-group col-md-2">
-                                            <label for="totalQty">Total Quantity</label>
-                                            <input type="number"
-                                                class="form-control qty-input @error('totalQty') is-invalid @enderror"
-                                                name="totalQty" placeholder="Quantity" required>
-                                            @error('totalQty')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
                                     </div>
 
                                     <!-- Container for Dynamic Barang Items -->
@@ -297,14 +285,26 @@
                                     <div class="assy-group card mt-3" id="assy-group-${templateId}" data-template-id="${templateId}">
                                         <div class="card-header">
                                             <h3 class="card-title"> 
-                                                <button class="btn btn-link text-left collapsed"
+                                                <div class="row">
+                                                    <button class="btn btn-link text-left collapsed"
                                                         type="button"
                                                         data-toggle="collapse"
                                                         data-target="#collapse-${templateId}"
                                                         aria-expanded="false"
                                                         aria-controls="collapse-${templateId}">
-                                                    🔹 ${assyName}
-                                                </button>
+                                                        🔹 ${assyName}
+                                                    </button>
+                                                    <div class="form-inline">
+                                                        <label class="mr-2 mb-0"><small>Total Quantity:</small></label>
+                                                        <input type="number"
+                                                            class="form-control form-control-sm group-total-qty" 
+                                                            name="items[${templateId}][totalQty]" 
+                                                            data-template="${templateId}"
+                                                            value="1"
+                                                            min="1"
+                                                            style="width: 80px;">
+                                                    </div>
+                                                </div>
                                             </h3>
                                             <div class="card-tools">
                                                 <button type="button"
@@ -427,27 +427,27 @@
                 });
 
                 // Multiply all item qty by totalQty multiplier
-                $(document).on('input', '[name="totalQty"]', function() {
+                // Handle per-group total quantity multiplier
+                $(document).on('input', '.group-total-qty', function() {
                     const multiplier = parseFloat($(this).val());
+                    const templateId = $(this).data('template');
 
-                    // If empty or zero, don't modify anything
-                    if (isNaN(multiplier) || multiplier === 0) return;
+                    if (isNaN(multiplier) || multiplier <= 0) return;
 
-                    $('#assy-groups-container .item-row').each(function() {
+                    // Only affect items in this group
+                    $(`#assy-items-${templateId} .item-row`).each(function() {
                         const qtyInput = $(this).find('.qty-input');
                         let originalQty = qtyInput.data('original');
 
-                        // If not yet stored, use current value as original
+                        // If no original qty stored, take current as original
                         if (originalQty === undefined) {
                             originalQty = parseFloat(qtyInput.val()) || 0;
                             qtyInput.data('original', originalQty);
                         }
 
-                        const newQty = originalQty * multiplier;
-                        qtyInput.val(newQty);
+                        qtyInput.val(originalQty * multiplier);
                     });
                 });
-
             });
         </script>
 

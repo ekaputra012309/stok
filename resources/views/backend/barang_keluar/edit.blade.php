@@ -82,12 +82,6 @@
                                                 @endforeach
                                             </select>
                                         </div>
-
-                                        <div class="form-group col-md-2">
-                                            <label for="totalQty">Total Quantity</label>
-                                            <input type="number" class="form-control qty-input" name="totalQty"
-                                                value="{{ $barangKeluar->totalQty }}" required>
-                                        </div>
                                     </div>
 
                                     <!-- Dynamic Assy Groups -->
@@ -100,13 +94,25 @@
                                                     data-template-id="{{ $templateId }}">
                                                     <div class="card-header">
                                                         <h3 class="card-title">
-                                                            <button class="btn btn-link text-left collapsed" type="button"
-                                                                data-toggle="collapse"
-                                                                data-target="#collapse-{{ $templateId }}"
-                                                                aria-expanded="false"
-                                                                aria-controls="collapse-{{ $templateId }}">
-                                                                🔹 {{ $templateName }}
-                                                            </button>
+                                                            <div class="row">
+                                                                <button class="btn btn-link text-left collapsed"
+                                                                    type="button" data-toggle="collapse"
+                                                                    data-target="#collapse-{{ $templateId }}"
+                                                                    aria-expanded="false"
+                                                                    aria-controls="collapse-{{ $templateId }}">
+                                                                    🔹 {{ $templateName }}
+                                                                </button>
+                                                                <div class="form-inline">
+                                                                    <label class="mr-2 mb-0"><small>Total
+                                                                            Quantity:</small></label>
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm group-total-qty"
+                                                                        name="total_group_qty[{{ $templateId }}]"
+                                                                        data-template="{{ $templateId }}"
+                                                                        value="{{ $groupedDetails[$templateId]['total_group_qty'] ?? 1 }}"
+                                                                        min="1" style="width: 80px;">
+                                                                </div>
+                                                            </div>
                                                         </h3>
                                                         <div class="card-tools">
                                                             <button type="button" class="btn btn-danger btn-sm remove-assy"
@@ -221,11 +227,23 @@
                                 <div class="assy-group card mt-3" id="assy-group-${templateId}" data-template-id="${templateId}">
                                     <div class="card-header">
                                         <h3 class="card-title">
-                                            <button class="btn btn-link text-left collapsed" type="button"
-                                                data-toggle="collapse" data-target="#collapse-${templateId}"
-                                                aria-expanded="false" aria-controls="collapse-${templateId}">
-                                                🔹 ${assyName}
-                                            </button>
+                                            <div class="row">
+                                                <button class="btn btn-link text-left collapsed" type="button"
+                                                    data-toggle="collapse" data-target="#collapse-${templateId}"
+                                                    aria-expanded="false" aria-controls="collapse-${templateId}">
+                                                    🔹 ${assyName}
+                                                </button>
+                                                <div class="form-inline">
+                                                    <label class="mr-2 mb-0"><small>Total
+                                                            Quantity:</small></label>
+                                                    <input type="number"
+                                                        class="form-control form-control-sm group-total-qty"
+                                                        name="items[${templateId}][totalQty]"
+                                                        data-template="${templateId}"
+                                                        value="1"
+                                                        min="1" style="width: 80px;">
+                                                </div>
+                                            </div>
                                         </h3>
                                         <div class="card-tools">
                                             <button type="button" class="btn btn-danger btn-sm remove-assy" data-id="${templateId}">Remove Group</button>
@@ -340,18 +358,27 @@
                 });
 
                 // totalQty multiplier
-                $(document).on('input', '[name="totalQty"]', function() {
+                // Handle per-group total quantity multiplier
+                $(document).on('input', '.group-total-qty', function() {
                     const multiplier = parseFloat($(this).val());
-                    if (isNaN(multiplier) || multiplier === 0) return;
+                    const templateId = $(this).data('template');
 
-                    $('#assy-groups-container .item-row').each(function() {
+                    if (isNaN(multiplier) || multiplier <= 0) return;
+
+                    // Only affect items in this group
+                    $(`#assy-items-${templateId} .item-row`).each(function() {
                         const qtyInput = $(this).find('.qty-input');
                         let originalQty = qtyInput.data('original');
-                        if (originalQty === undefined || originalQty === null) {
+
+                        // If no original qty stored, take current as original
+                        if (originalQty === undefined) {
                             originalQty = parseFloat(qtyInput.val()) || 0;
                             qtyInput.data('original', originalQty);
                         }
-                        qtyInput.val(originalQty * multiplier);
+
+                        qtyInput.val((originalQty /
+                                {{ $groupedDetails[$templateId]['total_group_qty'] }}) *
+                            multiplier);
                     });
                 });
             });

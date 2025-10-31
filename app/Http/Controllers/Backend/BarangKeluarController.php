@@ -73,9 +73,8 @@ class BarangKeluarController extends Controller
             'po_number' => 'required|string|unique:barang_keluar,po_number|max:255',
             'user_id' => 'required|exists:users,id',
             'customer_id' => 'required|exists:customers,id',
-            'totalQty' => 'nullable|integer',
-            'items' => 'required|array',
             'tanggal_keluar' => 'required|date',
+            'items' => 'required|array',
         ]);
 
         DB::transaction(function () use ($request) {
@@ -84,28 +83,35 @@ class BarangKeluarController extends Controller
                 'po_number' => $request->po_number,
                 'user_id' => auth()->user()->id,
                 'customer_id' => $request->customer_id,
-                'totalQty' => $request->totalQty,
                 'tanggal_keluar' => $request->tanggal_keluar,
             ]);
-
-            // Loop through groups and items
+        
             foreach ($request->items as $templateId => $groupItems) {
-                foreach ($groupItems as $item) {
+                if (!is_array($groupItems)) continue;
+        
+                // Extract group total quantity
+                $groupTotal = $groupItems['totalQty'] ?? 1;
+        
+                foreach ($groupItems as $index => $item) {
+                    if ($index === 'totalQty') continue; // Skip the totalQty key itself
+        
                     $barang = Barang::find($item['barang_id']);
                     if ($barang) {
-                        $barang->decrement('stok', $item['qty']);
+                        // Decrement stock based on total quantity
+                        $barang->decrement('stok', $item['qty'] );
                     }
-            
+        
                     BarangKeluarDetail::create([
                         'barang_keluar_id' => $barangKeluar->id,
                         'barang_id' => $item['barang_id'],
-                        'qty' => $item['qty'],
+                        'qty' => $item['qty'] ,    // adjusted quantity
+                        'total_group_qty' => $groupTotal,       // store the group total
                         'remarks' => $item['remarks'] ?? '',
                         'user_id' => $request->user_id,
-                        'template_id' => $templateId, // ✅ save the group/template
+                        'template_id' => $templateId,
                     ]);
                 }
-            }            
+            }
         });
 
         Alert::success('Success', 'Barang Keluar transaction created successfully.')->autoClose(2000);
@@ -127,6 +133,18 @@ class BarangKeluarController extends Controller
         $satuans = Satuan::all();
         $customers = Customer::all();
         $barang_template = BarangTemplate::with(['details.barang.satuan'])->get();
+
+        // ✅ Use $BarangKeluar->id instead of undefined $id
+        $details = BarangKeluarDetail::where('barang_keluar_id', $BarangKeluar->id)->get();
+
+        // ✅ Group details by template_id and include group_total_qty
+        $groupedDetails = $details->groupBy('template_id')->map(function ($items) {
+            return [
+                'total_group_qty' => $items->first()->total_group_qty ?? 1,
+                'items' => $items,
+            ];
+        });
+
         $data = [
             'title' => 'Edit Barang Keluar | ',
             'barangKeluar' => $BarangKeluar->load('details.barang'),
@@ -134,7 +152,9 @@ class BarangKeluarController extends Controller
             'satuans' => $satuans,
             'customers' => $customers,
             'barang_template' => $barang_template,
+            'groupedDetails' => $groupedDetails, // ✅ pass to view
         ];
+        // dd($data);
         return view('backend.barang_keluar.edit', $data);
     }
 
@@ -160,7 +180,7 @@ class BarangKeluarController extends Controller
                 'invoice_number' => $request->invoice_number,
                 'po_number' => $request->po_number,
                 'customer_id' => $request->customer_id,
-                'totalQty' => $request->totalQty,
+                // 'totalQty' => $request->totalQty,
                 'tanggal_keluar' => $request->tanggal_keluar,
             ]);
         
@@ -175,22 +195,26 @@ class BarangKeluarController extends Controller
         
             // Insert new items (grouped by template)
             foreach ($request->items as $templateId => $groupItems) {
+                $groupTotalQty = $request->total_group_qty[$templateId] ?? 1;
+    
                 foreach ($groupItems as $item) {
                     $barang = Barang::find($item['barang_id']);
                     if ($barang) {
-                        $barang->decrement('stok', $item['qty']);
+                        // Decrement stock based on total quantity
+                        $barang->decrement('stok', $item['qty'] );
                     }
-            
+
                     BarangKeluarDetail::create([
                         'barang_keluar_id' => $BarangKeluar->id,
                         'barang_id' => $item['barang_id'],
-                        'template_id' => $templateId !== 'unknown' ? $templateId : null,
                         'qty' => $item['qty'],
+                        'total_group_qty' => $groupTotalQty, // ✅ store group qty
                         'remarks' => $item['remarks'] ?? '',
-                        'user_id' => $request->user_id,
+                        'user_id' => auth()->id(),
+                        'template_id' => $templateId,
                     ]);
                 }
-            }            
+            }       
         });
 
         Alert::success('Success', 'Barang Keluar updated successfully.')->autoClose(2000);
