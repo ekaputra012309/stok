@@ -295,9 +295,8 @@
                                                     aria-expanded="false" aria-controls="collapse-${templateId}">
                                                     🔹 ${assyName}
                                                 </button>
-                                                <div class="form-inline">
-                                                    <label class="mr-2 mb-0"><small>Total
-                                                            Quantity:</small></label>
+                                                <div class="form-inline ml-3">
+                                                    <label class="mr-2 mb-0"><small>Total Quantity:</small></label>
                                                     <input type="number"
                                                         class="form-control form-control-sm group-total-qty"
                                                         name="total_group_qty[${templateId}]"
@@ -311,7 +310,12 @@
                                             <button type="button" class="btn btn-danger btn-sm remove-assy" data-id="${templateId}">Remove Group</button>
                                         </div>
                                     </div>
-                                    
+
+                                    <!-- ✅ ADD THIS COLLAPSE BODY -->
+                                    <div id="collapse-${templateId}" class="collapse show" data-parent="#assyAccordion">
+                                        <div class="card-body" id="assy-items-${templateId}">
+                                        </div>
+                                    </div>
                                 </div>
                             `;
                             $('#assy-groups-container').append(groupCard);
