@@ -84,10 +84,76 @@
                                         </div>
                                     </div>
 
+                                    <!-- 🔹 Non-Assy Items Section -->
+                                    <div class="card mt-3">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Barang Non-Assy</h3>
+                                            <div class="card-tools">
+                                                <button type="button" class="btn btn-success btn-sm" id="add-non-assy">Add
+                                                    Barang</button>
+                                            </div>
+                                        </div>
+                                        <div class="card-body" id="non-assy-container">
+                                            @php
+                                                $nonAssyItems = $barangKeluar->details->whereNull('template_id');
+                                            @endphp
+                                            @foreach ($nonAssyItems as $index => $item)
+                                                <div class="item-row row">
+                                                    <div class="form-group col-md-2">
+                                                        <label>Barang</label>
+                                                        <select class="form-control select2bs4"
+                                                            name="items[non_assy][{{ $index }}][barang_id]"
+                                                            required>
+                                                            <option value="" disabled>Select Barang</option>
+                                                            @foreach ($barangs as $barang)
+                                                                <option value="{{ $barang->id }}"
+                                                                    data-deskripsi="{{ $barang->deskripsi }}"
+                                                                    data-stok="{{ $barang->stok }}"
+                                                                    {{ $barang->id == $item->barang_id ? 'selected' : '' }}>
+                                                                    {{ $barang->part_number }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-md-2">
+                                                        <label>Deskripsi</label>
+                                                        <input type="text" class="form-control"
+                                                            value="{{ $item->barang->deskripsi ?? '' }}" readonly>
+                                                    </div>
+                                                    <div class="form-group col-md-2">
+                                                        <label>Stock</label>
+                                                        <input type="text" class="form-control"
+                                                            value="{{ $item->barang->stok ?? 0 }}" readonly>
+                                                    </div>
+                                                    <div class="form-group col-md-2">
+                                                        <label>Quantity</label>
+                                                        <input type="number" class="form-control"
+                                                            name="items[non_assy][{{ $index }}][qty]"
+                                                            value="{{ $item->qty }}" min="1" required>
+                                                    </div>
+                                                    <div class="form-group col-md-2">
+                                                        <label>Remarks</label>
+                                                        <input type="text" class="form-control"
+                                                            name="items[non_assy][{{ $index }}][remarks]"
+                                                            value="{{ $item->remarks }}">
+                                                    </div>
+                                                    <div class="form-group col-md-2 d-flex align-items-end">
+                                                        <button type="button"
+                                                            class="btn btn-danger btn-sm remove-item">Remove</button>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+
                                     <!-- Dynamic Assy Groups -->
                                     <div class="accordion" id="assyAccordion">
                                         <div id="assy-groups-container">
-                                            @php $groupedItems = $barangKeluar->details->groupBy('template_id'); @endphp
+                                            @php
+                                                $groupedItems = $barangKeluar->details
+                                                    ->whereNotNull('template_id')
+                                                    ->groupBy('template_id');
+                                            @endphp
                                             @foreach ($groupedItems as $templateId => $items)
                                                 @php $templateName = $items->first()->template->nama_template ?? 'Unknown Assy'; @endphp
                                                 <div class="assy-group card mt-3" id="assy-group-{{ $templateId }}"
@@ -115,7 +181,8 @@
                                                             </div>
                                                         </h3>
                                                         <div class="card-tools">
-                                                            <button type="button" class="btn btn-danger btn-sm remove-assy"
+                                                            <button type="button"
+                                                                class="btn btn-danger btn-sm remove-assy"
                                                                 data-id="{{ $templateId }}">Remove Group</button>
                                                         </div>
                                                     </div>
@@ -170,11 +237,6 @@
                                                                     </div>
                                                                 </div>
                                                             @endforeach
-                                                        </div>
-                                                        <div class="card-footer text-right">
-                                                            <button type="button" class="btn btn-success btn-sm add-item"
-                                                                data-template="{{ $templateId }}">Add Another
-                                                                Item</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -238,7 +300,7 @@
                                                             Quantity:</small></label>
                                                     <input type="number"
                                                         class="form-control form-control-sm group-total-qty"
-                                                        name="items[${templateId}][totalQty]"
+                                                        name="total_group_qty[${templateId}]"
                                                         data-template="${templateId}"
                                                         value="1"
                                                         min="1" style="width: 80px;">
@@ -249,12 +311,7 @@
                                             <button type="button" class="btn btn-danger btn-sm remove-assy" data-id="${templateId}">Remove Group</button>
                                         </div>
                                     </div>
-                                    <div id="collapse-${templateId}" class="collapse" data-parent="#assyAccordion">
-                                        <div class="card-body" id="assy-items-${templateId}"></div>
-                                        <div class="card-footer text-right">
-                                            <button type="button" class="btn btn-success btn-sm add-item" data-template="${templateId}">Add Another Item</button>
-                                        </div>
-                                    </div>
+                                    
                                 </div>
                             `;
                             $('#assy-groups-container').append(groupCard);
@@ -266,33 +323,38 @@
                                 const calculatedQty = (item.qty || 0) * totalQtyValue;
 
                                 const newItemRow = `
-                                    <div class="item-row row">
-                                        <div class="form-group col-md-2">
-                                            <label>Barang</label>
-                                            <select class="form-control select2bs4" name="items[${templateId}][${index}][barang_id]" required>
-                                                <option value="${item.barang.id}" selected>${item.barang.part_number}</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            <label>Deskripsi</label>
-                                            <input type="text" class="form-control" value="${item.barang.deskripsi}" readonly>
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            <label>Stock</label>
-                                            <input type="text" class="form-control" value="${item.barang.stok}" readonly>
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            <label>Quantity</label>
-                                            <input type="number" class="form-control qty-input" name="items[${templateId}][${index}][qty]" value="${calculatedQty}" min="1" required>
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            <label>Remarks</label>
-                                            <input type="text" class="form-control" name="items[${templateId}][${index}][remarks]" value="${item.remarks ?? ''}">
-                                        </div>
-                                        <div class="form-group col-md-2 d-flex align-items-end">
-                                            <button type="button" class="btn btn-danger btn-sm remove-item">Remove</button>
-                                        </div>
+                                <div class="item-row row">
+                                    <div class="form-group col-md-2">
+                                        <label>Barang</label>
+                                        <select class="form-control select2bs4" name="items[${templateId}][${index}][barang_id]" required>
+                                            <option value="${item.barang.id}" 
+                                                data-deskripsi="${item.barang.deskripsi}" 
+                                                data-stok="${item.barang.stok}" 
+                                                selected>
+                                                ${item.barang.part_number}
+                                            </option>
+                                        </select>
                                     </div>
+                                    <div class="form-group col-md-2">
+                                        <label>Deskripsi</label>
+                                        <input type="text" class="form-control" value="${item.barang.deskripsi}" readonly>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <label>Stock</label>
+                                        <input type="text" class="form-control" value="${item.barang.stok}" readonly>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <label>Quantity</label>
+                                        <input type="number" class="form-control qty-input" name="items[${templateId}][${index}][qty]" value="${calculatedQty}" min="1" required>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <label>Remarks</label>
+                                        <input type="text" class="form-control" name="items[${templateId}][${index}][remarks]" value="${item.remarks ?? ''}">
+                                    </div>
+                                    <div class="form-group col-md-2 d-flex align-items-end">
+                                        <button type="button" class="btn btn-danger btn-sm remove-item">Remove</button>
+                                    </div>
+                                </div>
                                 `;
                                 $groupBody.append(newItemRow);
 
@@ -311,6 +373,39 @@
                 // On change of template select
                 $(document).on('change', '#barang_template', updateAssyGroups);
 
+                // 🔹 Add Non-Assy Item
+                $(document).on('click', '#add-non-assy', function() {
+                    const $container = $('#non-assy-container');
+                    const index = $container.find('.item-row').length;
+
+                    const newItem = `
+                        <div class="item-row row">
+                            <div class="form-group col-md-2">
+                                <label>Barang</label>
+                                <select class="form-control select2bs4" name="items[non_assy][${index}][barang_id]" required>
+                                    <option value="" disabled selected>Select Barang</option>
+                                    @foreach ($barangs as $barang)
+                                        <option value="{{ $barang->id }}" 
+                                                data-deskripsi="{{ $barang->deskripsi }}" 
+                                                data-stok="{{ $barang->stok }}">
+                                            {{ $barang->part_number }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-md-2"><label>Deskripsi</label><input type="text" class="form-control" readonly></div>
+                            <div class="form-group col-md-2"><label>Stock</label><input type="text" class="form-control" readonly></div>
+                            <div class="form-group col-md-2"><label>Quantity</label><input type="number" class="form-control" name="items[non_assy][${index}][qty]" min="1" required></div>
+                            <div class="form-group col-md-2"><label>Remarks</label><input type="text" class="form-control" name="items[non_assy][${index}][remarks]"></div>
+                            <div class="form-group col-md-2 d-flex align-items-end"><button type="button" class="btn btn-danger btn-sm remove-item">Remove</button></div>
+                        </div>
+                    `;
+                    $container.append(newItem);
+                    $('.select2bs4').select2({
+                        theme: 'bootstrap4'
+                    });
+                });
+
                 // Add item button
                 $(document).on('click', '.add-item', function() {
                     const templateId = $(this).data('template');
@@ -324,7 +419,11 @@
                                 <select class="form-control select2bs4" name="items[${templateId}][${index}][barang_id]" required>
                                     <option value="" disabled selected>Select Barang</option>
                                     @foreach ($barangs as $barang)
-                                        <option value="{{ $barang->id }}">{{ $barang->part_number }}</option>
+                                        <option value="{{ $barang->id }}" 
+                                                data-deskripsi="{{ $barang->deskripsi }}" 
+                                                data-stok="{{ $barang->stok }}">
+                                            {{ $barang->part_number }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -362,24 +461,28 @@
                 $(document).on('input', '.group-total-qty', function() {
                     const multiplier = parseFloat($(this).val());
                     const templateId = $(this).data('template');
-
                     if (isNaN(multiplier) || multiplier <= 0) return;
 
-                    // Only affect items in this group
                     $(`#assy-items-${templateId} .item-row`).each(function() {
                         const qtyInput = $(this).find('.qty-input');
                         let originalQty = qtyInput.data('original');
-
-                        // If no original qty stored, take current as original
                         if (originalQty === undefined) {
                             originalQty = parseFloat(qtyInput.val()) || 0;
                             qtyInput.data('original', originalQty);
                         }
-
-                        qtyInput.val((originalQty /
-                                {{ $groupedDetails[$templateId]['total_group_qty'] }}) *
-                            multiplier);
+                        qtyInput.val((originalQty * multiplier).toFixed(0));
                     });
+                });
+
+                // 🔹 When selecting Barang (for Non-Assy or Assy), auto-fill deskripsi & stok
+                $(document).on('change', 'select[name^="items"][name*="[barang_id]"]', function() {
+                    const $selected = $(this).find(':selected');
+                    const deskripsi = $selected.data('deskripsi') || '';
+                    const stok = $selected.data('stok') || 0;
+
+                    const $row = $(this).closest('.item-row');
+                    $row.find('input[readonly]').eq(0).val(deskripsi); // first readonly input = deskripsi
+                    $row.find('input[readonly]').eq(1).val(stok); // second readonly input = stok
                 });
             });
         </script>

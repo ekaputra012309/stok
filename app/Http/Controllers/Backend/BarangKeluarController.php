@@ -67,17 +67,16 @@ class BarangKeluarController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
         $request->validate([
             'invoice_number' => 'required|string|unique:barang_keluar,invoice_number|max:255',
             'po_number' => 'required|string|unique:barang_keluar,po_number|max:255',
             'user_id' => 'required|exists:users,id',
             'customer_id' => 'required|exists:customers,id',
             'tanggal_keluar' => 'required|date',
-            'items' => 'required|array',
         ]);
 
         DB::transaction(function () use ($request) {
+            // --- Create main BarangKeluar record ---
             $barangKeluar = BarangKeluar::create([
                 'invoice_number' => $request->invoice_number,
                 'po_number' => $request->po_number,
@@ -85,30 +84,54 @@ class BarangKeluarController extends Controller
                 'customer_id' => $request->customer_id,
                 'tanggal_keluar' => $request->tanggal_keluar,
             ]);
-        
-            foreach ($request->items as $templateId => $groupItems) {
-                if (!is_array($groupItems)) continue;
-        
-                // Extract group total quantity
-                $groupTotal = $groupItems['totalQty'] ?? 1;
-        
-                foreach ($groupItems as $index => $item) {
-                    if ($index === 'totalQty') continue; // Skip the totalQty key itself
-        
+
+            // --- 1️⃣ Save ASSY items ---
+            if ($request->has('items')) {
+                foreach ($request->items as $templateId => $groupItems) {
+                    if (!is_array($groupItems)) continue;
+
+                    // Extract group total quantity
+                    $groupTotal = $groupItems['totalQty'] ?? 1;
+
+                    foreach ($groupItems as $index => $item) {
+                        if ($index === 'totalQty' || !is_array($item)) continue;
+
+                        $barang = Barang::find($item['barang_id']);
+                        if ($barang) {
+                            $barang->decrement('stok', $item['qty']);
+                        }
+
+                        BarangKeluarDetail::create([
+                            'barang_keluar_id' => $barangKeluar->id,
+                            'barang_id' => $item['barang_id'],
+                            'qty' => $item['qty'],
+                            'total_group_qty' => $groupTotal,
+                            'remarks' => $item['remarks'] ?? '',
+                            'user_id' => $request->user_id,
+                            'template_id' => $templateId, // Assy group
+                        ]);
+                    }
+                }
+            }
+
+            // --- 2️⃣ Save NON-ASSY items (extra_items) ---
+            if ($request->has('extra_items')) {
+                foreach ($request->extra_items as $item) {
+                    if (empty($item['barang_id'])) continue;
+
                     $barang = Barang::find($item['barang_id']);
                     if ($barang) {
-                        // Decrement stock based on total quantity
-                        $barang->decrement('stok', $item['qty'] );
+                        $barang->decrement('stok', $item['qty']);
                     }
-        
+
                     BarangKeluarDetail::create([
                         'barang_keluar_id' => $barangKeluar->id,
                         'barang_id' => $item['barang_id'],
-                        'qty' => $item['qty'] ,    // adjusted quantity
-                        'total_group_qty' => $groupTotal,       // store the group total
+                        'qty' => $item['qty'],
+                        'total_group_qty' => 1, // not grouped
                         'remarks' => $item['remarks'] ?? '',
                         'user_id' => $request->user_id,
-                        'template_id' => $templateId,
+                        'template_id' => null, // because not part of assy
                     ]);
                 }
             }
@@ -165,26 +188,24 @@ class BarangKeluarController extends Controller
             'invoice_number' => 'required|string|unique:barang_keluar,invoice_number,' . $BarangKeluar->id . '|max:255',
             'user_id' => 'required|exists:users,id',
             'customer_id' => 'required|exists:customers,id',
-            'totalQty' => 'nullable|integer',
+            'tanggal_keluar' => 'required|date',
             'items' => 'required|array',
-            'items.*.*.barang_id' => 'required|exists:barang,id', // nested: template_id -> index -> barang_id
+            'items.*.*.barang_id' => 'required|exists:barang,id',
             'items.*.*.qty' => 'required|integer|min:1',
             'items.*.*.remarks' => 'nullable|string|max:255',
-            'tanggal_keluar' => 'required|date',
-        ]);        
+        ]);
 
         DB::transaction(function () use ($request, $BarangKeluar) {
-            // Update main BarangKeluar record
+            // 🔹 Update main record
             $BarangKeluar->update([
                 'user_id' => $request->user_id,
                 'invoice_number' => $request->invoice_number,
                 'po_number' => $request->po_number,
                 'customer_id' => $request->customer_id,
-                // 'totalQty' => $request->totalQty,
                 'tanggal_keluar' => $request->tanggal_keluar,
             ]);
-        
-            // Revert stock for existing items and delete details
+
+            // 🔹 Revert old stock & delete old details
             foreach ($BarangKeluar->details as $detail) {
                 $barang = Barang::find($detail->barang_id);
                 if ($barang) {
@@ -192,29 +213,49 @@ class BarangKeluarController extends Controller
                 }
                 $detail->delete();
             }
-        
-            // Insert new items (grouped by template)
-            foreach ($request->items as $templateId => $groupItems) {
-                $groupTotalQty = $request->total_group_qty[$templateId] ?? 1;
-    
-                foreach ($groupItems as $item) {
-                    $barang = Barang::find($item['barang_id']);
-                    if ($barang) {
-                        // Decrement stock based on total quantity
-                        $barang->decrement('stok', $item['qty'] );
-                    }
 
-                    BarangKeluarDetail::create([
-                        'barang_keluar_id' => $BarangKeluar->id,
-                        'barang_id' => $item['barang_id'],
-                        'qty' => $item['qty'],
-                        'total_group_qty' => $groupTotalQty, // ✅ store group qty
-                        'remarks' => $item['remarks'] ?? '',
-                        'user_id' => auth()->id(),
-                        'template_id' => $templateId,
-                    ]);
+            // 🔹 Recreate detail records from new input
+            foreach ($request->items as $templateKey => $groupItems) {
+                // If this key is "non_assy", treat separately
+                if ($templateKey === 'non_assy') {
+                    foreach ($groupItems as $item) {
+                        $barang = Barang::find($item['barang_id']);
+                        if ($barang) {
+                            $barang->decrement('stok', $item['qty']);
+                        }
+
+                        BarangKeluarDetail::create([
+                            'barang_keluar_id' => $BarangKeluar->id,
+                            'barang_id' => $item['barang_id'],
+                            'qty' => $item['qty'],
+                            'remarks' => $item['remarks'] ?? '',
+                            'user_id' => auth()->id(),
+                            'template_id' => null, // ✅ explicitly null for non-assy
+                            'total_group_qty' => null,
+                        ]);
+                    }
+                } else {
+                    // 🔹 This is a template group
+                    $groupTotalQty = $request->total_group_qty[$templateKey] ?? 1;
+
+                    foreach ($groupItems as $item) {
+                        $barang = Barang::find($item['barang_id']);
+                        if ($barang) {
+                            $barang->decrement('stok', $item['qty']);
+                        }
+
+                        BarangKeluarDetail::create([
+                            'barang_keluar_id' => $BarangKeluar->id,
+                            'barang_id' => $item['barang_id'],
+                            'qty' => $item['qty'],
+                            'remarks' => $item['remarks'] ?? '',
+                            'user_id' => auth()->id(),
+                            'template_id' => $templateKey,
+                            'total_group_qty' => $groupTotalQty,
+                        ]);
+                    }
                 }
-            }       
+            }
         });
 
         Alert::success('Success', 'Barang Keluar updated successfully.')->autoClose(2000);

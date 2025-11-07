@@ -116,6 +116,19 @@
                                                         <div id="assy-groups-container">
 
                                                         </div>
+                                                        <!-- Global Additional Items Section -->
+                                                        <div class="card mt-4">
+                                                            <div class="card-header">
+                                                                <h3 class="card-title">Additional Items (Non-Assy)</h3>
+                                                                <div class="card-tools">
+                                                                    <button type="button" class="btn btn-success btn-sm"
+                                                                        id="add-global-item">
+                                                                        Add Another Item
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card-body" id="global-items-container"></div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -189,39 +202,39 @@
                     const index = $groupBody.find('.item-row').length;
 
                     const newItemRow = `
-        <div class="item-row row">
-            <div class="form-group col-md-2">
-                <label>Barang</label>
-                <select class="form-control select2bs4" name="items[${templateId}][${index}][barang_id]" required>
-                    <option value="" disabled selected>Select Barang</option>
-                    @foreach ($barangs as $barang)
-                        <option value="{{ $barang->id }}" data-stok="{{ $barang->stok }}" data-deskripsi="{{ $barang->deskripsi }}">
-                            {{ $barang->part_number }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="form-group col-md-2">
-                <label>Deskripsi</label>
-                <input type="text" class="form-control" readonly>
-            </div>
-            <div class="form-group col-md-2">
-                <label>Stock</label>
-                <input type="text" class="form-control" readonly>
-            </div>
-            <div class="form-group col-md-2">
-                <label>Quantity</label>
-                <input type="number" class="form-control qty-input" name="items[${templateId}][${index}][qty]" placeholder="Quantity" required min="1">
-            </div>
-            <div class="form-group col-md-2">
-                <label>Remarks</label>
-                <input type="text" class="form-control" name="items[${templateId}][${index}][remarks]" placeholder="Remarks">
-            </div>
-            <div class="form-group col-md-2 d-flex align-items-end">
-                <button type="button" class="btn btn-danger btn-sm remove-item">Remove</button>
-            </div>
-        </div>
-    `;
+                        <div class="item-row row">
+                            <div class="form-group col-md-2">
+                                <label>Barang</label>
+                                <select class="form-control select2bs4" name="items[${templateId}][${index}][barang_id]" required>
+                                    <option value="" disabled selected>Select Barang</option>
+                                    @foreach ($barangs as $barang)
+                                        <option value="{{ $barang->id }}" data-stok="{{ $barang->stok }}" data-deskripsi="{{ $barang->deskripsi }}">
+                                            {{ $barang->part_number }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label>Deskripsi</label>
+                                <input type="text" class="form-control deskripsi-field" readonly>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label>Stock</label>
+                                <input type="text" class="form-control stok-field" readonly>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label>Quantity</label>
+                                <input type="number" class="form-control qty-input" name="items[${templateId}][${index}][qty]" placeholder="Quantity" required min="1">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label>Remarks</label>
+                                <input type="text" class="form-control" name="items[${templateId}][${index}][remarks]" placeholder="Remarks">
+                            </div>
+                            <div class="form-group col-md-2 d-flex align-items-end">
+                                <button type="button" class="btn btn-danger btn-sm remove-item">Remove</button>
+                            </div>
+                        </div>
+                    `;
 
                     $groupBody.append(newItemRow);
                     $('.select2bs4').select2({
@@ -234,11 +247,16 @@
                     updateOptions();
                 });
 
-                $(document).on('change', '[name^="items["][name$="[barang_id]"]', function() {
-                    const stockValue = $(this).find(':selected').data('stok') || 0;
-                    const deskripsiValue = $(this).find(':selected').data('deskripsi');
-                    $(this).closest('.item-row').find('[id$="[stok]"]').val(stockValue);
-                    $(this).closest('.item-row').find('[id$="[deskripsi]"]').val(deskripsiValue);
+                // --- UNIVERSAL barang_id change listener ---
+                $(document).on('change', 'select[name*="[barang_id]"]', function() {
+                    const selected = $(this).find(':selected');
+                    const stok = selected.data('stok') ?? '';
+                    const deskripsi = selected.data('deskripsi') ?? '';
+
+                    const $row = $(this).closest('.item-row');
+                    $row.find('.deskripsi-field').val(deskripsi);
+                    $row.find('.stok-field').val(stok);
+
                     updateOptions();
                 });
 
@@ -320,16 +338,6 @@
                                             aria-labelledby="heading-${templateId}"
                                             data-parent="#assyAccordion">
                                             <div class="card-body" id="assy-items-${templateId}"></div>
-                                        </div>
-
-                                        <div id="collapse-${templateId}" class="collapse" aria-labelledby="heading-${templateId}" data-parent="#assyAccordion">
-                                            <div class="card-body" id="assy-items-${templateId}">
-                                            </div>
-                                            <div class="card-footer text-right">
-                                                <button type="button" class="btn btn-success btn-sm add-item" data-template="${templateId}">
-                                                    Add Another Item
-                                                </button>
-                                            </div>
                                         </div>
                                     </div>
                                 `;
@@ -448,6 +456,55 @@
                         qtyInput.val(originalQty * multiplier);
                     });
                 });
+
+                // --- GLOBAL ADDITIONAL ITEM SECTION ---
+                $(document).on('click', '#add-global-item', function() {
+                    const $container = $('#global-items-container');
+                    const index = $container.find('.item-row').length;
+
+                    const newItemRow = `
+                        <div class="item-row row border-bottom pb-2 mb-2">
+                            <div class="form-group col-md-2">
+                                <label>Barang</label>
+                                <select class="form-control select2bs4" name="extra_items[${index}][barang_id]" required>
+                                    <option value="" disabled selected>Select Barang</option>
+                                    @foreach ($barangs as $barang)
+                                        <option value="{{ $barang->id }}"
+                                                data-stok="{{ $barang->stok }}"
+                                                data-deskripsi="{{ $barang->deskripsi }}">
+                                            {{ $barang->part_number }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label>Deskripsi</label>
+                                <input type="text" class="form-control deskripsi-field" readonly>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label>Stock</label>
+                                <input type="text" class="form-control stok-field" readonly>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label>Quantity</label>
+                                <input type="number" class="form-control qty-input" name="extra_items[${index}][qty]" placeholder="Quantity" required min="1">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label>Remarks</label>
+                                <input type="text" class="form-control" name="extra_items[${index}][remarks]" placeholder="Remarks">
+                            </div>
+                            <div class="form-group col-md-2 d-flex align-items-end">
+                                <button type="button" class="btn btn-danger btn-sm remove-item">Remove</button>
+                            </div>
+                        </div>
+                    `;
+
+                    $container.append(newItemRow);
+                    $('.select2bs4').select2({
+                        theme: 'bootstrap4'
+                    });
+                });
+
             });
         </script>
 
