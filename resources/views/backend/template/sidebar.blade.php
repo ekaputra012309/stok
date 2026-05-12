@@ -42,6 +42,12 @@
                             <p>Master Data<i class="right fas fa-angle-left"></i></p>
                         </a>
                         <ul class="nav nav-treeview">
+                            {{-- <li class="nav-item">
+                                <a href="{{ route('stok') }}"
+                                    class="nav-link {{ request()->routeIs('stok') ? 'active' : '' }}">
+                                    <p>Stok Barang PT.RBI</p>
+                                </a>
+                            </li> --}}
                             <li class="nav-item">
                                 <a href="{{ route('barang.index') }}"
                                     class="nav-link {{ request()->routeIs('barang.index') ? 'active' : '' }}">

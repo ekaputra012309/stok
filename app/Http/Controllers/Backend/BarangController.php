@@ -151,4 +151,13 @@ class BarangController extends Controller
         ], 200);
     }
 
+    public function index2()
+    {
+        $data = [
+            'title' => 'Stok Barang PT. RBI ',
+        ];
+        // dd($data);
+        return view('backend.barang.index2', $data);
+    }
+
 }

@@ -77,6 +77,10 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('customer', CustomerController::class); //customer
 
     Route::resource('lokasi', LokasiController::class); //lokasi
+
+    
 });
+
+Route::get('stok', [BarangController::class, 'index2'])->name('stok');
 
 require __DIR__.'/auth.php';
