@@ -140,4 +140,15 @@ class BarangController extends Controller
         return Excel::download(new BarangExport, $fileName);
     }
 
+    public function getAllBarang()
+    {
+        $barang = Barang::with(['satuan', 'lokasi'])->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data barang berhasil diambil',
+            'data' => $barang
+        ], 200);
+    }
+
 }
