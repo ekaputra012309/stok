@@ -45,6 +45,11 @@ class Backend extends Controller
             'barang_keluar' => $barang_keluar == '' ? 0 : $barang_keluar,  
             'barang_broken' => $barang_broken == '' ? 0 : $barang_broken,  
             'databarang' => Barang::with('satuan')->whereColumn('stok','<=', 'limit')->get(),
+            'datastokzero' => Barang::with('satuan')->where('stok', 0)->get(),
+            'datastoklimitnozero' => Barang::with('satuan')
+                                            ->where('stok', '>', 0)
+                                            ->whereColumn('stok','<', 'limit')
+                                            ->get(),
             'datapurchase_order' => PurchaseOrder::with(['items.barang.satuan'])
                                     ->where(function($query) {
                                         $query->where('status_order', '!=', 'Approved')

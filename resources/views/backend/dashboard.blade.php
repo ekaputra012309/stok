@@ -170,7 +170,8 @@
                                                             {{ $item->barang->deskripsi }} <strong>({{ $item->qty }}
                                                                 @if ($item->barang->satuan)
                                                                     {{ $item->barang->satuan->name }}
-                                                                @endif)</strong><br>
+                                                                @endif)
+                                                            </strong><br>
                                                         @endforeach
                                                     </td>
                                                     <td>
@@ -214,6 +215,45 @@
                 "autoWidth": true,
                 "pageLength": 10,
                 // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            });
+
+            console.log('data stok zero: {{ $datastokzero->count() }}');
+            console.log('data stok limit no zero: {{ $datastoklimitnozero->count() }}');
+            // notification for stok zero and stok di bawah limit using swal fire
+            $(document).ready(function() {
+                $.ajax({
+                    url: '{{ route('get.role.name') }}',
+                    type: 'GET',
+                    success: function(response) {
+                        if (response.role_name == 'Super Admin' || response.role_name == 'Kepala Gudang') {
+                            @if ($datastokzero->count() > 0 || $datastoklimitnozero->count() > 0)
+                                Swal.fire({
+                                    title: 'Peringatan!!',
+                                    html: 'Terdapat <strong>{{ $datastokzero->count() }}</strong> item dengan stok <strong>0</strong>.<br>' +
+                                        'Terdapat <strong>{{ $datastoklimitnozero->count() }}</strong> item dengan stok di bawah limit dan stok tidak nol.<br>' +
+                                        'Silakan periksa data barang untuk menghindari kekurangan stok.',
+                                    icon: 'warning',
+                                    confirmButtonText: 'OK'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        // Your next alert here
+                                        Swal.fire({
+                                            title: 'Peringatan!!',
+                                            text: 'JANGAN LUPA DI ISI STOK YANG 0 DAN DI BAWAH LIMIT',
+                                            icon: 'warning',
+                                            confirmButtonText: 'OK'
+                                        });
+                                    }
+                                });
+                            @endif
+                        } else {
+                            console.log("Role Name not found");
+                        }
+                    },
+                    error: function(error) {
+                        console.log("Error fetching role name");
+                    }
+                });
             });
         </script>
     </div>
