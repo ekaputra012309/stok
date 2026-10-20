@@ -44,6 +44,7 @@
                                             <th>Stok Aktual</th>
                                             <th>Part Number</th>
                                             <th>Nama Barang</th>
+                                            <th>Remarks</th>
                                             <th>Total Qty</th>
                                         </tr>
                                     </thead>
@@ -97,6 +98,11 @@
                                                         <strong>({{ $item->qty }} @if ($item->barang->satuan)
                                                                 {{ $item->barang->satuan->name }}
                                                             @endif)</strong><br>
+                                                    @endforeach
+                                                </td>
+                                                <td>
+                                                    @foreach ($barangKeluar->details as $item)
+                                                        {{ $item->remarks }} <br>
                                                     @endforeach
                                                 </td>
                                                 <td>
