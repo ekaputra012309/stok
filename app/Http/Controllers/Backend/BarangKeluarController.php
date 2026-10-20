@@ -297,7 +297,13 @@ class BarangKeluarController extends Controller
         // dd($data);
         $pdf = FacadePdf::loadView('backend.barang_keluar.print_barang_keluar', $data);
         // $pdf->setPaper('A4', 'portrait'); // Set paper size
-        return $pdf->stream(''.$barangKeluar->invoice_number.'.pdf'); // Stream the PDF
+        $filename = str_replace(
+            ['/', '\\'],
+            '-',
+            $barangKeluar->invoice_number
+        ) . '.pdf';
+
+        return $pdf->stream($filename);
     }
 
     // public function getBarangTemplateData($id)
