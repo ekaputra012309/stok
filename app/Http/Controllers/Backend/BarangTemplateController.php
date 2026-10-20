@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
+use App\Exports\BarangAssyExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BarangTemplateController extends Controller
 {
@@ -164,5 +166,13 @@ class BarangTemplateController extends Controller
         $safeFileName = Str::slug($BarangTemplate->nama_template, '_') . '.pdf';
         // Example: "HOSE ASSY HOSE REEL 1-1/2"" → "hose_assy_hose_reel_1-1_2.pdf"
         return $pdf->stream($safeFileName);
+    }
+
+    public function export($id)
+    {
+        $BarangTemplate = BarangTemplate::findOrFail($id);
+        $namaTemplate = Str::slug($BarangTemplate->nama_template, '_');
+        $fileName = 'barang-template-' . $namaTemplate . '-' . date('Ymd') . '.xlsx';
+        return Excel::download(new BarangAssyExport($id), $fileName);
     }
 }

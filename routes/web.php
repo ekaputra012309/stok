@@ -59,6 +59,7 @@ Route::get('/customer/export', [CustomerController::class, 'export'])->name('cus
 Route::get('/transaksi/laporan/cetak', [TransaksiController::class, 'cetakLaporan'])->name('transaksi.laporan.cetak');
 
 Route::get('/lokasi/export', [LokasiController::class, 'export'])->name('lokasi.export');
+Route::get('/barang-template/{id}/export', [BarangTemplateController::class, 'export'])->name('barang_template.export');
 
 Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
