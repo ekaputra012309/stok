@@ -225,7 +225,8 @@
                     url: '{{ route('get.role.name') }}',
                     type: 'GET',
                     success: function(response) {
-                        if (response.role_name == 'Super Admin' || response.role_name == 'Kepala Gudang') {
+                        if (response.role_name == 'Super Admin' || response.role_name == 'Kepala Gudang' ||
+                            response.role_name == 'Sales') {
                             @if ($datastokzero->count() > 0 || $datastoklimitnozero->count() > 0)
                                 Swal.fire({
                                     title: 'Peringatan!!',
