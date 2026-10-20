@@ -1,3 +1,7 @@
+@php
+    $role = App\Models\Privilage::getRoleKodeForAuthenticatedUser();
+@endphp
+
 @extends('backend/template/app')
 
 @section('content')
@@ -50,21 +54,23 @@
                                             <tr>
                                                 <td>
                                                     <!-- <a class="btn btn-xs btn-dark" href="{{ route('barang_template.show', $barangTemplate->id) }}">
-                                                                                                    <i class="fas fa-eye"></i> Show
-                                                                                                </a> <br> -->
+                                                                                                        <i class="fas fa-eye"></i> Show
+                                                                                                    </a> <br> -->
                                                     <a class="btn btn-xs btn-success"
                                                         href="{{ route('barang_template.print', $barangTemplate->id) }}"
                                                         target="_blank">
                                                         <i class="fas fa-print"></i> Print Template
                                                     </a> <br>
-                                                    <a class="btn btn-xs btn-primary"
-                                                        href="{{ route('barang_template.edit', $barangTemplate->id) }}">
-                                                        <i class="fas fa-edit"></i> Edit
-                                                    </a> <br>
-                                                    <button class="btn btn-xs btn-danger delete-btn-template"
-                                                        data-id="{{ $barangTemplate->id }}">
-                                                        <i class="fas fa-trash"></i> Delete
-                                                    </button>
+                                                    @if (in_array($role, ['superadmin', 'owner', 'admin']))
+                                                        <a class="btn btn-xs btn-primary"
+                                                            href="{{ route('barang_template.edit', $barangTemplate->id) }}">
+                                                            <i class="fas fa-edit"></i> Edit
+                                                        </a> <br>
+                                                        <button class="btn btn-xs btn-danger delete-btn-template"
+                                                            data-id="{{ $barangTemplate->id }}">
+                                                            <i class="fas fa-trash"></i> Delete
+                                                        </button>
+                                                    @endif
                                                 </td>
                                                 <td>{{ $barangTemplate->nama_template }}</td>
                                                 <td>
