@@ -110,7 +110,8 @@
                                                         $totalQty = $barangKeluar->details->sum('qty');
                                                         echo $totalQty; // Total quantity of details
                                                     @endphp --}}
-                                                    {{ $barangKeluar->totalQty ?? '' }}
+                                                    {{-- {{ $barangKeluar->totalQty ?? '' }} --}}
+                                                    {{ $barangKeluar->details->sum(fn($item) => $item->qty) }}
                                                 </td>
                                             </tr>
                                         @endforeach
