@@ -54,8 +54,8 @@
                                             <tr>
                                                 <td>
                                                     <!-- <a class="btn btn-xs btn-dark" href="{{ route('barang_template.show', $barangTemplate->id) }}">
-                                                                                                                        <i class="fas fa-eye"></i> Show
-                                                                                                                    </a> <br> -->
+                                                                                                                            <i class="fas fa-eye"></i> Show
+                                                                                                                        </a> <br> -->
                                                     <a class="btn btn-xs btn-success"
                                                         href="{{ route('barang_template.print', $barangTemplate->id) }}"
                                                         target="_blank">
@@ -87,7 +87,7 @@
                                                 <td>
                                                     @foreach ($barangTemplate->details as $item)
                                                         {{ $item->barang->deskripsi }}
-                                                        <strong>({{ $item->qty }} @if ($item->barang->satuan)
+                                                        <strong>({{ number_format($item->qty, 0, ',', '.') }} @if ($item->barang->satuan)
                                                                 {{ $item->barang->satuan->name }}
                                                             @endif)</strong><br>
                                                     @endforeach

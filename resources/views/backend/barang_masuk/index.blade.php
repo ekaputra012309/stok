@@ -103,7 +103,7 @@
 
                                                 <td>
                                                     @foreach ($poItems as $item)
-                                                        {{ $item->barang->stok }}
+                                                        {{ number_format($item->barang->stok, 0, ',', '.') }}
                                                         @if ($item->barang->satuan)
                                                             {{ $item->barang->satuan->name }}
                                                         @endif
@@ -121,7 +121,7 @@
                                                     @foreach ($poItems as $item)
                                                         {{ $item->barang->deskripsi }}
                                                         <strong>
-                                                            ({{ $receivedItems[$item->barang_id] ?? 0 }}
+                                                            ({{ number_format($receivedItems[$item->barang_id] ?? 0, 0, ',', '.') }}
                                                             @if ($item->barang->satuan)
                                                                 {{ $item->barang->satuan->name }}
                                                             @endif)
@@ -130,7 +130,7 @@
                                                     @endforeach
                                                 </td>
 
-                                                <td>{{ $totalReceived }}</td>
+                                                <td>{{ number_format($totalReceived, 0, ',', '.') }}</td>
 
                                                 <td>
                                                     {{-- Sort descending and get first to get the latest note --}}

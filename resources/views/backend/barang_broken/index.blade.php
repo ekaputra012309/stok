@@ -75,16 +75,18 @@
                                                 </td>
                                                 <td>
                                                     @foreach ($barangBroken->details as $item)
-                                                        {{ $item->barang->deskripsi }} <strong>({{ $item->qty }}
+                                                        {{ $item->barang->deskripsi }}
+                                                        <strong>({{ number_format($item->qty, 0, ',', '.') }}
                                                             @if ($item->barang->satuan)
                                                                 {{ $item->barang->satuan->name }}
-                                                            @endif)</strong><br>
+                                                            @endif)
+                                                        </strong><br>
                                                     @endforeach
                                                 </td>
                                                 <td>
                                                     @php
                                                         $totalQty = $barangBroken->details->sum('qty');
-                                                        echo $totalQty; // Total quantity of details
+                                                        echo number_format($totalQty, 0, ',', '.'); // Total quantity of details
                                                     @endphp
                                                 </td>
                                                 <td>

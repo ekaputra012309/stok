@@ -81,7 +81,8 @@
                                                 <td>{{ $barangKeluar->customer->name ?? '' }}</td>
                                                 <td>
                                                     @foreach ($barangKeluar->details as $item)
-                                                        <strong>({{ $item->barang->stok }} @if ($item->barang->satuan)
+                                                        <strong>({{ number_format($item->barang->stok, 0, ',', '.') }}
+                                                            @if ($item->barang->satuan)
                                                                 {{ $item->barang->satuan->name }}
                                                             @endif)</strong><br>
                                                     @endforeach
@@ -95,7 +96,7 @@
                                                 <td>
                                                     @foreach ($barangKeluar->details as $item)
                                                         {{ $item->barang->deskripsi }}
-                                                        <strong>({{ $item->qty }} @if ($item->barang->satuan)
+                                                        <strong>({{ number_format($item->qty, 0, ',', '.') }} @if ($item->barang->satuan)
                                                                 {{ $item->barang->satuan->name }}
                                                             @endif)</strong><br>
                                                     @endforeach
@@ -111,7 +112,7 @@
                                                         echo $totalQty; // Total quantity of details
                                                     @endphp --}}
                                                     {{-- {{ $barangKeluar->totalQty ?? '' }} --}}
-                                                    {{ $barangKeluar->details->sum(fn($item) => $item->qty) }}
+                                                    {{ number_format($barangKeluar->details->sum(fn($item) => $item->qty), 0, ',', '.') }}
                                                 </td>
                                             </tr>
                                         @endforeach

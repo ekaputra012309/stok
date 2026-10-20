@@ -90,7 +90,8 @@
                                                 </td>
                                                 <td>
                                                     @foreach ($purchaseOrder->items as $item)
-                                                        {{ $item->barang->deskripsi }} <strong>({{ $item->qty }}
+                                                        {{ $item->barang->deskripsi }}
+                                                        <strong>({{ number_format($item->qty, 0, ',', '.') }}
                                                             @if ($item->barang->satuan)
                                                                 {{ $item->barang->satuan->name }}
                                                             @endif)
@@ -100,7 +101,7 @@
                                                 <td>
                                                     @php
                                                         $totalQty = $purchaseOrder->items->sum('qty');
-                                                        echo $totalQty; // Total quantity of items
+                                                        echo number_format($totalQty, 0, ',', '.'); // Total quantity of items
                                                     @endphp
                                                 </td>
                                                 <td>
