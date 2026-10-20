@@ -208,6 +208,12 @@ class BarangBrokenController extends Controller
         ];
         // dd($data);
         $pdf = FacadePdf::loadView('backend.barang_broken.print_barang_broken', $data);
-        return $pdf->stream(''.$barangBroken->invoice_number.'.pdf'); // Stream the PDF
+        $filename = str_replace(
+            ['/', '\\'],
+            '-',
+            $barangBroken->invoice_number
+        ) . '.pdf';
+
+        return $pdf->stream($filename);
     }
 }
