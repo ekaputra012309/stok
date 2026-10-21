@@ -130,12 +130,28 @@
                                                     @endforeach
                                                 </td>
 
-                                                <td>{{ number_format($totalReceived, 0, ',', '.') }}</td>
+                                                {{-- <td>{{ number_format($totalReceived, 0, ',', '.') }}</td> --}}
+                                                <td>
+                                                    @php
+                                                        $qtyBySatuan = $barangMasuk->details->groupBy(
+                                                            fn($item) => $item->barang->satuan->name ?? 'Tanpa Satuan',
+                                                        );
+                                                    @endphp
+
+                                                    @foreach ($qtyBySatuan as $satuan => $items)
+                                                        <strong>
+                                                            {{ number_format($items->sum('qty'), 0, ',', '.') }}
+                                                            {{ $satuan }}
+                                                        </strong>
+                                                        <br>
+                                                    @endforeach
+                                                </td>
 
                                                 <td>
                                                     {{-- Sort descending and get first to get the latest note --}}
                                                     {{ $barangMasukGroup->sortByDesc('created_at')->first()->note ?? '-' }}
                                                 </td>
+
                                             </tr>
                                         @endforeach
                                     </tbody>

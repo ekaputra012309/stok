@@ -77,7 +77,20 @@
                                         <tfoot>
                                             <tr>
                                                 <th colspan="2" class="text-right">Total</th>
-                                                <th>{{ number_format($PurchaseOrder->items->sum(fn($item) => $item->qty), 0, ',', '.') }}
+                                                <th>
+                                                    @php
+                                                        $qtyBySatuan = $PurchaseOrder->items->groupBy(
+                                                            fn($item) => $item->barang->satuan->name ?? 'Tanpa Satuan',
+                                                        );
+                                                    @endphp
+
+                                                    @foreach ($qtyBySatuan as $satuan => $items)
+                                                        <strong>
+                                                            {{ number_format($items->sum('qty'), 0, ',', '.') }}
+                                                            {{ $satuan }}
+                                                        </strong>
+                                                        <br>
+                                                    @endforeach
                                                 </th>
                                             </tr>
                                         </tfoot>

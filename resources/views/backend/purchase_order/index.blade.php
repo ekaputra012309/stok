@@ -100,9 +100,18 @@
                                                 </td>
                                                 <td>
                                                     @php
-                                                        $totalQty = $purchaseOrder->items->sum('qty');
-                                                        echo number_format($totalQty, 0, ',', '.'); // Total quantity of items
+                                                        $qtyBySatuan = $purchaseOrder->items->groupBy(
+                                                            fn($item) => $item->barang->satuan->name ?? 'Tanpa Satuan',
+                                                        );
                                                     @endphp
+
+                                                    @foreach ($qtyBySatuan as $satuan => $items)
+                                                        <strong>
+                                                            {{ number_format($items->sum('qty'), 0, ',', '.') }}
+                                                            {{ $satuan }}
+                                                        </strong>
+                                                        <br>
+                                                    @endforeach
                                                 </td>
                                                 <td>
                                                     <span
