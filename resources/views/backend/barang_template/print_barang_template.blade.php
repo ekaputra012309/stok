@@ -120,13 +120,26 @@
                         <tr>
                             <td><strong>({{ $item->barang->part_number }})</strong></td>
                             <td>{{ $item->barang->deskripsi }}</td>
-                            <td class="text-center">{{ $item->qty }}</td>
+                            <td class="text-center">{{ $item->qty }}
+                                {{ $item->barang->satuan ? $item->barang->satuan->name : '' }}</td>
                         </tr>
                     @endforeach
                     <tr>
                         <td colspan="2" class="no-line text-left"><strong>Total</strong></td>
-                        <td class="no-line text-center">
-                            <strong>{{ $barangTemplate->details->sum(fn($item) => $item->qty) }}</strong>
+                        <td class="no-line text-left">
+                            @php
+                                $qtyBySatuan = $barangTemplate->details->groupBy(
+                                    fn($item) => $item->barang->satuan->name ?? 'Tanpa Satuan',
+                                );
+                            @endphp
+
+                            @foreach ($qtyBySatuan as $satuan => $items)
+                                <strong>
+                                    {{ number_format($items->sum('qty'), 0, ',', '.') }}
+                                    {{ $satuan }}
+                                </strong>
+                                <br>
+                            @endforeach
                         </td>
                     </tr>
                 </tbody>

@@ -39,14 +39,14 @@
                             </div>
                             <div class="card-body">
 
-                                <table id="example2" class="table table-bordered table-striped w-100">
+                                <table id="example1" class="table table-bordered table-striped w-100">
                                     <thead>
                                         <tr>
                                             <th>#</th>
                                             <th>Nama Template</th>
                                             <th>Part Number</th>
                                             <th>Nama Barang</th>
-                                            {{-- <th>Total Qty</th> --}}
+                                            <th>Total Qty</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -54,8 +54,8 @@
                                             <tr>
                                                 <td>
                                                     <!-- <a class="btn btn-xs btn-dark" href="{{ route('barang_template.show', $barangTemplate->id) }}">
-                                                                                                                            <i class="fas fa-eye"></i> Show
-                                                                                                                        </a> <br> -->
+                                                                                                                                    <i class="fas fa-eye"></i> Show
+                                                                                                                                </a> <br> -->
                                                     <a class="btn btn-xs btn-success"
                                                         href="{{ route('barang_template.print', $barangTemplate->id) }}"
                                                         target="_blank">
@@ -92,13 +92,21 @@
                                                             @endif)</strong><br>
                                                     @endforeach
                                                 </td>
-                                                {{-- <td> --}}
-                                                {{-- {{ $barangTemplate->totalQty }} --}}
-                                                {{-- @php
-                                                        $totalQty = $barangTemplate->details->sum('qty');
-                                                        echo $totalQty; // Total quantity of details
-                                                    @endphp --}}
-                                                {{-- </td> --}}
+                                                <td>
+                                                    @php
+                                                        $qtyBySatuan = $barangTemplate->details->groupBy(
+                                                            fn($item) => $item->barang->satuan->name ?? 'Tanpa Satuan',
+                                                        );
+                                                    @endphp
+
+                                                    @foreach ($qtyBySatuan as $satuan => $items)
+                                                        <strong>
+                                                            {{ number_format($items->sum('qty'), 0, ',', '.') }}
+                                                            {{ $satuan }}
+                                                        </strong>
+                                                        <br>
+                                                    @endforeach
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
