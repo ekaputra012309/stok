@@ -1,6 +1,18 @@
 @extends('backend/template/app')
 
 @section('content')
+    <style>
+        /* Ensure the table respects explicit widths inside Bootstrap 4 wrapper */
+        table.dataTable {
+            width: 100% !important;
+        }
+
+        /* Optional: force minimum column widths to trigger scrollX properly */
+        #example1 th,
+        #example1 td {
+            white-space: wrap;
+        }
+    </style>
     <div class="content-wrapper">
         <section class="content-header">
             <div class="container-fluid">
@@ -78,13 +90,16 @@
                                                     @else
                                                     @endif
                                                 </td>
-                                                <td>{{ $barangKeluar->customer->name ?? '' }}</td>
+                                                <td>
+                                                    {{ $barangKeluar->customer->name ?? '' }}
+                                                </td>
                                                 <td>
                                                     @foreach ($barangKeluar->details as $item)
                                                         <strong>({{ number_format($item->barang->stok, 0, ',', '.') }}
                                                             @if ($item->barang->satuan)
                                                                 {{ $item->barang->satuan->name }}
-                                                            @endif)</strong><br>
+                                                            @endif)
+                                                        </strong><br>
                                                     @endforeach
                                                 </td>
                                                 <td>
@@ -107,12 +122,19 @@
                                                     @endforeach
                                                 </td>
                                                 <td>
-                                                    {{-- @php
-                                                        $totalQty = $barangKeluar->details->sum('qty');
-                                                        echo $totalQty; // Total quantity of details
-                                                    @endphp --}}
-                                                    {{-- {{ $barangKeluar->totalQty ?? '' }} --}}
-                                                    {{ number_format($barangKeluar->details->sum(fn($item) => $item->qty), 0, ',', '.') }}
+                                                    @php
+                                                        $qtyBySatuan = $barangKeluar->details->groupBy(
+                                                            fn($item) => $item->barang->satuan->name ?? 'Tanpa Satuan',
+                                                        );
+                                                    @endphp
+
+                                                    @foreach ($qtyBySatuan as $satuan => $items)
+                                                        <strong>
+                                                            {{ number_format($items->sum('qty'), 0, ',', '.') }}
+                                                            {{ $satuan }}
+                                                        </strong>
+                                                        <br>
+                                                    @endforeach
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -125,15 +147,35 @@
             </div>
         </section>
         <script>
-            $("#example1").DataTable({
-                // "responsive": true,
-                // "lengthChange": true,
-                // "autoWidth": false,
+            var table = $("#example1").DataTable({
                 scrollY: "500px",
                 scrollX: true,
                 scrollCollapse: true,
-                paging: false,
+                // paging: false,
+                autoWidth: false,
                 fixedColumns: true,
+
+                columnDefs: [{
+                        targets: 0,
+                        width: "100px"
+                    },
+                    {
+                        targets: 1,
+                        width: "120px"
+                    },
+                    {
+                        targets: 2,
+                        width: "120px"
+                    },
+                    {
+                        targets: 6,
+                        width: "80px"
+                    }
+                ],
+
+                initComplete: function() {
+                    this.api().columns.adjust().draw(false);
+                }
             });
 
             $("#example2").DataTable({
