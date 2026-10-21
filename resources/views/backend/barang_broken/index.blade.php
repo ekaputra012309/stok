@@ -85,9 +85,18 @@
                                                 </td>
                                                 <td>
                                                     @php
-                                                        $totalQty = $barangBroken->details->sum('qty');
-                                                        echo number_format($totalQty, 0, ',', '.'); // Total quantity of details
+                                                        $qtyBySatuan = $barangBroken->details->groupBy(
+                                                            fn($item) => $item->barang->satuan->name ?? 'Tanpa Satuan',
+                                                        );
                                                     @endphp
+
+                                                    @foreach ($qtyBySatuan as $satuan => $items)
+                                                        <strong>
+                                                            {{ number_format($items->sum('qty'), 0, ',', '.') }}
+                                                            {{ $satuan }}
+                                                        </strong>
+                                                        <br>
+                                                    @endforeach
                                                 </td>
                                                 <td>
                                                     @foreach ($barangBroken->details as $item)
