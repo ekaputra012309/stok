@@ -10,7 +10,7 @@
         /* Optional: force minimum column widths to trigger scrollX properly */
         #example1 th,
         #example1 td {
-            white-space: wrap;
+            white-space: nowrap;
         }
     </style>
     <div class="content-wrapper">
@@ -152,30 +152,30 @@
                 scrollX: true,
                 scrollCollapse: true,
                 // paging: false,
-                autoWidth: false,
+                // autoWidth: false,
                 fixedColumns: true,
 
-                columnDefs: [{
-                        targets: 0,
-                        width: "100px"
-                    },
-                    {
-                        targets: 1,
-                        width: "120px"
-                    },
-                    {
-                        targets: 2,
-                        width: "120px"
-                    },
-                    {
-                        targets: 6,
-                        width: "80px"
-                    }
-                ],
+                // columnDefs: [{
+                //         targets: 0,
+                //         width: "100px"
+                //     },
+                //     {
+                //         targets: 1,
+                //         width: "120px"
+                //     },
+                //     {
+                //         targets: 2,
+                //         width: "120px"
+                //     },
+                //     {
+                //         targets: 6,
+                //         width: "80px"
+                //     }
+                // ],
 
-                initComplete: function() {
-                    this.api().columns.adjust().draw(false);
-                }
+                // initComplete: function() {
+                //     this.api().columns.adjust().draw(false);
+                // }
             });
 
             $("#example2").DataTable({
