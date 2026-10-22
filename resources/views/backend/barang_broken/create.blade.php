@@ -56,64 +56,86 @@
                                         </div>
                                     </div>
 
-                                    <!-- Container for Dynamic Barang Items -->
-                                    <div id="items-container">
-                                        <div class="item-row row">
-                                            <div class="form-group col-md-2">
-                                                <label for="barang_id">Barang</label>
-                                                <select class="form-control select2bs4 barang-select"
-                                                    name="items[0][barang_id]" required>
-                                                    <option value="" data-deskripsi="" disabled selected>Select Part
-                                                        Number</option>
-                                                    @foreach ($barangs as $barang)
-                                                        <option value="{{ $barang->id }}"
-                                                            data-deskripsi="{{ $barang->deskripsi }}"
-                                                            data-stok="{{ $barang->stok }}">{{ $barang->part_number }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
+                                    <!-- Table Container for Dynamic Barang Items -->
+                                    <div class="card mt-3">
+                                        <div class="card-header d-flex align-items-center justify-content-between">
+                                            <h3 class="card-title m-0">Detail Items</h3>
+                                        </div>
+                                        <div class="card-body p-0">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered table-striped mb-0"
+                                                    style="min-width: 1028px;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Barang</th>
+                                                            <th>Deskripsi</th>
+                                                            <th style="width: 100px;">Stok</th>
+                                                            <th style="width: 100px;">Quantity</th>
+                                                            <th style="width: 200px;">Remarks</th>
+                                                            <th class="text-center">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="items-container">
+                                                        <tr class="item-row">
+                                                            <td>
+                                                                <select class="form-control select2bs4 barang-select"
+                                                                    name="items[0][barang_id]" required>
+                                                                    <option value="" data-deskripsi="" disabled
+                                                                        selected>Select Part Number</option>
+                                                                    @foreach ($barangs as $barang)
+                                                                        <option value="{{ $barang->id }}"
+                                                                            data-deskripsi="{{ $barang->deskripsi }}"
+                                                                            data-stok="{{ $barang->stok }}">
+                                                                            {{ $barang->part_number }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control deskripsi-input"
+                                                                    name="deskripsi_display" placeholder="Deskripsi"
+                                                                    readonly>
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control stok-input"
+                                                                    name="stok_display" placeholder="stok" readonly>
+                                                            </td>
+                                                            <td>
+                                                                <input type="number"
+                                                                    class="form-control qty-input @error('items.0.qty') is-invalid @enderror"
+                                                                    name="items[0][qty]" placeholder="Quantity" required
+                                                                    min="1">
+                                                                @error('items.0.qty')
+                                                                    <span class="invalid-feedback" role="alert">
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </span>
+                                                                @enderror
+                                                            </td>
+                                                            <td>
+                                                                <input type="text"
+                                                                    class="form-control remarks-input @error('items.0.remarks') is-invalid @enderror"
+                                                                    name="items[0][remarks]" placeholder="Remarks">
+                                                                @error('items.0.remarks')
+                                                                    <span class="invalid-feedback" role="alert">
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </span>
+                                                                @enderror
+                                                            </td>
+                                                            <td class="text-center align-middle">
+                                                                <button type="button"
+                                                                    class="btn btn-danger btn-sm remove-item">Remove</button>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
                                             </div>
-                                            <div class="form-group col-md-4">
-                                                <label for="deskripsi">Deskripsi</label>
-                                                <input type="text" class="form-control deskripsi-input"
-                                                    name="deskripsi_display" placeholder="Deskripsi" readonly>
-                                            </div>
-                                            <div class="form-group col-md-1">
-                                                <label for="stok">Stok</label>
-                                                <input type="text" class="form-control stok-input" name="stok_display"
-                                                    placeholder="stok" readonly>
-                                            </div>
-                                            <div class="form-group col-md-2">
-                                                <label for="qty">Quantity</label>
-                                                <input type="number"
-                                                    class="form-control qty-input @error('items.0.qty') is-invalid @enderror"
-                                                    name="items[0][qty]" placeholder="Quantity" required min="1">
-                                                @error('items.0.qty')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                            <div class="form-group col-md-2">
-                                                <label for="remarks">Remarks</label>
-                                                <input type="text"
-                                                    class="form-control remarks-input @error('items.0.remarks') is-invalid @enderror"
-                                                    name="items[0][remarks]" placeholder="Remarks">
-                                                @error('items.0.remarks')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                            <div class="form-group col-md-1 d-flex align-items-end">
-                                                <button type="button"
-                                                    class="btn btn-danger btn-sm remove-item">Remove</button>
-                                            </div>
+                                        </div>
+                                        <div class="card-footer">
+                                            <button type="button" id="add-item" class="btn btn-success btn-sm">Add
+                                                Another Item</button>
                                         </div>
                                     </div>
 
-                                    <button type="button" id="add-item" class="btn btn-success btn-sm">Add Another
-                                        Item</button>
                                 </div>
 
                                 <div class="card-footer">
@@ -157,46 +179,31 @@
 
                 $('#add-item').on('click', function() {
                     const newItemRow = `
-                    <div class="item-row row">
-                        <div class="form-group col-md-2">
-                        <label for="barang_id">Barang</label>
-                        <select class="form-control select2bs4 barang-select" name="items[${itemIndex}][barang_id]" required>
-                            <option value="" data-deskripsi="" disabled selected>Select Part Number</option>
-                            @foreach ($barangs as $barang)
-                                <option value="{{ $barang->id }}" data-deskripsi="{{ $barang->deskripsi }}" data-stok="{{ $barang->stok }}">{{ $barang->part_number }}</option>
-                            @endforeach
-                        </select>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="deskripsi">Deskripsi</label>
+                    <tr class="item-row">
+                        <td >
+                            <select class="form-control select2bs4 barang-select" name="items[${itemIndex}][barang_id]" required>
+                                <option value="" data-deskripsi="" disabled selected>Select Part Number</option>
+                                @foreach ($barangs as $barang)
+                                    <option value="{{ $barang->id }}" data-deskripsi="{{ $barang->deskripsi }}" data-stok="{{ $barang->stok }}">{{ $barang->part_number }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td >
                             <input type="text" class="form-control deskripsi-input" name="deskripsi_display" placeholder="Deskripsi" readonly>
-                        </div>
-                         <div class="form-group col-md-1">
-                            <label for="Stok">stok</label>
+                        </td>
+                        <td >
                             <input type="text" class="form-control stok-input" name="stok_display" placeholder="stok" readonly>
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label for="qty">Quantity</label>
+                        </td>
+                        <td>
                             <input type="number" class="form-control qty-input @error('items.${itemIndex}.qty') is-invalid @enderror" name="items[${itemIndex}][qty]" placeholder="Quantity" required min="1">
-                            @error('items.${itemIndex}.qty')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label for="remarks">Remarks</label>
+                        </td>
+                        <td>
                             <input type="text" class="form-control remarks-input @error('items.${itemIndex}.remarks') is-invalid @enderror" name="items[${itemIndex}][remarks]" placeholder="Remarks" >
-                            @error('items.${itemIndex}.remarks')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="form-group col-md-1 d-flex align-items-end">
+                        </td>
+                        <td class="text-center align-middle">
                             <button type="button" class="btn btn-danger btn-sm remove-item">Remove</button>
-                        </div>
-                    </div>`;
+                        </td>
+                    </tr>`;
 
                     $('#items-container').append(newItemRow);
                     $('.select2bs4').select2({
@@ -207,15 +214,15 @@
                 });
 
                 $(document).on('click', '.remove-item', function() {
-                    $(this).closest('.item-row').remove();
+                    $(this).closest('tr.item-row').remove();
                     updateOptions();
                 });
 
                 $(document).on('change', '.barang-select', function() {
                     const deskripsi = $(this).find('option:selected').data('deskripsi');
                     const stok = $(this).find('option:selected').data('stok');
-                    $(this).closest('.item-row').find('.deskripsi-input').val(deskripsi);
-                    $(this).closest('.item-row').find('.stok-input').val(stok);
+                    $(this).closest('tr.item-row').find('.deskripsi-input').val(deskripsi);
+                    $(this).closest('tr.item-row').find('.stok-input').val(stok);
                 });
             });
         </script>
