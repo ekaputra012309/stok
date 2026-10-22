@@ -152,16 +152,19 @@ class BarangKeluarController extends Controller
 
     public function edit(BarangKeluar $BarangKeluar)
     {
-        $barangs = Barang::with('satuan')->where('stok', '>', 0)->get();
+        $barangs = Barang::with('satuan')
+                        // ->where('stok', '>', 0)
+                        ->get();
         $satuans = Satuan::all();
         $customers = Customer::all();
         $barang_template = BarangTemplate::with(['details.barang.satuan'])->get();
 
-        // ✅ Use $BarangKeluar->id instead of undefined $id
         $details = BarangKeluarDetail::where('barang_keluar_id', $BarangKeluar->id)->get();
 
-        // ✅ Group details by template_id and include group_total_qty
-        $groupedDetails = $details->groupBy('template_id')->map(function ($items) {
+        // Group details by template_id, handling null/non_assy cleanly
+        $groupedDetails = $details->groupBy(function ($item) {
+            return $item->template_id ?? 'non_assy';
+        })->map(function ($items) {
             return [
                 'total_group_qty' => $items->first()->total_group_qty ?? 1,
                 'items' => $items,
@@ -175,15 +178,14 @@ class BarangKeluarController extends Controller
             'satuans' => $satuans,
             'customers' => $customers,
             'barang_template' => $barang_template,
-            'groupedDetails' => $groupedDetails, // ✅ pass to view
+            'groupedDetails' => $groupedDetails,
         ];
-        // dd($data);
+        // dd($data); // Debugging line to inspect the data structure
         return view('backend.barang_keluar.edit', $data);
     }
 
     public function update(Request $request, BarangKeluar $BarangKeluar)
     {
-        // dd($request->all());
         $request->validate([
             'invoice_number' => 'required|string|unique:barang_keluar,invoice_number,' . $BarangKeluar->id . '|max:255',
             'user_id' => 'required|exists:users,id',
@@ -193,19 +195,12 @@ class BarangKeluarController extends Controller
             'items.*.*.barang_id' => 'required|exists:barang,id',
             'items.*.*.qty' => 'required|integer|min:1',
             'items.*.*.remarks' => 'nullable|string|max:255',
+            'total_group_qty' => 'nullable|array',
+            'total_group_qty.*' => 'nullable|integer|min:1',
         ]);
 
         DB::transaction(function () use ($request, $BarangKeluar) {
-            // 🔹 Update main record
-            $BarangKeluar->update([
-                'user_id' => $request->user_id,
-                'invoice_number' => $request->invoice_number,
-                'po_number' => $request->po_number,
-                'customer_id' => $request->customer_id,
-                'tanggal_keluar' => $request->tanggal_keluar,
-            ]);
-
-            // 🔹 Revert old stock & delete old details
+            // 🔹 1. Revert old stock & delete old details
             foreach ($BarangKeluar->details as $detail) {
                 $barang = Barang::find($detail->barang_id);
                 if ($barang) {
@@ -214,13 +209,24 @@ class BarangKeluarController extends Controller
                 $detail->delete();
             }
 
-            // 🔹 Recreate detail records from new input
+            // 🔹 2. Update main record fields
+            $BarangKeluar->update([
+                'user_id' => $request->user_id,
+                'invoice_number' => $request->invoice_number,
+                'po_number' => $request->po_number,
+                'customer_id' => $request->customer_id,
+                'tanggal_keluar' => $request->tanggal_keluar,
+            ]);
+
+            // 🔹 3. Recreate detail records from new input and decrement stock
             foreach ($request->items as $templateKey => $groupItems) {
-                // If this key is "non_assy", treat separately
                 if ($templateKey === 'non_assy') {
                     foreach ($groupItems as $item) {
                         $barang = Barang::find($item['barang_id']);
                         if ($barang) {
+                            // Optional check: Ensure stock doesn't drop below 0 if required
+                            // if ($barang->stok < $item['qty']) { throw new \Exception("Stock for {$barang->nama} is insufficient."); }
+                            
                             $barang->decrement('stok', $item['qty']);
                         }
 
@@ -230,12 +236,12 @@ class BarangKeluarController extends Controller
                             'qty' => $item['qty'],
                             'remarks' => $item['remarks'] ?? '',
                             'user_id' => auth()->id(),
-                            'template_id' => null, // ✅ explicitly null for non-assy
+                            'template_id' => null,
                             'total_group_qty' => null,
                         ]);
                     }
                 } else {
-                    // 🔹 This is a template group
+                    // Template group
                     $groupTotalQty = $request->total_group_qty[$templateKey] ?? 1;
 
                     foreach ($groupItems as $item) {
